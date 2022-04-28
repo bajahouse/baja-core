@@ -1,30 +1,25 @@
 let maps = [309]
 export function housing(events: TSEvents) {
-    maps.forEach((mapID, i, arr) => {
-        events.MapID.OnPlayerEnter(mapID, (map, player) => {
-            player.LearnClassSpells(true,true,true)
-            if (!map.GetBool("isSpawned", false)) {
-                map.SetBool("isSpawned", true);
-                map.SetUInt("playerOwner", player.GetGUIDLow());
-                player.SendAreaTriggerMessage("Welcome home, " + player.GetName() + "!");
-                let q = QueryCharacters(
-                    "SELECT * FROM `player_housing` WHERE guid = " + player.GetGUIDLow()
-                );
-                while (q.GetRow()) {
-                    map.SpawnGameObject(q.GetInt32(1), q.GetFloat(2), q.GetFloat(3), q.GetFloat(4), q.GetFloat(5)
-                    );
-                }
+    events.MapID.OnPlayerEnter(maps, (map, player) => {
+        if (!map.GetBool("isSpawned", false)) {
+            map.SetBool("isSpawned", true);
+            map.SetUInt("playerOwner", player.GetGUIDLow());
+            player.SendAreaTriggerMessage("Welcome home, " + player.GetName() + "!");
+            let q = QueryCharacters("SELECT * FROM `player_housing` WHERE guid = " + player.GetGUIDLow());
+            while (q.GetRow()) {
+                map.SpawnGameObject(q.GetInt32(1), q.GetFloat(2), q.GetFloat(3), q.GetFloat(4), q.GetFloat(5));
             }
-        });
+        }
+    });
 
-        events.MapID.OnPlayerLeave(mapID, (map, player) => {
-            if (map.GetUInt("playerOwner") == player.GetGUIDLow()) {
-                player.SendAreaTriggerMessage("Come back home soon!");
-            } else {
-                player.SendAreaTriggerMessage("Come visit again soon!");
-            }
-        });
-    })
+    events.MapID.OnPlayerLeave(maps, (map, player) => {
+        if (map.GetUInt("playerOwner") == player.GetGUIDLow()) {
+            player.SendAreaTriggerMessage("Come back home soon!");
+        } else {
+            player.SendAreaTriggerMessage("Come visit again soon!");
+        }
+    });
+
     events.SpellID.OnCheckCast(GetIDTag('housing-mod', 'spawn-gob'), (spell, result) => {
         let player = spell.GetCaster().ToPlayer();
         if (player.GetMap().GetUInt("playerOwner", 1) != player.GetGUIDLow()) {
@@ -38,7 +33,6 @@ export function housing(events: TSEvents) {
                 );
             }
         }
-
     })
 
     events.SpellID.OnCheckCast(1, (spell, result) => {
@@ -87,6 +81,5 @@ export function housing(events: TSEvents) {
             QueryCharacters("DELETE FROM `player_housing` WHERE x = " + pos.x + " AND y = " + pos.y + " AND z = " + pos.z + ";"
             );
         }
-    }
-    );
+    });
 }
