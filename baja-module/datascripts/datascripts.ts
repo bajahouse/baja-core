@@ -1,1 +1,1 @@
-console.log("Hello from baja-module data script! ");
+console.log("Hello from baja-module data script!");
