@@ -19,6 +19,10 @@ export function makeHousingItemForGob(entry: number, name: string) {
     return itemID;
 }
 
+export function makeHousingItemForCreature(entry: number, name: string) {
+    console.log('didnt make this yet')
+}
+
 function makeHousingSpell(name: string, entry: number): number {
     let spl = std.Spells.create(
         "testing-housing",
