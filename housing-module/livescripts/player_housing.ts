@@ -1,4 +1,4 @@
-let maps = [309]
+let maps: TSArray<uint32> = [309]
 export function housing(events: TSEvents) {
     events.MapID.OnPlayerEnter(maps, (map, player) => {
         if (!map.GetBool("isSpawned", false)) {
