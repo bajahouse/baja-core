@@ -1,11 +1,11 @@
 import { std } from "wow/wotlk";
-import { areaGroupID } from "./housing-base";
+import { areaGroupID, MODNAME } from "./housing-base";
 
 //entry = gob ID / creatureID
 //name = name to show 
 //typeID = 1 for gob, 2 for creature
 export function makeHousingItemForGob(entry: number, name: string) {
-    let spellID = makeHousingSpell(name, entry);
+    let spellID = makeHousingSpellGob(name, entry);
     let itemID = makeHousingItemTemplate(name, spellID);
     std.SQL.Databases.world_dest.write(
         "INSERT INTO `player_housing_spell_object_link` VALUES(" +
@@ -23,9 +23,9 @@ export function makeHousingItemForCreature(entry: number, name: string) {
     console.log('didnt make this yet')
 }
 
-function makeHousingSpell(name: string, entry: number): number {
+function makeHousingSpellGob(name: string, entry: number): number {
     let spl = std.Spells.create(
-        "testing-housing",
+        MODNAME,
         "housing-" + name.toLowerCase().replace(" ", "-"),
         61031
     );
@@ -37,11 +37,12 @@ function makeHousingSpell(name: string, entry: number): number {
     spl.Range.setSimple(0, 20);
     spl.SchoolMask.set(99);
     spl.RequiredArea.set(areaGroupID);
+    spl.Tags.add(MODNAME,'spawn-obj')
     return spl.ID;
 }
 function makeHousingItemTemplate(name: string, spellID: number) {
     let item = std.Items.create(
-        "testing-housing",
+        MODNAME,
         "housing-" + name.toLowerCase().replace(" ", "-"),
         44606
     );

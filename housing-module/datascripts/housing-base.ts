@@ -1,4 +1,5 @@
 import { std } from "wow/wotlk";
+export const MODNAME = 'housing-mod'
 
 export const areaGroupID = 3000;
 std.DBC.AreaGroup.add(areaGroupID).AreaID.set([1977]); //change to a dungeon eventually

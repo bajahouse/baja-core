@@ -17,7 +17,7 @@ export function housing(events: TSEvents) {
         }
     });
 
-    events.SpellID.OnCheckCast(GetIDTag('housing-mod', 'spawn-gob'), (spell, result) => {
+    events.SpellID.OnCheckCast(GetIDTag('housing-mod', 'spawn-obj'), (spell, result) => {
         if (!spell.GetCaster().IsPlayer())
             return
 
