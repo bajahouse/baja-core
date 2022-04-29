@@ -16,6 +16,7 @@ export function housing(events: TSEvents) {
         } else {
             player.SendAreaTriggerMessage("Come visit again soon!")
         }
+        player.UnbindInstance(map.GetMapID(),map.GetDifficulty())
     })
 
     events.SpellID.OnCheckCast(GetIDTag('housing-mod', 'spawn-obj'), (spell, result) => {
