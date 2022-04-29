@@ -1,3 +1,3 @@
-import { makeHousingItem } from "./housing-functions";
+import { makeHousingItemForGob } from "./housing-functions";
 
-makeHousingItem(10192, "Wooden Chair");
+makeHousingItemForGob(10192, "Wooden Chair");
