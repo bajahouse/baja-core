@@ -1,5 +1,8 @@
 let maps: TSArray<uint32> = [309]
+let linkTable = CreateDictionary<uint32,TSArray<uint32>>({})
 export function housing(events: TSEvents) {
+    setupLinkTable()
+    
     events.MapID.OnPlayerEnter(maps, (map, player) => {
         if (!map.GetBool("isSpawned", false)) {
             map.SetBool("isSpawned", true)
@@ -29,13 +32,11 @@ export function housing(events: TSEvents) {
 
         }
     })
+
     events.SpellID.OnCast(GetIDTag('housing-mod', 'spawn-obj'), (spell) => {
-        let player = spell.GetCaster().ToPlayer()
-        //eventually replace with a dictionary map that gets made at start of server
-        let q = QueryWorld("SELECT typeID,entry FROM `player_housing_spell_object_link` WHERE spellID = " + spell.GetEntry())
-        while (q.GetRow()) {
-            QueryCharacters("INSERT INTO `player_housing` VALUES(" + player.GetGUIDLow() + "," + player.GetMapID() + "," + player.GetMap().GetUInt('versionID', 1) + "," + q.GetUInt32(0) + "," + q.GetUInt32(1) + "," + spell.GetTargetDest().x + "," + spell.GetTargetDest().y + "," + spell.GetTargetDest().z + "," + player.GetO() + ")")
-        }
+        let caster = spell.GetCaster()
+        QueryCharacters("INSERT INTO `player_housing` VALUES(" + caster.GetGUIDLow() + "," + caster.GetMapID() + "," + caster.GetMap().GetUInt('versionID', 1) + "," + linkTable[spell.GetEntry()][0] + "," + linkTable[spell.GetEntry()][1] + "," + spell.GetTargetDest().x + "," + spell.GetTargetDest().y + "," + spell.GetTargetDest().z + "," + caster.GetO() + ")")
+        
     })
 
     //change spell ID later to something else
@@ -90,3 +91,11 @@ function spawnMap(map: TSMap, player: TSPlayer, versionID: uint32) {
             map.SpawnCreature(q.GetInt32(1), q.GetFloat(2), q.GetFloat(3), q.GetFloat(4), q.GetFloat(5))
     }
 }
+
+function setupLinkTable() {
+    let q = QueryWorld("SELECT * FROM `player_housing_spell_object_link`")
+    while (q.GetRow()) {
+        linkTable[q.GetUInt32(0)] = <TSArray<uint32>>[q.GetUInt32(1),q.GetUInt32(2)]
+    }
+}
+
