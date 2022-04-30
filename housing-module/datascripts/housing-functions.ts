@@ -1,11 +1,12 @@
 import { std } from "wow/wotlk";
-import { areaGroupID, MODNAME } from "./housing-base";
+import { MODNAME } from "./housing-base";
+import { creatureSpellEntry, gobSpellEntry, itemEntry } from "./housing-template-objects";
 
 //entry = gob ID / creatureID
 //name = name to show 
 //typeID = 1 for gob, 2 for creature
 export function makeHousingItemForGob(entry: number, name: string) {
-    let spellID = makeHousingSpellGob(name, entry);
+    let spellID = makeHousingSpellGob(entry, name);
     let itemID = makeHousingItemTemplate(name, spellID);
     std.SQL.Databases.world_dest.write(
         "INSERT INTO `player_housing_spell_object_link` VALUES(" +
@@ -19,42 +20,56 @@ export function makeHousingItemForGob(entry: number, name: string) {
     return itemID;
 }
 
-export function makeHousingItemForCreature(entry: number, name: string) {
-    console.log('didnt make this yet')
-}
-
-function makeHousingSpellGob(name: string, entry: number): number {
+function makeHousingSpellGob(entry: number, name: string): number {
     let spl = std.Spells.create(
         MODNAME,
         "housing-" + name.toLowerCase().replace(" ", "-"),
-        61031
+        gobSpellEntry
     );
     spl.Name.enGB.set("Housing: Spawn " + name);
-    spl.Description.enGB.set("Used to place a " + name);
-    spl.CastTime.setSimple(1000, 0, 1000);
-    spl.Duration.setSimple(0, 0, 0);
-    spl.Effects.get(0).Type.TRANS_DOOR.set().GOTemplate.set(entry);
-    spl.Range.setSimple(0, 20);
-    spl.SchoolMask.set(99);
-    spl.RequiredArea.set(areaGroupID);
-    spl.Tags.add(MODNAME,'spawn-obj')
+    spl.Description.enGB.set("Used to place a " + name + " at a chosen location.");
+    spl.Effects.get(0).MiscValueA.set(entry)
+    spl.Tags.add(MODNAME, 'spawn-obj')
     return spl.ID;
 }
+
+export function makeHousingItemForCreature(entry: number, name: string) {
+    let spellID = makeHousingSpellCreature(entry, name);
+    let itemID = makeHousingItemTemplate(name, spellID);
+    std.SQL.Databases.world_dest.write(
+        "INSERT INTO `player_housing_spell_object_link` VALUES(" +
+        spellID +
+        "," +
+        2 + //typeID
+        "," +
+        entry +
+        ")"
+    );
+    return itemID;
+}
+
+function makeHousingSpellCreature(entry: number, name: string): number {
+    let spl = std.Spells.create(
+        MODNAME,
+        "housing-" + name.toLowerCase().replace(" ", "-"),
+        creatureSpellEntry
+    );
+    spl.Name.enGB.set("Housing: Spawn " + name);
+    spl.Description.enGB.set("Used to place a " + name + " at your feet.");
+    spl.Effects.get(0).MiscValueA.set(entry)
+    spl.Tags.add(MODNAME, 'spawn-obj')
+    return spl.ID;
+}
+
 function makeHousingItemTemplate(name: string, spellID: number) {
     let item = std.Items.create(
         MODNAME,
         "housing-" + name.toLowerCase().replace(" ", "-"),
-        44606
+        itemEntry
     );
     item.Name.enGB.set("Housing: Spawn " + name);
-    item.Quality.set(3);
-    item.Bonding.NO_BOUNDS.set();
-    item.Description.enGB.set("");
-    item.DisplayInfo.setSimpleIcon("INV_Misc_Gear_01");
-    item.Spells.clearAll();
     item.Spells.addMod((val) => {
         val.Spell.set(spellID);
     });
-    item.Price.set(0, 0);
     return item.ID;
 }
