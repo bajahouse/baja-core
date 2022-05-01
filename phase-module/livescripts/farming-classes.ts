@@ -125,11 +125,13 @@ export function RegisterFarmingInfo(events: TSEvents) {
     })
 
     GetIDTag('farming-mod', 'farming-crop-spell').forEach(x => {
-        events.SpellID.OnCast(x, spell => {
+        events.SpellID.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
-            if (player.IsNull()) return;
+            if (player.IsNull())
+                return
             if (PlayerFarm.get(player).area != player.GetAreaID() && player.GetPhaseID() != player.GetGUID()) {
-                player.SendBroadcastMessage(`You can only use this in your own farm!`)
+                player.SendAreaTriggerMessage("This is not your home!")
+                result.set(SpellCastResult.FAILED_DONT_REPORT)
                 return
             }
             let cropData = PlayerFarmCrops.get(player);
@@ -137,6 +139,7 @@ export function RegisterFarmingInfo(events: TSEvents) {
                 player.SendBroadcastMessage(`You already have more than 10 crops active!`);
                 return;
             }
+            result.set(SpellCastResult.FAILED_DONT_REPORT)
             let crop = cropData.Add(new PlayerFarmCrops(player.GetGUID()))
             crop.x = spell.GetTargetDest().x
             crop.y = spell.GetTargetDest().y
@@ -146,18 +149,21 @@ export function RegisterFarmingInfo(events: TSEvents) {
             crop.type = spell.GetSpellInfo().GetPriority();
             crop.MarkDirty();
             crop.Spawn(player)
-        });
+        })
     })
 
     GetIDTag('farming-mod', 'farming-gob-spell').forEach(x => {
-        events.SpellID.OnCast(x, spell => {
+        events.SpellID.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
-            if (player.IsNull()) return;
+            if (player.IsNull())
+                return
             if (PlayerFarm.get(player).area != player.GetAreaID() && player.GetPhaseID() != player.GetGUID()) {
-                player.SendBroadcastMessage(`You can only use this in your own farm!`)
+                player.SendAreaTriggerMessage("This is not your home!")
+                result.set(SpellCastResult.FAILED_DONT_REPORT)
                 return
             }
             let gobData = PlayerFarmGobs.get(player);
+            result.set(SpellCastResult.FAILED_DONT_REPORT)
             let gob = gobData.Add(new PlayerFarmGobs(player.GetGUID()))
             gob.entry = spell.GetSpellInfo().GetPriority();
             gob.x = spell.GetTargetDest().x
@@ -166,27 +172,30 @@ export function RegisterFarmingInfo(events: TSEvents) {
             gob.o = player.GetO();
             gob.MarkDirty();
             gob.Spawn(player)
-        });
+        })
     })
 
     GetIDTag('farming-mod', 'farming-creature-spell').forEach(x => {
-        events.SpellID.OnCast(x, spell => {
+        events.SpellID.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
-            if (player.IsNull()) return;
+            if (player.IsNull())
+                return
             if (PlayerFarm.get(player).area != player.GetAreaID() && player.GetPhaseID() != player.GetGUID()) {
-                player.SendBroadcastMessage(`You can only use this in your own farm!`)
+                player.SendAreaTriggerMessage("This is not your home!")
+                result.set(SpellCastResult.FAILED_DONT_REPORT)
                 return
             }
             let creatureData = PlayerFarmCreatures.get(player);
+            result.set(SpellCastResult.FAILED_DONT_REPORT)
             let creature = creatureData.Add(new PlayerFarmCreatures(player.GetGUID()))
             creature.entry = spell.GetSpellInfo().GetPriority();
-            creature.x = player.GetX();
-            creature.y = player.GetY();
-            creature.z = player.GetZ();
+            creature.x = player.GetX()
+            creature.y = player.GetY()
+            creature.z = player.GetZ()
             creature.o = player.GetO();
             creature.MarkDirty();
             creature.Spawn(player)
-        });
+        })
     })
 }
 
@@ -264,9 +273,9 @@ export class PlayerFarmCreatures extends DBArrayEntry {
 
     Despawn(map: TSMap) {
         if (this.spawnGuid === 0 || this.spawnMap != map.GetMapID()) return;
-        let go = map.GetCreature(this.spawnGuid);
-        if (!go.IsNull()) {
-            go.DespawnOrUnsummon(0);
+        let creature = map.GetCreature(this.spawnGuid);
+        if (!creature.IsNull()) {
+            creature.DespawnOrUnsummon(0);
         }
         this.spawnGuid = 0;
         this.spawnMap = 0;
@@ -276,11 +285,11 @@ export class PlayerFarmCreatures extends DBArrayEntry {
         if (this.spawnGuid != 0) {
             return;
         }
-        let go = player.GetMap().SpawnCreature(this.entry, this.x, this.y, this.z, this.o)
-        go.SetPhaseMask(1, true, player.GetGUID())
+        let creature = player.SpawnCreature(this.entry, this.x, this.y, this.z, this.o,8,0)
+        creature.SetPhaseMask(1, true, player.GetGUID())
         this.spawnMap = player.GetMapID();
-        this.spawnGuid = go.GetGUID();
-        this.spawnedEntry = go.GetEntry();
+        this.spawnGuid = creature.GetGUID();
+        this.spawnedEntry = creature.GetEntry();
     }
 
     static get(player: TSPlayer): DBContainer<PlayerFarmCreatures> {
