@@ -124,7 +124,7 @@ export function RegisterFarmingInfo(events: TSEvents) {
         PlayerFarmCreatures.get(player).Save();
     })
 
-    GetIDTag('farming-mod', 'plant-crop-spell').forEach(x => {
+    GetIDTag('farming-mod', 'farming-crop-spell').forEach(x => {
         events.SpellID.OnCast(x, spell => {
             let player = spell.GetCaster().ToPlayer();
             if (player.IsNull()) return;
@@ -149,7 +149,7 @@ export function RegisterFarmingInfo(events: TSEvents) {
         });
     })
 
-    GetIDTag('farming-mod', 'plant-gob-spell').forEach(x => {
+    GetIDTag('farming-mod', 'farming-gob-spell').forEach(x => {
         events.SpellID.OnCast(x, spell => {
             let player = spell.GetCaster().ToPlayer();
             if (player.IsNull()) return;
@@ -169,7 +169,7 @@ export function RegisterFarmingInfo(events: TSEvents) {
         });
     })
 
-    GetIDTag('farming-mod', 'plant-creature-spell').forEach(x => {
+    GetIDTag('farming-mod', 'farming-creature-spell').forEach(x => {
         events.SpellID.OnCast(x, spell => {
             let player = spell.GetCaster().ToPlayer();
             if (player.IsNull()) return;
