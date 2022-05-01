@@ -1,14 +1,15 @@
 @CharactersTable
 export class PlayerFarm extends DBEntry {
-    constructor(player: uint64) {
-        super();
-        this.player = player;
-    }
     @DBPrimaryKey
     player: uint64 = 0
     @DBField
     area: uint32 = 0;
     open: bool = false;
+
+    constructor(player: uint64) {
+        super();
+        this.player = player;
+    }
 
     static get(player: TSPlayer): PlayerFarm {
         return player.GetObject('FarmData', LoadDBEntry(new PlayerFarm(player.GetGUID())))
@@ -16,17 +17,17 @@ export class PlayerFarm extends DBEntry {
 
     Open(player: TSPlayer) {
         this.open = true;
-        PlayerCrops.get(player).forEach(x => x.Spawn(player));
-        PlayerGobs.get(player).forEach(x => x.Spawn(player));
-        PlayerCreatures.get(player).forEach(x => x.Spawn(player));
+        PlayerFarmCrops.get(player).forEach(x => x.Spawn(player));
+        PlayerFarmGobs.get(player).forEach(x => x.Spawn(player));
+        PlayerFarmCreatures.get(player).forEach(x => x.Spawn(player));
         player.SetPhaseMask(player.GetPhaseMask(), true, player.GetGUID());
     }
 
     Close(player: TSPlayer) {
         this.open = false;
-        PlayerCrops.get(player).forEach(x => x.Despawn(player.GetMap()));
-        PlayerGobs.get(player).forEach(x => x.Despawn(player.GetMap()));
-        PlayerCreatures.get(player).forEach(x => x.Spawn(player));
+        PlayerFarmCrops.get(player).forEach(x => x.Despawn(player.GetMap()));
+        PlayerFarmGobs.get(player).forEach(x => x.Despawn(player.GetMap()));
+        PlayerFarmCreatures.get(player).forEach(x => x.Spawn(player));
         player.SetPhaseMask(player.GetPhaseMask(), true, 0);
         if (!player.GetGroup().IsNull()) {
             player.GetGroup().GetMembers().forEach(x => {
@@ -39,12 +40,7 @@ export class PlayerFarm extends DBEntry {
 }
 
 @CharactersTable
-export class PlayerCrops extends DBArrayEntry {
-    constructor(player: uint64) {
-        super();
-        this.player = player;
-    }
-
+export class PlayerFarmCrops extends DBArrayEntry {
     @DBPrimaryKey
     player: uint64 = 0
     @DBField
@@ -64,10 +60,15 @@ export class PlayerCrops extends DBArrayEntry {
     spawnGuid: uint64 = 0;
     spawnedEntry: uint32 = 0;
 
+    constructor(player: uint64) {
+        super();
+        this.player = player;
+    }
+
     GetActiveGOEntry(): uint32 {
         let type = CropTypes[this.type];
         let timeElapsed = GetUnixTime() - this.spawnTime;
-        return (timeElapsed > type.stage1Growth) ? type.stage1Go : type.stage0Go
+        return (timeElapsed > type.stage1GrowthTime) ? type.stage1Entry : type.stage0Entry
     }
 
     Despawn(map: TSMap) {
@@ -91,29 +92,23 @@ export class PlayerCrops extends DBArrayEntry {
         this.spawnedEntry = go.GetEntry();
     }
 
-    static get(player: TSPlayer): DBContainer<PlayerCrops> {
-        return player.GetObject(
-            'CropData'
-            , LoadDBArrayEntry(PlayerCrops, player.GetGUID())
-        )
+    static get(player: TSPlayer): DBContainer<PlayerFarmCrops> {
+        return player.GetObject('CropData', LoadDBArrayEntry(PlayerFarmCrops, player.GetGUID()))
     }
 }
 
 export const CropTypes = CreateDictionary<uint32, CropType>({})
 export class CropType {
-
-    stage0Go: uint32
-    stage1Go: uint32
-    stage1Growth: uint32
-    spell: uint32
-    item: uint32
+    stage0Entry: uint32
+    stage1Entry: uint32
+    stage1GrowthTime: uint32
+    spellID: uint32
 
     constructor(res: TSDatabaseResult) {
-        this.stage0Go = res.GetUInt32(1);
-        this.stage1Go = res.GetUInt32(2);
-        this.stage1Growth = res.GetUInt32(4);
-        this.spell = res.GetUInt32(6);
-        this.item = res.GetUInt32(7);
+        this.stage0Entry = res.GetUInt32(1);
+        this.stage1Entry = res.GetUInt32(2);
+        this.stage1GrowthTime = res.GetUInt32(3);
+        this.spellID = res.GetUInt32(4);
     }
 }
 
@@ -124,11 +119,10 @@ export function RegisterFarmingInfo(events: TSEvents) {
     }
 
     events.Player.OnSave(player => {
-        PlayerCrops.get(player).Save();
-        PlayerGobs.get(player).Save();
-        PlayerCreatures.get(player).Save();
+        PlayerFarmCrops.get(player).Save();
+        PlayerFarmGobs.get(player).Save();
+        PlayerFarmCreatures.get(player).Save();
     })
-
 
     GetIDTag('farming-mod', 'plant-crop-spell').forEach(x => {
         events.SpellID.OnCast(x, spell => {
@@ -138,15 +132,15 @@ export function RegisterFarmingInfo(events: TSEvents) {
                 player.SendBroadcastMessage(`You can only use this in your own farm!`)
                 return
             }
-            let cropData = PlayerCrops.get(player);
+            let cropData = PlayerFarmCrops.get(player);
             if (cropData.Size() > 10) {
                 player.SendBroadcastMessage(`You already have more than 10 crops active!`);
                 return;
             }
-            let crop = cropData.Add(new PlayerCrops(player.GetGUID()))
-            crop.x = player.GetX();
-            crop.y = player.GetY();
-            crop.z = player.GetZ();
+            let crop = cropData.Add(new PlayerFarmCrops(player.GetGUID()))
+            crop.x = spell.GetTargetDest().x
+            crop.y = spell.GetTargetDest().y
+            crop.z = spell.GetTargetDest().z
             crop.o = player.GetO();
             crop.spawnTime = GetUnixTime();
             crop.type = spell.GetSpellInfo().GetPriority();
@@ -163,8 +157,8 @@ export function RegisterFarmingInfo(events: TSEvents) {
                 player.SendBroadcastMessage(`You can only use this in your own farm!`)
                 return
             }
-            let gobData = PlayerGobs.get(player);
-            let gob = gobData.Add(new PlayerGobs(player.GetGUID()))
+            let gobData = PlayerFarmGobs.get(player);
+            let gob = gobData.Add(new PlayerFarmGobs(player.GetGUID()))
             gob.entry = spell.GetSpellInfo().GetPriority();
             gob.x = spell.GetTargetDest().x
             gob.y = spell.GetTargetDest().y
@@ -183,8 +177,8 @@ export function RegisterFarmingInfo(events: TSEvents) {
                 player.SendBroadcastMessage(`You can only use this in your own farm!`)
                 return
             }
-            let creatureData = PlayerCreatures.get(player);
-            let creature = creatureData.Add(new PlayerCreatures(player.GetGUID()))
+            let creatureData = PlayerFarmCreatures.get(player);
+            let creature = creatureData.Add(new PlayerFarmCreatures(player.GetGUID()))
             creature.entry = spell.GetSpellInfo().GetPriority();
             creature.x = player.GetX();
             creature.y = player.GetY();
@@ -197,7 +191,7 @@ export function RegisterFarmingInfo(events: TSEvents) {
 }
 
 @CharactersTable
-export class PlayerGobs extends DBArrayEntry {
+export class PlayerFarmGobs extends DBArrayEntry {
     constructor(player: uint64) {
         super();
         this.player = player;
@@ -240,13 +234,13 @@ export class PlayerGobs extends DBArrayEntry {
         this.spawnedEntry = go.GetEntry();
     }
 
-    static get(player: TSPlayer): DBContainer<PlayerGobs> {
-        return player.GetObject('GobData', LoadDBArrayEntry(PlayerGobs, player.GetGUID()))
+    static get(player: TSPlayer): DBContainer<PlayerFarmGobs> {
+        return player.GetObject('GobData', LoadDBArrayEntry(PlayerFarmGobs, player.GetGUID()))
     }
 }
 
 @CharactersTable
-export class PlayerCreatures extends DBArrayEntry {
+export class PlayerFarmCreatures extends DBArrayEntry {
     constructor(player: uint64) {
         super();
         this.player = player;
@@ -289,8 +283,8 @@ export class PlayerCreatures extends DBArrayEntry {
         this.spawnedEntry = go.GetEntry();
     }
 
-    static get(player: TSPlayer): DBContainer<PlayerCreatures> {
-        return player.GetObject('CreatureData', LoadDBArrayEntry(PlayerCreatures, player.GetGUID())
+    static get(player: TSPlayer): DBContainer<PlayerFarmCreatures> {
+        return player.GetObject('CreatureData', LoadDBArrayEntry(PlayerFarmCreatures, player.GetGUID())
         )
     }
 }

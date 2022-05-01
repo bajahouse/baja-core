@@ -1,10 +1,6 @@
-import { PlayerCrops, PlayerFarm } from "./farming-classes";
+import { PlayerFarm } from "./farming-classes";
 
 export function baseFarm(events: TSEvents) {
-
-    events.Player.OnSave(player => {
-        PlayerCrops.get(player).Save();
-    })
     
     events.Player.OnCommand((player, command, found) => {
         if (command.get() == 'farm') {
