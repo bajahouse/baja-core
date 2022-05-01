@@ -12,7 +12,7 @@ export class PlayerFarm extends DBEntry {
     }
 
     static get(player: TSPlayer): PlayerFarm {
-        return player.GetObject('FarmData', LoadDBEntry(new PlayerFarm(player.GetGUID())))
+        return player.GetObject('FarmingFarmData', LoadDBEntry(new PlayerFarm(player.GetGUID())))
     }
 
     Open(player: TSPlayer) {
@@ -93,7 +93,7 @@ export class PlayerFarmCrops extends DBArrayEntry {
     }
 
     static get(player: TSPlayer): DBContainer<PlayerFarmCrops> {
-        return player.GetObject('CropData', LoadDBArrayEntry(PlayerFarmCrops, player.GetGUID()))
+        return player.GetObject('FarmingCropData', LoadDBArrayEntry(PlayerFarmCrops, player.GetGUID()))
     }
 }
 
@@ -235,7 +235,7 @@ export class PlayerFarmGobs extends DBArrayEntry {
     }
 
     static get(player: TSPlayer): DBContainer<PlayerFarmGobs> {
-        return player.GetObject('GobData', LoadDBArrayEntry(PlayerFarmGobs, player.GetGUID()))
+        return player.GetObject('FarmingGobData', LoadDBArrayEntry(PlayerFarmGobs, player.GetGUID()))
     }
 }
 
@@ -284,7 +284,7 @@ export class PlayerFarmCreatures extends DBArrayEntry {
     }
 
     static get(player: TSPlayer): DBContainer<PlayerFarmCreatures> {
-        return player.GetObject('CreatureData', LoadDBArrayEntry(PlayerFarmCreatures, player.GetGUID())
+        return player.GetObject('FarmingCreatureData', LoadDBArrayEntry(PlayerFarmCreatures, player.GetGUID())
         )
     }
 }
