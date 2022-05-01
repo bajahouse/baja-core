@@ -18,6 +18,7 @@ export let creatureSpellEntry = creatureSpell.ID
 
 let item = std.Items.create(MODNAME, "farming-template-creature-spell", 44606);
 item.Quality.set(3);
+item.MaxCount.set(-1)
 item.Bonding.NO_BOUNDS.set();
 item.Description.enGB.set("");
 item.DisplayInfo.setSimpleIcon("INV_Misc_Gear_01");

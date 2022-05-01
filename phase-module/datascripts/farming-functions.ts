@@ -72,6 +72,7 @@ function makeHousingItemTemplate(name: string, spellID: number) {
     item.Name.enGB.set("Housing: Spawn " + name);
     item.Spells.addMod((val) => {
         val.Spell.set(spellID);
+        val.Charges.set(1,"DELETE_ITEM")
     });
     return item.ID;
 }
