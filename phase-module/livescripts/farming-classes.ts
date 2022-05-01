@@ -8,7 +8,6 @@ export class PlayerFarm extends DBEntry {
     player: uint64 = 0
     @DBField
     area: uint32 = 0;
-
     open: bool = false;
 
     static get(player: TSPlayer): PlayerFarm {
@@ -18,14 +17,14 @@ export class PlayerFarm extends DBEntry {
     Open(player: TSPlayer) {
         this.open = true;
         PlayerCrops.get(player).forEach(x => x.Spawn(player));
-        //PlayerObjects.get(player).forEach(x=>x.Spawn(player));
+        PlayerGobs.get(player).forEach(x => x.Spawn(player));
         player.SetPhaseMask(player.GetPhaseMask(), true, player.GetGUID());
     }
 
     Close(player: TSPlayer) {
         this.open = false;
         PlayerCrops.get(player).forEach(x => x.Despawn(player.GetMap()));
-        //PlayerObjects.get(player).forEach(x=>x.Despawn(player));
+        PlayerGobs.get(player).forEach(x => x.Despawn(player.GetMap()));
         player.SetPhaseMask(player.GetPhaseMask(), true, 0);
         if (!player.GetGroup().IsNull()) {
             player.GetGroup().GetMembers().forEach(x => {
@@ -43,6 +42,7 @@ export class PlayerCrops extends DBArrayEntry {
         super();
         this.player = player;
     }
+    
     @DBPrimaryKey
     player: uint64 = 0
     @DBField
@@ -63,13 +63,9 @@ export class PlayerCrops extends DBArrayEntry {
     spawnedEntry: uint32 = 0;
 
     GetActiveGOEntry(): uint32 {
-        let type = this.GetType();
+        let type = CropTypes[this.type];
         let timeElapsed = GetUnixTime() - this.spawnTime;
-        return (timeElapsed > type.stage1Growth + type.stage2Growth)
-            ? type.stage2Go
-            : (timeElapsed > type.stage1Growth)
-                ? type.stage1Go
-                : type.stage0Go
+        return (timeElapsed > type.stage1Growth) ? type.stage1Go : type.stage0Go
     }
 
     Despawn(map: TSMap) {
@@ -86,20 +82,11 @@ export class PlayerCrops extends DBArrayEntry {
         if (this.spawnGuid != 0) {
             return;
         }
-        let go = player.GetMap().SpawnGameObject(
-            this.GetActiveGOEntry()
-            , this.x
-            , this.y
-            , this.z
-            , this.o)
+        let go = player.GetMap().SpawnGameObject(this.GetActiveGOEntry(), this.x, this.y, this.z, this.o)
         go.SetPhaseMask(1, true, player.GetGUID())
         this.spawnMap = player.GetMapID();
         this.spawnGuid = go.GetGUID();
         this.spawnedEntry = go.GetEntry();
-    }
-
-    GetType(): CropType {
-        return CropTypes[this.type];
     }
 
     static get(player: TSPlayer): DBContainer<PlayerCrops> {
@@ -112,33 +99,33 @@ export class PlayerCrops extends DBArrayEntry {
 
 export const CropTypes = CreateDictionary<uint32, CropType>({})
 export class CropType {
+
     stage0Go: uint32
     stage1Go: uint32
-    stage2Go: uint32
-
     stage1Growth: uint32
-    stage2Growth: uint32
-
     spell: uint32
     item: uint32
 
     constructor(res: TSDatabaseResult) {
         this.stage0Go = res.GetUInt32(1);
         this.stage1Go = res.GetUInt32(2);
-        this.stage2Go = res.GetUInt32(3);
         this.stage1Growth = res.GetUInt32(4);
-        this.stage2Growth = res.GetUInt32(5);
         this.spell = res.GetUInt32(6);
         this.item = res.GetUInt32(7);
     }
 }
 
 export function RegisterFarmingInfo(events: TSEvents) {
+    let q = QueryWorld('SELECT * from farming_crops')
+    while (q.GetRow()) {
+        CropTypes[q.GetUInt32(0)] = new CropType(q);
+    }
+
     GetIDTag('farming-mod', 'plant-crop-spell').forEach(x => {
         events.SpellID.OnCast(x, spell => {
             let player = spell.GetCaster().ToPlayer();
             if (player.IsNull()) return;
-            if (PlayerFarm.get(player).area != player.GetAreaID()) {
+            if (PlayerFarm.get(player).area != player.GetAreaID() && player.GetPhaseID() != player.GetGUID()) {
                 player.SendBroadcastMessage(`You can only use this in your own farm!`)
                 return
             }
@@ -159,8 +146,72 @@ export function RegisterFarmingInfo(events: TSEvents) {
         });
     })
 
-    let q = QueryWorld('SELECT * from farming_crops')
-    while (q.GetRow()) {
-        CropTypes[q.GetUInt32(0)] = new CropType(q);
+    GetIDTag('farming-mod', 'plant-gob-spell').forEach(x => {
+        events.SpellID.OnCast(x, spell => {
+            let player = spell.GetCaster().ToPlayer();
+            if (player.IsNull()) return;
+            if (PlayerFarm.get(player).area != player.GetAreaID() && player.GetPhaseID() != player.GetGUID()) {
+                player.SendBroadcastMessage(`You can only use this in your own farm!`)
+                return
+            }
+            let gobData = PlayerGobs.get(player);
+            let gob = gobData.Add(new PlayerGobs(player.GetGUID()))
+            gob.x = player.GetX();
+            gob.y = player.GetY();
+            gob.z = player.GetZ();
+            gob.o = player.GetO();
+            gob.MarkDirty();
+            gob.Spawn(player)
+        });
+    })
+}
+
+@CharactersTable
+export class PlayerGobs extends DBArrayEntry {
+    constructor(player: uint64) {
+        super();
+        this.player = player;
+    }
+    @DBPrimaryKey
+    player: uint64 = 0
+    @DBField
+    entry: float = 0;
+    @DBField
+    x: float = 0;
+    @DBField
+    y: float = 0;
+    @DBField
+    z: float = 0;
+    @DBField
+    o: float = 0;
+
+    spawnMap: uint32 = 0;
+    spawnGuid: uint64 = 0;
+    spawnedEntry: uint32 = 0;
+
+    Despawn(map: TSMap) {
+        if (this.spawnGuid === 0 || this.spawnMap != map.GetMapID()) return;
+        let go = map.GetGameObject(this.spawnGuid);
+        if (!go.IsNull()) {
+            go.RemoveFromWorld(false);
+        }
+        this.spawnGuid = 0;
+        this.spawnMap = 0;
+    }
+
+    Spawn(player: TSPlayer) {
+        if (this.spawnGuid != 0) {
+            return;
+        }
+        let go = player.GetMap().SpawnGameObject(this.entry, this.x, this.y, this.z, this.o)
+        go.SetPhaseMask(1, true, player.GetGUID())
+        this.spawnMap = player.GetMapID();
+        this.spawnGuid = go.GetGUID();
+        this.spawnedEntry = go.GetEntry();
+    }
+
+    static get(player: TSPlayer): DBContainer<PlayerGobs> {
+        return player.GetObject('GobData', LoadDBArrayEntry(PlayerGobs, player.GetGUID())
+        )
     }
 }
