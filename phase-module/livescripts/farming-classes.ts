@@ -105,10 +105,10 @@ export class CropType {
     spellID: uint32
 
     constructor(res: TSDatabaseResult) {
-        this.stage0Entry = res.GetUInt32(1);
-        this.stage1Entry = res.GetUInt32(2);
-        this.stage1GrowthTime = res.GetUInt32(3);
-        this.spellID = res.GetUInt32(4);
+        this.stage0Entry = res.GetUInt32(0);
+        this.stage1Entry = res.GetUInt32(1);
+        this.stage1GrowthTime = res.GetUInt32(2);
+        this.spellID = res.GetUInt32(3);
     }
 }
 

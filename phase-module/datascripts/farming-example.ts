@@ -2,4 +2,4 @@ import { makeHousingItemForGob, makeHousingItemForCreature, makeHousingItemForCr
 
 makeHousingItemForGob(10192, "Wooden Chair");
 makeHousingItemForCreature(2671, "Squirrel")
-makeHousingItemForCrop(1,1,'wheat',300000)
+makeHousingItemForCrop(191016,188691,'Wheat',300000)

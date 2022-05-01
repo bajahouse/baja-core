@@ -5,7 +5,7 @@ import { gobSpellEntry, creatureSpellEntry, itemEntry } from "./farming-objects"
 export function makeHousingItemForCrop(startingVisual: number, finalVisual: number, name: string, growthtime: number) {
     let spellID = makeHousingSpellCrop(startingVisual, name);
     let itemID = makeHousingItemTemplate(name, spellID);
-    std.SQL.Databases.world_dest.write(`INSERT INTO \`farming_crops\` VALUES ( ${startingVisual}, ${startingVisual}, ${finalVisual}, ${growthtime} );`)
+    std.SQL.Databases.world_dest.write(`INSERT INTO \`farming_crops\` VALUES ( ${startingVisual}, ${finalVisual}, ${growthtime}, ${spellID} );`)
     return itemID;
 }
 
