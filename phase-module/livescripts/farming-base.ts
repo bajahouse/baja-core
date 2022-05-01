@@ -26,9 +26,8 @@ export function baseFarm(events: TSEvents) {
             player.SetPhaseMask(player.GetPhaseMask(), true, 0)
         }
     })
-
-    
 }
+
 function goToFriendFarm(player: TSPlayer, targetPhase: number, targetCoords: TSPosition) {
     player.Teleport(targetCoords.map, targetCoords.x, targetCoords.y, targetCoords.z, targetCoords.o)
     player.SetPhaseMask(player.GetPhaseMask(), true, targetPhase)

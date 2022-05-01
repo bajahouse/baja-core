@@ -18,6 +18,7 @@ export class PlayerFarm extends DBEntry {
         this.open = true;
         PlayerCrops.get(player).forEach(x => x.Spawn(player));
         PlayerGobs.get(player).forEach(x => x.Spawn(player));
+        PlayerCreatures.get(player).forEach(x => x.Spawn(player));
         player.SetPhaseMask(player.GetPhaseMask(), true, player.GetGUID());
     }
 
@@ -25,6 +26,7 @@ export class PlayerFarm extends DBEntry {
         this.open = false;
         PlayerCrops.get(player).forEach(x => x.Despawn(player.GetMap()));
         PlayerGobs.get(player).forEach(x => x.Despawn(player.GetMap()));
+        PlayerCreatures.get(player).forEach(x => x.Spawn(player));
         player.SetPhaseMask(player.GetPhaseMask(), true, 0);
         if (!player.GetGroup().IsNull()) {
             player.GetGroup().GetMembers().forEach(x => {
@@ -42,7 +44,7 @@ export class PlayerCrops extends DBArrayEntry {
         super();
         this.player = player;
     }
-    
+
     @DBPrimaryKey
     player: uint64 = 0
     @DBField
@@ -121,6 +123,13 @@ export function RegisterFarmingInfo(events: TSEvents) {
         CropTypes[q.GetUInt32(0)] = new CropType(q);
     }
 
+    events.Player.OnSave(player => {
+        PlayerCrops.get(player).Save();
+        PlayerGobs.get(player).Save();
+        PlayerCreatures.get(player).Save();
+    })
+
+
     GetIDTag('farming-mod', 'plant-crop-spell').forEach(x => {
         events.SpellID.OnCast(x, spell => {
             let player = spell.GetCaster().ToPlayer();
@@ -156,12 +165,33 @@ export function RegisterFarmingInfo(events: TSEvents) {
             }
             let gobData = PlayerGobs.get(player);
             let gob = gobData.Add(new PlayerGobs(player.GetGUID()))
-            gob.x = player.GetX();
-            gob.y = player.GetY();
-            gob.z = player.GetZ();
+            gob.entry = spell.GetSpellInfo().GetPriority();
+            gob.x = spell.GetTargetDest().x
+            gob.y = spell.GetTargetDest().y
+            gob.z = spell.GetTargetDest().z
             gob.o = player.GetO();
             gob.MarkDirty();
             gob.Spawn(player)
+        });
+    })
+
+    GetIDTag('farming-mod', 'plant-creature-spell').forEach(x => {
+        events.SpellID.OnCast(x, spell => {
+            let player = spell.GetCaster().ToPlayer();
+            if (player.IsNull()) return;
+            if (PlayerFarm.get(player).area != player.GetAreaID() && player.GetPhaseID() != player.GetGUID()) {
+                player.SendBroadcastMessage(`You can only use this in your own farm!`)
+                return
+            }
+            let creatureData = PlayerCreatures.get(player);
+            let creature = creatureData.Add(new PlayerCreatures(player.GetGUID()))
+            creature.entry = spell.GetSpellInfo().GetPriority();
+            creature.x = player.GetX();
+            creature.y = player.GetY();
+            creature.z = player.GetZ();
+            creature.o = player.GetO();
+            creature.MarkDirty();
+            creature.Spawn(player)
         });
     })
 }
@@ -211,7 +241,56 @@ export class PlayerGobs extends DBArrayEntry {
     }
 
     static get(player: TSPlayer): DBContainer<PlayerGobs> {
-        return player.GetObject('GobData', LoadDBArrayEntry(PlayerGobs, player.GetGUID())
+        return player.GetObject('GobData', LoadDBArrayEntry(PlayerGobs, player.GetGUID()))
+    }
+}
+
+@CharactersTable
+export class PlayerCreatures extends DBArrayEntry {
+    constructor(player: uint64) {
+        super();
+        this.player = player;
+    }
+    @DBPrimaryKey
+    player: uint64 = 0
+    @DBField
+    entry: float = 0;
+    @DBField
+    x: float = 0;
+    @DBField
+    y: float = 0;
+    @DBField
+    z: float = 0;
+    @DBField
+    o: float = 0;
+
+    spawnMap: uint32 = 0;
+    spawnGuid: uint64 = 0;
+    spawnedEntry: uint32 = 0;
+
+    Despawn(map: TSMap) {
+        if (this.spawnGuid === 0 || this.spawnMap != map.GetMapID()) return;
+        let go = map.GetCreature(this.spawnGuid);
+        if (!go.IsNull()) {
+            go.DespawnOrUnsummon(0);
+        }
+        this.spawnGuid = 0;
+        this.spawnMap = 0;
+    }
+
+    Spawn(player: TSPlayer) {
+        if (this.spawnGuid != 0) {
+            return;
+        }
+        let go = player.GetMap().SpawnCreature(this.entry, this.x, this.y, this.z, this.o)
+        go.SetPhaseMask(1, true, player.GetGUID())
+        this.spawnMap = player.GetMapID();
+        this.spawnGuid = go.GetGUID();
+        this.spawnedEntry = go.GetEntry();
+    }
+
+    static get(player: TSPlayer): DBContainer<PlayerCreatures> {
+        return player.GetObject('CreatureData', LoadDBArrayEntry(PlayerCreatures, player.GetGUID())
         )
     }
 }
