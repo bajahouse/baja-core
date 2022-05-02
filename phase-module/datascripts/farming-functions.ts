@@ -2,10 +2,14 @@ import { std } from "wow/wotlk";
 import { MODNAME } from "./farming-base";
 import { gobSpellEntry, creatureSpellEntry, itemEntry } from "./farming-objects";
 
-export function makeHousingItemForCrop(startingVisual: number, finalVisual: number, name: string, growthtime: number) {
-    let spellID = makeHousingSpellCrop(startingVisual, name);
+export function makeHousingItemForCrop(firstCopy: number, finalCopy: number, name: string, growthtime: number, harvestReward: uint32, minreward: uint32, maxReward: uint32) {
+    let spellID = makeHousingSpellCrop(firstCopy, name);
     let itemID = makeHousingItemTemplate(name, spellID);
-    std.SQL.Databases.world_dest.write(`INSERT INTO \`farming_crops\` VALUES ( ${startingVisual}, ${finalVisual}, ${growthtime}, ${spellID} );`)
+    let objFinal = std.GameObjectTemplates.Rituals.create(MODNAME, "farming-" + name.toLowerCase().replace(" ", "-") + "-final", 177193);
+    objFinal.Name.enGB.set(name);
+    objFinal.Tags.add(MODNAME, 'farming-crop-final');
+    objFinal.Display.set(std.GameObjectTemplates.Generic.load(finalCopy).Display.get())
+    std.SQL.Databases.world_dest.write(`INSERT INTO \`farming_crops\` VALUES ( ${firstCopy}, ${objFinal.ID}, ${growthtime}, ${spellID},${harvestReward},${minreward},${maxReward})`);
     return itemID;
 }
 
@@ -72,7 +76,7 @@ function makeHousingItemTemplate(name: string, spellID: number) {
     item.Name.enGB.set("Housing: Spawn " + name);
     item.Spells.addMod((val) => {
         val.Spell.set(spellID);
-        val.Charges.set(1,"DELETE_ITEM")
+        val.Charges.set(1, "DELETE_ITEM")
     });
     return item.ID;
 }

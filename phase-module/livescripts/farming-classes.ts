@@ -1,3 +1,4 @@
+import { getRandNumber } from "./livescripts"
 @CharactersTable
 export class PlayerFarm extends DBEntry {
     @DBPrimaryKey
@@ -65,6 +66,13 @@ export class PlayerFarmCrops extends DBArrayEntry {
         this.player = player;
     }
 
+    Harvest(player: TSPlayer) {
+        this.Despawn(player.GetMap());
+        this.spawnTime = GetUnixTime();
+        this.Spawn(player)
+        player.AddItem(CropTypes[this.type].harvestItem, getRandNumber(CropTypes[this.type].minHarvestItem, CropTypes[this.type].maxHarvestItem))
+    }
+
     GetActiveGOEntry(): uint32 {
         let type = CropTypes[this.type];
         let timeElapsed = GetUnixTime() - this.spawnTime;
@@ -103,100 +111,19 @@ export class CropType {
     stage1Entry: uint32
     stage1GrowthTime: uint32
     spellID: uint32
+    harvestItem: uint32
+    minHarvestItem: uint32
+    maxHarvestItem: uint32
 
     constructor(res: TSDatabaseResult) {
         this.stage0Entry = res.GetUInt32(0);
         this.stage1Entry = res.GetUInt32(1);
         this.stage1GrowthTime = res.GetUInt32(2);
         this.spellID = res.GetUInt32(3);
+        this.harvestItem = res.GetUInt32(4);
+        this.minHarvestItem = res.GetUInt32(5);
+        this.maxHarvestItem = res.GetUInt32(6);
     }
-}
-
-export function RegisterFarmingInfo(events: TSEvents) {
-    let q = QueryWorld('SELECT * from farming_crops')
-    while (q.GetRow()) {
-        CropTypes[q.GetUInt32(0)] = new CropType(q);
-    }
-
-    events.Player.OnSave(player => {
-        PlayerFarmCrops.get(player).Save();
-        PlayerFarmGobs.get(player).Save();
-        PlayerFarmCreatures.get(player).Save();
-    })
-
-    GetIDTag('farming-mod', 'farming-crop-spell').forEach(x => {
-        events.SpellID.OnCheckCast(x, (spell, result) => {
-            let player = spell.GetCaster().ToPlayer();
-            if (player.IsNull())
-                return
-            if (PlayerFarm.get(player).area != player.GetAreaID() && player.GetPhaseID() != player.GetGUID()) {
-                player.SendAreaTriggerMessage("This is not your home!")
-                result.set(SpellCastResult.FAILED_DONT_REPORT)
-                return
-            }
-            let cropData = PlayerFarmCrops.get(player);
-            if (cropData.Size() > 10) {
-                player.SendBroadcastMessage(`You already have more than 10 crops active!`);
-                return;
-            }
-            result.set(SpellCastResult.FAILED_DONT_REPORT)
-            let crop = cropData.Add(new PlayerFarmCrops(player.GetGUID()))
-            crop.x = spell.GetTargetDest().x
-            crop.y = spell.GetTargetDest().y
-            crop.z = spell.GetTargetDest().z
-            crop.o = player.GetO();
-            crop.spawnTime = GetUnixTime();
-            crop.type = spell.GetSpellInfo().GetPriority();
-            crop.MarkDirty();
-            crop.Spawn(player)
-        })
-    })
-
-    GetIDTag('farming-mod', 'farming-gob-spell').forEach(x => {
-        events.SpellID.OnCheckCast(x, (spell, result) => {
-            let player = spell.GetCaster().ToPlayer();
-            if (player.IsNull())
-                return
-            if (PlayerFarm.get(player).area != player.GetAreaID() && player.GetPhaseID() != player.GetGUID()) {
-                player.SendAreaTriggerMessage("This is not your home!")
-                result.set(SpellCastResult.FAILED_DONT_REPORT)
-                return
-            }
-            let gobData = PlayerFarmGobs.get(player);
-            result.set(SpellCastResult.FAILED_DONT_REPORT)
-            let gob = gobData.Add(new PlayerFarmGobs(player.GetGUID()))
-            gob.entry = spell.GetSpellInfo().GetPriority();
-            gob.x = spell.GetTargetDest().x
-            gob.y = spell.GetTargetDest().y
-            gob.z = spell.GetTargetDest().z
-            gob.o = player.GetO();
-            gob.MarkDirty();
-            gob.Spawn(player)
-        })
-    })
-
-    GetIDTag('farming-mod', 'farming-creature-spell').forEach(x => {
-        events.SpellID.OnCheckCast(x, (spell, result) => {
-            let player = spell.GetCaster().ToPlayer();
-            if (player.IsNull())
-                return
-            if (PlayerFarm.get(player).area != player.GetAreaID() && player.GetPhaseID() != player.GetGUID()) {
-                player.SendAreaTriggerMessage("This is not your home!")
-                result.set(SpellCastResult.FAILED_DONT_REPORT)
-                return
-            }
-            let creatureData = PlayerFarmCreatures.get(player);
-            result.set(SpellCastResult.FAILED_DONT_REPORT)
-            let creature = creatureData.Add(new PlayerFarmCreatures(player.GetGUID()))
-            creature.entry = spell.GetSpellInfo().GetPriority();
-            creature.x = player.GetX()
-            creature.y = player.GetY()
-            creature.z = player.GetZ()
-            creature.o = player.GetO();
-            creature.MarkDirty();
-            creature.Spawn(player)
-        })
-    })
 }
 
 @CharactersTable
@@ -285,7 +212,7 @@ export class PlayerFarmCreatures extends DBArrayEntry {
         if (this.spawnGuid != 0) {
             return;
         }
-        let creature = player.SpawnCreature(this.entry, this.x, this.y, this.z, this.o,8,0)
+        let creature = player.SpawnCreature(this.entry, this.x, this.y, this.z, this.o, 8, 0)
         creature.SetPhaseMask(1, true, player.GetGUID())
         this.spawnMap = player.GetMapID();
         this.spawnGuid = creature.GetGUID();
@@ -296,4 +223,113 @@ export class PlayerFarmCreatures extends DBArrayEntry {
         return player.GetObject('FarmingCreatureData', LoadDBArrayEntry(PlayerFarmCreatures, player.GetGUID())
         )
     }
+}
+
+export function RegisterFarmingInfo(events: TSEvents) {
+    let q = QueryWorld('SELECT * from farming_crops')
+    while (q.GetRow()) {
+        CropTypes[q.GetUInt32(0)] = new CropType(q);
+    }
+
+    events.Player.OnSave(player => {
+        PlayerFarmCrops.get(player).Save();
+        PlayerFarmGobs.get(player).Save();
+        PlayerFarmCreatures.get(player).Save();
+    })
+
+    GetIDTag('farming-mod', 'farming-crop-spell').forEach(x => {
+        events.SpellID.OnCheckCast(x, (spell, result) => {
+            let player = spell.GetCaster().ToPlayer();
+            if (player.IsNull())
+                return
+            if (PlayerFarm.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+                player.SendAreaTriggerMessage("This is not your home!")
+                result.set(SpellCastResult.FAILED_DONT_REPORT)
+                return
+            }
+            let cropData = PlayerFarmCrops.get(player);
+            if (cropData.Size() > 10) {
+                player.SendBroadcastMessage(`You already have more than 10 crops active!`);
+                return;
+            }
+            result.set(SpellCastResult.FAILED_DONT_REPORT)
+            let crop = cropData.Add(new PlayerFarmCrops(player.GetGUID()))
+            crop.x = spell.GetTargetDest().x
+            crop.y = spell.GetTargetDest().y
+            crop.z = spell.GetTargetDest().z
+            crop.o = player.GetO();
+            crop.spawnTime = GetUnixTime();
+            crop.type = spell.GetSpellInfo().GetPriority();
+            crop.MarkDirty();
+            crop.Spawn(player)
+        })
+    })
+
+    GetIDTag('farming-mod', 'farming-gob-spell').forEach(x => {
+        events.SpellID.OnCheckCast(x, (spell, result) => {
+            let player = spell.GetCaster().ToPlayer();
+            if (player.IsNull())
+                return
+            if (PlayerFarm.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+                player.SendAreaTriggerMessage("This is not your home!")
+                result.set(SpellCastResult.FAILED_DONT_REPORT)
+                return
+            }
+            let gobData = PlayerFarmGobs.get(player);
+            result.set(SpellCastResult.FAILED_DONT_REPORT)
+            let gob = gobData.Add(new PlayerFarmGobs(player.GetGUID()))
+            gob.entry = spell.GetSpellInfo().GetPriority();
+            gob.x = spell.GetTargetDest().x
+            gob.y = spell.GetTargetDest().y
+            gob.z = spell.GetTargetDest().z
+            gob.o = player.GetO();
+            gob.MarkDirty();
+            gob.Spawn(player)
+        })
+    })
+
+    GetIDTag('farming-mod', 'farming-crop-final').forEach(x => {
+        events.GameObjectID.OnUse(x, (obj, user, cancel) => {
+            let player = user.ToPlayer();
+            if (player.IsNull())
+                return
+
+            if (PlayerFarm.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+                player.SendAreaTriggerMessage("This is not your home!")
+                cancel.set(true)
+                return
+            }
+
+            let found = false
+            PlayerFarmCrops.get(player).forEach(element => {
+                if (element.spawnGuid == obj.GetGUID()) {
+                    element.Harvest(player)
+                    found = true
+                }
+            })
+        })
+    })
+
+    GetIDTag('farming-mod', 'farming-creature-spell').forEach(x => {
+        events.SpellID.OnCheckCast(x, (spell, result) => {
+            let player = spell.GetCaster().ToPlayer();
+            if (player.IsNull())
+                return
+            if (PlayerFarm.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+                player.SendAreaTriggerMessage("This is not your home!")
+                result.set(SpellCastResult.FAILED_DONT_REPORT)
+                return
+            }
+            let creatureData = PlayerFarmCreatures.get(player);
+            result.set(SpellCastResult.FAILED_DONT_REPORT)
+            let creature = creatureData.Add(new PlayerFarmCreatures(player.GetGUID()))
+            creature.entry = spell.GetSpellInfo().GetPriority();
+            creature.x = player.GetX()
+            creature.y = player.GetY()
+            creature.z = player.GetZ()
+            creature.o = player.GetO();
+            creature.MarkDirty();
+            creature.Spawn(player)
+        })
+    })
 }
