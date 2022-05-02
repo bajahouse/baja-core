@@ -301,11 +301,9 @@ export function RegisterFarmingInfo(events: TSEvents) {
                 return
             }
 
-            let found = false
             PlayerFarmCrops.get(player).forEach(element => {
                 if (element.spawnGuid == obj.GetGUID()) {
                     element.Harvest(player)
-                    found = true
                 }
             })
         })
