@@ -248,8 +248,9 @@ export function RegisterFarmingInfo(events: TSEvents) {
                 return
             }
             let cropData = PlayerFarmCrops.get(player);
-            if (cropData.Size() > 10) {
-                player.SendBroadcastMessage(`You already have more than 10 crops active!`);
+            if (cropData.Size() > 9) {
+                player.SendBroadcastMessage(`You already have 10 crops active!`);
+                result.set(SpellCastResult.FAILED_DONT_REPORT)
                 return;
             }
             result.set(SpellCastResult.FAILED_DONT_REPORT)
