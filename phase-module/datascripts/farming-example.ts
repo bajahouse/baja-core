@@ -6,5 +6,4 @@ makeHousingItemForGob(10192, "Wooden Chair");
 makeHousingItemForCreature(2671, "Squirrel")
 
 let rewardHarvest = std.Items.create(MODNAME, "farming-reward-harvest", 738);
-rewardHarvest.Flags.HAS_QUEST_GLOW.set(0)
 makeHousingItemForCrop(188667,188691,'Wheat',10000,rewardHarvest.ID,1,3)
