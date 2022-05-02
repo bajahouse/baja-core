@@ -104,7 +104,7 @@ export class PlayerFarmCrops extends DBArrayEntry {
         return player.GetObject('FarmingCropData', LoadDBArrayEntry(PlayerFarmCrops, player.GetGUID()))
     }
 }
-
+export const CropSizes = CreateDictionary<uint32,uint32>({})
 export const CropTypes = CreateDictionary<uint32, CropType>({})
 export class CropType {
     stage0Entry: uint32
@@ -230,6 +230,10 @@ export function RegisterFarmingInfo(events: TSEvents) {
     while (q.GetRow()) {
         CropTypes[q.GetUInt32(0)] = new CropType(q);
     }
+    q = QueryWorld('SELECT * from farming_crops_size')
+    while (q.GetRow()) {
+        CropSizes[q.GetUInt32(0)] = q.GetUInt32(1);
+    }
 
     events.Player.OnSave(player => {
         PlayerFarmCrops.get(player).Save();
@@ -248,8 +252,8 @@ export function RegisterFarmingInfo(events: TSEvents) {
                 return
             }
             let cropData = PlayerFarmCrops.get(player);
-            if (cropData.Size() > 9) {
-                player.SendBroadcastMessage(`You already have 10 crops active!`);
+            if (cropData.Size() >= CropSizes[player.GetAreaID()]) {
+                player.SendBroadcastMessage(`You already have ${cropData.Size} crops active!`);
                 result.set(SpellCastResult.FAILED_DONT_REPORT)
                 return;
             }

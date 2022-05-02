@@ -2,6 +2,10 @@ import { std } from "wow/wotlk";
 import { MODNAME } from "./farming-base";
 import { gobSpellEntry, creatureSpellEntry, itemEntry } from "./farming-objects";
 
+export function setupAreaForCrops(areaID: number, cropCount: number) {
+    std.SQL.Databases.world_dest.write(`INSERT INTO \`farming_crops\` VALUES ( ${areaID}, ${cropCount})`);
+}
+
 export function makeHousingItemForCrop(firstCopy: number, finalCopy: number, name: string, growthtime: number, harvestReward: uint32, minreward: uint32, maxReward: uint32) {
     let spellID = makeHousingSpellCrop(firstCopy, name);
     let itemID = makeHousingItemTemplate(name, spellID);

@@ -13,3 +13,12 @@ std.SQL.Databases.world_dest.writeEarly(`
         PRIMARY KEY(\`id\`)
     );
 `)
+
+std.SQL.Databases.world_dest.writeEarly(`
+    DROP TABLE IF EXISTS \`farming_crops_size\`;
+    CREATE TABLE \`farming_crops_size\` (
+        \`areaID\` INT(10) NOT NULL,
+        \`cropCount\` INT(10) NOT NULL,
+        PRIMARY KEY(\`areaID\`)
+    );
+`)
