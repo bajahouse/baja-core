@@ -2,7 +2,7 @@ import { std } from "wow/wotlk";
 import { MODNAME } from "./farming-base";
 import { makeHousingItemForGob, makeHousingItemForCreature, setupAreaForCrops, makeHousingItemForCrop } from "./farming-functions";
 
-setupAreaForCrops(67, 10)
+setupAreaForCrops(64, 10)
 
 makeHousingItemForGob(10192, "Wooden Chair")
 makeHousingItemForCreature(2671, "Squirrel")
