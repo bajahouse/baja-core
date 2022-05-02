@@ -22,6 +22,7 @@ item.MaxCount.set(-1)
 item.Bonding.NO_BOUNDS.set();
 item.Description.enGB.set("");
 item.DisplayInfo.setSimpleIcon("INV_Misc_Gear_01");
+item.MaxStack.set(20)
 item.Spells.clearAll();
 item.Price.set(0, 0);
 export let itemEntry = item.ID
