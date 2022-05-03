@@ -1,4 +1,5 @@
-abstract class Addon {
+// FIXME: option to init when all data is available
+export abstract class Addon {
   constructor () {
     if (_G[FRAME_LIST_SELECTOR] === null)
       _G[FRAME_LIST_SELECTOR] = []
@@ -10,54 +11,9 @@ abstract class Addon {
   protected abstract init (): void
 }
 
-class Foo extends Addon {
-  init () {
-    const a = $({
-      color: [255, 0, 0],
-      mod: 'test',
-      uid: 'frame-a',
-      type: 'Frame',
-      parent: UIParent,
-      backdrop: 'tooltip',
-      point: 'CENTER',
-      width: 500,
-      height: 500,
-      mouse: true,
-    })
-    a.SetScript('OnMouseDown', () => $({
-        mod: 'test',
-        type: 'Frame',
-        parent: a,
-        strata: 'HIGH',
-        level: 999,
-        width: 50,
-        height: 50,
-        point: 'CENTER',
-        backdrop: 'tutorial',
-        mouse: true,
-      }).SetScript('OnMouseDown', (b: ExtendedFrame) => b.Delete())
-    )
-    const button = $({
-      type: 'Button',
-      mod: 'test',
-      width: 80,
-      height: 30,
-      backdrop: 'dialogue',
-      parent: a,
-      point: 'TOPLEFT',
-    })
-    const text = button.CreateFontString('hello', 'OVERLAY', 'GameTooltipText')
-    text.SetParent(button)
-    text.SetPoint('TOPRIGHT', -10, -8)
-    text.SetFont('Fonts/FRIZQT__.TTF', 10)
-    button.SetFontString(text)
-    button.SetText('hello world')
-  }
-}
+export type BackdropPreset = 'tooltip' | 'tutorial' | 'border' | 'noborder' | 'dialogue'
 
-type BackdropPreset = 'tooltip' | 'tutorial' | 'border' | 'noborder' | 'dialogue'
-
-interface FrameOptions {
+export interface FrameOptions {
   mod: string
   uid?: string
   type?: WoWAPI.FrameType
@@ -77,16 +33,16 @@ interface FrameOptions {
   movable?: boolean
 }
 
-// FIXME: build other api
-interface ScrollFrameOptions extends FrameOptions { type: 'ScrollFrame' }
-interface ButtonOptions extends FrameOptions { type: 'Button' }
-interface ModelOptions extends FrameOptions { type: 'Model' }
-interface SliderOptions extends FrameOptions { type: 'Slider' }
-interface StatusBarOptions extends FrameOptions { type: 'StatusBar' }
-interface SimpleHTMLOptions extends FrameOptions { type: 'SimpleHTML' }
-interface ColorSelectOptions extends FrameOptions { type: 'ColorSelect' }
+// FIXME: build other frame options
+export interface ScrollFrameOptions extends FrameOptions { type: 'ScrollFrame' }
+export interface ButtonOptions extends FrameOptions { type: 'Button' }
+export interface ModelOptions extends FrameOptions { type: 'Model' }
+export interface SliderOptions extends FrameOptions { type: 'Slider' }
+export interface StatusBarOptions extends FrameOptions { type: 'StatusBar' }
+export interface SimpleHTMLOptions extends FrameOptions { type: 'SimpleHTML' }
+export interface ColorSelectOptions extends FrameOptions { type: 'ColorSelect' }
 
-interface ExtendedFrameProps {
+export interface ExtendedFrameProps {
   // props
   UID: string
   Mod: string
@@ -116,18 +72,18 @@ interface ExtendedFrameProps {
   >() => WoWAPI.AdvancedFrame<F, O>
 }
 
-type ExtendedModel = WoWAPI.AdvancedFrame<WoWAPI.Model, ExtendedFrameProps>
-type ExtendedSlider = WoWAPI.AdvancedFrame<WoWAPI.Slider, ExtendedFrameProps>
-type ExtendedStatusBar = WoWAPI.AdvancedFrame<WoWAPI.StatusBar, ExtendedFrameProps>
-type ExtendedSimpleHTML = WoWAPI.AdvancedFrame<WoWAPI.SimpleHTML, ExtendedFrameProps>
-type ExtendedScrollFrame = WoWAPI.AdvancedFrame<WoWAPI.ScrollFrame, ExtendedFrameProps>
-type ExtendedButton = WoWAPI.AdvancedFrame<WoWAPI.Button, ExtendedFrameProps>
-type ExtendedFrame = WoWAPI.AdvancedFrame<WoWAPI.Frame, ExtendedFrameProps>
+export type ExtendedModel = WoWAPI.AdvancedFrame<WoWAPI.Model, ExtendedFrameProps>
+export type ExtendedSlider = WoWAPI.AdvancedFrame<WoWAPI.Slider, ExtendedFrameProps>
+export type ExtendedStatusBar = WoWAPI.AdvancedFrame<WoWAPI.StatusBar, ExtendedFrameProps>
+export type ExtendedSimpleHTML = WoWAPI.AdvancedFrame<WoWAPI.SimpleHTML, ExtendedFrameProps>
+export type ExtendedScrollFrame = WoWAPI.AdvancedFrame<WoWAPI.ScrollFrame, ExtendedFrameProps>
+export type ExtendedButton = WoWAPI.AdvancedFrame<WoWAPI.Button, ExtendedFrameProps>
+export type ExtendedFrame = WoWAPI.AdvancedFrame<WoWAPI.Frame, ExtendedFrameProps>
 
-const FRAME_LIST_SELECTOR = 'frame-list'
-const FRAME_MAP_SELECTOR = 'frame-map'
+export const FRAME_LIST_SELECTOR = 'frame-list'
+export const FRAME_MAP_SELECTOR = 'frame-map'
 
-function CleanFrame (f: WoWAPI.Frame) {
+export function CleanFrame (f: WoWAPI.Frame) {
   f.SetAlpha(1)
   f.SetSize(0, 0)
   f.StopAnimating()
@@ -142,28 +98,28 @@ function CleanFrame (f: WoWAPI.Frame) {
   ;(f as ExtendedFrame).IsDeleted = true
 }
 
-function GetFrameList (): ExtendedFrame[] {
+export function GetFrameList (): ExtendedFrame[] {
   if (!_G[FRAME_LIST_SELECTOR])
     _G[FRAME_LIST_SELECTOR] = []
   return _G[FRAME_LIST_SELECTOR] as ExtendedFrame[]
 }
 
-function GetFrameMap (): object {
+export function GetFrameMap (): object {
   if (!_G[FRAME_MAP_SELECTOR])
     _G[FRAME_MAP_SELECTOR] = {}
   return _G[FRAME_MAP_SELECTOR] as object
 }
 
-let current_frame_index = 0
+export let current_frame_index = 0
 
-function $ (options: ModelOptions): ExtendedModel
-function $ (options: SliderOptions): ExtendedSlider
-function $ (options: StatusBarOptions): ExtendedStatusBar
-function $ (options: SimpleHTMLOptions): ExtendedSimpleHTML
-function $ (options: ScrollFrameOptions): ExtendedScrollFrame
-function $ (options: ButtonOptions): ExtendedButton
-function $ (options: FrameOptions): ExtendedFrame
-function $ (options: FrameOptions) {
+export function $ (options: ModelOptions): ExtendedModel
+export function $ (options: SliderOptions): ExtendedSlider
+export function $ (options: StatusBarOptions): ExtendedStatusBar
+export function $ (options: SimpleHTMLOptions): ExtendedSimpleHTML
+export function $ (options: ScrollFrameOptions): ExtendedScrollFrame
+export function $ (options: ButtonOptions): ExtendedButton
+export function $ (options: FrameOptions): ExtendedFrame
+export function $ (options: FrameOptions) {
   let frame: ExtendedFrame
   let list: ExtendedFrame[] = _G[FRAME_LIST_SELECTOR]
   let map: object = _G[FRAME_MAP_SELECTOR]
@@ -332,6 +288,4 @@ function $ (options: FrameOptions) {
   }
   return frame
 }
-
-const foo = new Foo()
 
