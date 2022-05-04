@@ -1,20 +1,6 @@
-import { CropTypes, CropType, CropSizes, PlayerFarmCrops, PlayerFarmGobs, PlayerFarmCreatures, PlayerFarm } from "./farming-classes";
+import { CropSizes, PlayerFarmCrops, PlayerFarmGobs, PlayerFarmCreatures, PlayerFarm } from "./farming-classes";
 
-export function RegisterFarmingInfo(events: TSEvents) {
-    let q = QueryWorld('SELECT * from farming_crops')
-    while (q.GetRow()) {
-        CropTypes[q.GetUInt32(0)] = new CropType(q);
-    }
-    q = QueryWorld('SELECT * from farming_crops_size')
-    while (q.GetRow()) {
-        CropSizes[q.GetUInt32(0)] = q.GetUInt32(1);
-    }
-
-    events.Player.OnSave(player => {
-        PlayerFarmCrops.get(player).Save();
-        PlayerFarmGobs.get(player).Save();
-        PlayerFarmCreatures.get(player).Save();
-    })
+export function RegisterFarmingSpells(events: TSEvents) {
 
     GetIDTag('farming-mod', 'farming-crop-spell').forEach(x => {
         events.SpellID.OnCheckCast(x, (spell, result) => {

@@ -105,7 +105,7 @@ export class PlayerFarmCrops extends DBArrayEntry {
         return player.GetObject('FarmingCropData', LoadDBArrayEntry(PlayerFarmCrops, player.GetGUID()))
     }
 }
-export const CropSizes = CreateDictionary<uint32,uint32>({})
+export const CropSizes = CreateDictionary<uint32, uint32>({})
 export const CropTypes = CreateDictionary<uint32, CropType>({})
 export class CropType {
     stage0Entry: uint32
@@ -224,4 +224,22 @@ export class PlayerFarmCreatures extends DBArrayEntry {
         return player.GetObject('FarmingCreatureData', LoadDBArrayEntry(PlayerFarmCreatures, player.GetGUID())
         )
     }
+}
+
+export function SetupFarmInfo(events: TSEvents) {
+    let q = QueryWorld('SELECT * from farming_crops')
+    while (q.GetRow()) {
+        CropTypes[q.GetUInt32(0)] = new CropType(q);
+    }
+    q = QueryWorld('SELECT * from farming_crops_size')
+    while (q.GetRow()) {
+        CropSizes[q.GetUInt32(0)] = q.GetUInt32(1);
+    }
+
+    events.Player.OnSave(player => {
+        PlayerFarmCrops.get(player).Save();
+        PlayerFarmGobs.get(player).Save();
+        PlayerFarmCreatures.get(player).Save();
+    })
+
 }

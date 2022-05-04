@@ -1,12 +1,13 @@
 import { baseFarm } from "./farming-base";
-import { RegisterFarmingInfo } from "./farming-spell-scripts";
+import { SetupFarmInfo } from "./farming-classes";
+import { RegisterFarmingSpells } from "./farming-spell-scripts";
 
 export function Main(events: TSEvents) {
-    RegisterFarmingInfo(events)
+    SetupFarmInfo(events)
+    RegisterFarmingSpells(events)
     baseFarm(events)
 }
 
-export function getRandNumber(min:uint32, max:uint32):uint32
-{
+export function getRandNumber(min: uint32, max: uint32): uint32 {
     return Math.floor((Math.random() * (max - min)) + min);
 }

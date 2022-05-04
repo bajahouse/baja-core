@@ -1,7 +1,6 @@
 import { PlayerFarm } from "./farming-classes";
 
 export function baseFarm(events: TSEvents) {
-
     events.Player.OnCommand((player, command, found) => {
         if (command.get() == 'farm') {
             PlayerFarm.get(player).area = player.GetAreaID()
@@ -12,12 +11,12 @@ export function baseFarm(events: TSEvents) {
     events.Player.OnUpdateZone((player, newZone, area) => {
         let farm = PlayerFarm.get(player)
         if (farm.area == area) {
-            if(player.GetPhaseID() == 0){
+            if (player.GetPhaseID() == 0) {
                 PlayerFarm.get(player).Open(player)
                 player.SendAreaTriggerMessage('You have entered your farm.')
             }
             return
-        }else if (farm.open) {
+        } else if (farm.open) {
             PlayerFarm.get(player).Close(player)
             player.SendAreaTriggerMessage('You have exited your farm.')
         } else if (player.GetBool('friendFarm', false)) {
@@ -32,4 +31,3 @@ function goToFriendFarm(player: TSPlayer, targetPhase: number, targetCoords: TSP
     player.SetPhaseMask(player.GetPhaseMask(), true, targetPhase)
     player.SetBool('friendFarm', true)
 }
-
