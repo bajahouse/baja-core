@@ -1,7 +1,32 @@
 import { CropSizes, PlayerFarmCrops, PlayerFarmGobs, PlayerFarmCreatures, PlayerFarm } from "./farming-classes";
 
 export function RegisterFarmingSpells(events: TSEvents) {
+    spellScriptsForPlacement(events)
 
+    GetIDTag('farming-mod', 'farming-crop-final').forEach(x => {
+        events.GameObjectID.OnUse(x, (obj, user, cancel) => {
+            let player = user.ToPlayer();
+            if (player.IsNull())
+                return
+
+            if (PlayerFarm.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+                player.SendAreaTriggerMessage("This is not your home!")
+                cancel.set(true)
+                return
+            }
+
+            PlayerFarmCrops.get(player).forEach(element => {
+                if (element.spawnGuid == obj.GetGUID()) {
+                    element.Harvest(player)
+                    element.Delete()
+                }
+            })
+        })
+    })
+}
+
+function spellScriptsForPlacement(events:TSEvents)
+{
     GetIDTag('farming-mod', 'farming-crop-spell').forEach(x => {
         events.SpellID.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
@@ -51,27 +76,6 @@ export function RegisterFarmingSpells(events: TSEvents) {
             gob.o = player.GetO();
             gob.MarkDirty();
             gob.Spawn(player)
-        })
-    })
-
-    GetIDTag('farming-mod', 'farming-crop-final').forEach(x => {
-        events.GameObjectID.OnUse(x, (obj, user, cancel) => {
-            let player = user.ToPlayer();
-            if (player.IsNull())
-                return
-
-            if (PlayerFarm.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
-                player.SendAreaTriggerMessage("This is not your home!")
-                cancel.set(true)
-                return
-            }
-
-            PlayerFarmCrops.get(player).forEach(element => {
-                if (element.spawnGuid == obj.GetGUID()) {
-                    element.Harvest(player)
-                    element.Delete()
-                }
-            })
         })
     })
 
