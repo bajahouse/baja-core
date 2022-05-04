@@ -1,5 +1,5 @@
 import { baseFarm } from "./farming-base";
-import { RegisterFarmingInfo } from "./farming-classes";
+import { RegisterFarmingInfo } from "./farming-spell-scripts";
 
 export function Main(events: TSEvents) {
     RegisterFarmingInfo(events)
