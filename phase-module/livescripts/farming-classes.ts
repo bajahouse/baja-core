@@ -56,6 +56,8 @@ export class PlayerFarmCrops extends DBArrayEntry {
     spawnTime: uint64 = 0;
     @DBField
     type: uint32 = 0;
+    @DBField
+    fertilizeMultiplier: float = 1;
 
     spawnMap: uint32 = 0;
     spawnGuid: uint64 = 0;
@@ -68,14 +70,12 @@ export class PlayerFarmCrops extends DBArrayEntry {
 
     Harvest(player: TSPlayer) {
         this.Despawn(player.GetMap());
-        this.spawnTime = GetUnixTime();
-        this.Spawn(player)
         player.AddItem(CropTypes[this.type].harvestItem, getRandNumber(CropTypes[this.type].minHarvestItem, CropTypes[this.type].maxHarvestItem))
     }
 
     GetActiveGOEntry(): uint32 {
         let type = CropTypes[this.type];
-        let timeElapsed = GetUnixTime() - this.spawnTime;
+        let timeElapsed = (GetUnixTime() - this.spawnTime) * this.fertilizeMultiplier;
         return (timeElapsed > type.stage1GrowthTime) ? type.stage1Entry : type.stage0Entry
     }
 
@@ -308,6 +308,7 @@ export function RegisterFarmingInfo(events: TSEvents) {
             PlayerFarmCrops.get(player).forEach(element => {
                 if (element.spawnGuid == obj.GetGUID()) {
                     element.Harvest(player)
+                    element.Delete()
                 }
             })
         })
