@@ -58,7 +58,7 @@ export class PlayerFarmCrops extends DBArrayEntry {
     @DBField
     type: uint32 = 0;
     @DBField
-    fertilizeMultiplier: float = 1;
+    fertilizeMultiplier: float = 1.0;
 
     spawnMap: uint32 = 0;
     spawnGuid: uint64 = 0;

@@ -3,6 +3,7 @@ import { CropSizes, PlayerFarmCrops, PlayerFarmGobs, PlayerFarmCreatures, Player
 export function RegisterFarmingSpells(events: TSEvents) {
     spellScriptsForPlacement(events)
 
+    //harvesting crop
     GetIDTag('farming-mod', 'farming-crop-final').forEach(x => {
         events.GameObjectID.OnUse(x, (obj, user, cancel) => {
             let player = user.ToPlayer();
@@ -23,10 +24,36 @@ export function RegisterFarmingSpells(events: TSEvents) {
             })
         })
     })
+
+    GetIDTag('farming-mod', 'farming-fertilizer-spell').forEach(x => {
+        events.SpellID.OnCheckCast(x, (spell, result) => {
+            let player = spell.GetCaster().ToPlayer()
+            if (player.IsNull())
+                return
+
+            if (PlayerFarm.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+                player.SendAreaTriggerMessage("This is not your home!")
+                result.set(SpellCastResult.FAILED_DONT_REPORT)
+                return
+            }
+        })
+
+        events.SpellID.OnCast(x, (spell) => {
+            let player = spell.GetCaster().ToPlayer()
+            let nearbyGobs = player.GetGameObjectsInRange(10, 0, 0)
+            nearbyGobs.forEach((v, i, arr) => {
+                PlayerFarmCrops.get(player).forEach(element => {
+                    if (element.spawnGuid == v.GetGUID()) {
+                        element.fertilizeMultiplier = spell.GetSpellInfo().GetPriority() / 10;
+                        element.MarkDirty()
+                    }
+                })
+            })
+        })
+    })
 }
 
-function spellScriptsForPlacement(events:TSEvents)
-{
+function spellScriptsForPlacement(events: TSEvents) {
     GetIDTag('farming-mod', 'farming-crop-spell').forEach(x => {
         events.SpellID.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
@@ -39,7 +66,7 @@ function spellScriptsForPlacement(events:TSEvents)
             }
             let cropData = PlayerFarmCrops.get(player);
             if (cropData.Size() >= CropSizes[player.GetAreaID()]) {
-                player.SendBroadcastMessage(`You already have ${cropData.Size} crops active!`);
+                player.SendBroadcastMessage(`You already have ${cropData.Size()} crops active!`);
                 result.set(SpellCastResult.FAILED_DONT_REPORT)
                 return;
             }
@@ -51,6 +78,7 @@ function spellScriptsForPlacement(events:TSEvents)
             crop.o = player.GetO();
             crop.spawnTime = GetUnixTime();
             crop.type = spell.GetSpellInfo().GetPriority();
+            crop.fertilizeMultiplier = 1.0
             crop.MarkDirty();
             crop.Spawn(player)
         })
