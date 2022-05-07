@@ -58,7 +58,7 @@ export class PlayerFarmCrops extends DBArrayEntry {
     @DBField
     type: uint32 = 0;
     @DBField
-    fertilizeMultiplier: float = 1.0;
+    fertilizeMultiplier: float = 10.0;
 
     spawnMap: uint32 = 0;
     spawnGuid: uint64 = 0;
@@ -71,6 +71,7 @@ export class PlayerFarmCrops extends DBArrayEntry {
 
     Harvest(player: TSPlayer) {
         this.Despawn(player.GetMap());
+        this.Delete()
         player.AddItem(CropTypes[this.type].harvestItem, getRandNumber(CropTypes[this.type].minHarvestItem, CropTypes[this.type].maxHarvestItem))
     }
 
@@ -80,11 +81,21 @@ export class PlayerFarmCrops extends DBArrayEntry {
         return (timeElapsed > type.stage1GrowthTime) ? type.stage1Entry : type.stage0Entry
     }
 
+    canGrow(player:TSPlayer) {
+        let type = CropTypes[this.type];
+        let timeElapsed = (GetUnixTime() - this.spawnTime) * this.fertilizeMultiplier;
+        if(timeElapsed > type.stage1GrowthTime)
+        {
+            this.Despawn(player.GetMap())
+            this.Spawn(player)
+        }
+    }
+
     Despawn(map: TSMap) {
         if (this.spawnGuid === 0 || this.spawnMap != map.GetMapID()) return;
         let go = map.GetGameObject(this.spawnGuid);
         if (!go.IsNull()) {
-            go.RemoveFromWorld(false);
+            go.RemoveFromWorld(true);
         }
         this.spawnGuid = 0;
         this.spawnMap = 0;

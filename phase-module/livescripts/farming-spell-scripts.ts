@@ -19,7 +19,7 @@ export function RegisterFarmingSpells(events: TSEvents) {
             PlayerFarmCrops.get(player).forEach(element => {
                 if (element.spawnGuid == obj.GetGUID()) {
                     element.Harvest(player)
-                    element.Delete()
+                    
                 }
             })
         })
@@ -79,7 +79,7 @@ function spellScriptsForPlacement(events: TSEvents) {
             crop.o = player.GetO();
             crop.spawnTime = GetUnixTime();
             crop.type = spell.GetSpellInfo().GetPriority();
-            crop.fertilizeMultiplier = 1.0
+            crop.fertilizeMultiplier = 10.0
             crop.MarkDirty();
             crop.Spawn(player)
         })

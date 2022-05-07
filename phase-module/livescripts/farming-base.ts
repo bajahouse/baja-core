@@ -1,4 +1,4 @@
-import { PlayerFarm } from "./farming-classes";
+import { PlayerFarm, PlayerFarmCrops } from "./farming-classes";
 
 export function baseFarm(events: TSEvents) {
     events.Player.OnCommand((player, command, found) => {
@@ -14,11 +14,19 @@ export function baseFarm(events: TSEvents) {
             if (player.GetPhaseID() == 0) {
                 PlayerFarm.get(player).Open(player)
                 player.SendAreaTriggerMessage('You have entered your farm.')
+                player.AddNamedTimer('refreshPlants',30000,TimerLoops.INDEFINITE,(owner,timer)=>{
+                    let player = owner.ToPlayer()
+                    PlayerFarmCrops.get(player).forEach((x)=>{
+                        x.canGrow(player)
+                        console.log('attempt')
+                    })
+                })
             }
             return
         } else if (farm.open) {
             PlayerFarm.get(player).Close(player)
             player.SendAreaTriggerMessage('You have exited your farm.')
+            player.RemoveTimer('refreshPlants')
         } else if (player.GetBool('friendFarm', false)) {
             player.SetBool('friendFarm', false)
             player.SetPhaseMask(player.GetPhaseMask(), true, 0)
