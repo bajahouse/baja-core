@@ -25,6 +25,7 @@ export function RegisterFarmingSpells(events: TSEvents) {
         })
     })
 
+    //fertilizer
     GetIDTag('farming-mod', 'farming-fertilizer-spell').forEach(x => {
         events.SpellID.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer()
