@@ -6,20 +6,14 @@ export function setupAreaForCrops(areaID: number, cropCount: number) {
     std.SQL.Databases.world_dest.write(`INSERT INTO \`farming_crops_size\` VALUES ( ${areaID}, ${cropCount})`);
 }
 
-
-export function makeHousingItemForFertilizer(name:string, mult:number)
-{
+export function makeHousingItemForFertilizer(name: string, mult: number) {
     let spellID = makeHousingSpellFertilizer(name, mult);
     let itemID = makeHousingItemTemplate(name, spellID);
     return itemID
 }
 
 function makeHousingSpellFertilizer(name: string, mult: number): number {
-    let spl = std.Spells.create(
-        MODNAME,
-        "farming-" + name.toLowerCase().replace(" ", "-"),
-        67285
-    );
+    let spl = std.Spells.create(MODNAME, "farming-" + name.toLowerCase().replace(" ", "-"), 67285);
     spl.Name.enGB.set("Farming: Fertilizer " + name);
     spl.Description.enGB.set("Used to speed up fertilization by " + mult + "x.");
     spl.Priority.set(mult)
@@ -39,16 +33,12 @@ export function makeHousingItemForCrop(firstCopy: number, finalCopy: number, nam
 }
 
 function makeHousingSpellCrop(entry: number, name: string): number {
-    let spl = std.Spells.create(
-        MODNAME,
-        "farming-" + name.toLowerCase().replace(" ", "-"),
-        gobSpellEntry
-    );
-    spl.Name.enGB.set("Farming: Spawn " + name);
-    spl.Description.enGB.set("Used to place a " + name + " at a chosen location.");
-    spl.Effects.get(0).MiscValueA.set(entry)
-    spl.Priority.set(entry)
-    spl.Tags.add(MODNAME, 'farming-crop-spell')
+    let spl = std.Spells.create(MODNAME, "farming-" + name.toLowerCase().replace(" ", "-"), gobSpellEntry)
+        .Name.enGB.set("Farming: Spawn " + name)
+        .Description.enGB.set("Used to place a " + name + " at a chosen location.")
+        .Priority.set(entry)
+        .Tags.add(MODNAME, 'farming-crop-spell')
+    spl.Effects.get(0).MiscValueA.set(entry);
     return spl.ID;
 }
 
@@ -59,16 +49,13 @@ export function makeHousingItemForGob(entry: number, name: string) {
 }
 
 function makeHousingSpellGob(entry: number, name: string): number {
-    let spl = std.Spells.create(
-        MODNAME,
-        "farming-" + name.toLowerCase().replace(" ", "-"),
-        gobSpellEntry
-    );
-    spl.Name.enGB.set("Housing: Spawn " + name);
-    spl.Description.enGB.set("Used to place a " + name + " at a chosen location.");
+    let spl = std.Spells.create(MODNAME, "farming-" + name.toLowerCase().replace(" ", "-"), gobSpellEntry)
+        .Name.enGB.set("Housing: Spawn " + name)
+        .Description.enGB.set("Used to place a " + name + " at a chosen location.")
+        .Priority.set(entry)
+        .Tags.add(MODNAME, 'farming-gob-spell')
     spl.Effects.get(0).MiscValueA.set(entry)
-    spl.Priority.set(entry)
-    spl.Tags.add(MODNAME, 'farming-gob-spell')
+
     return spl.ID;
 }
 
@@ -79,29 +66,22 @@ export function makeHousingItemForCreature(entry: number, name: string) {
 }
 
 function makeHousingSpellCreature(entry: number, name: string): number {
-    let spl = std.Spells.create(
-        MODNAME,
-        "farming-" + name.toLowerCase().replace(" ", "-"),
-        creatureSpellEntry
-    );
-    spl.Name.enGB.set("Housing: Spawn " + name);
-    spl.Description.enGB.set("Used to place a " + name + " at your feet.");
-    spl.Effects.get(0).MiscValueA.set(entry)
-    spl.Priority.set(entry)
-    spl.Tags.add(MODNAME, 'farming-creature-spell')
+    let spl = std.Spells.create(MODNAME, "farming-" + name.toLowerCase().replace(" ", "-"), creatureSpellEntry)
+        .Name.enGB.set("Housing: Spawn " + name)
+        .Description.enGB.set("Used to place a " + name + " at your feet.")
+        .Priority.set(entry)
+        .Tags.add(MODNAME, 'farming-creature-spell')
+    spl.Effects.get(0).MiscValueA.set(entry);
+
     return spl.ID;
 }
 
 function makeHousingItemTemplate(name: string, spellID: number) {
-    let item = std.Items.create(
-        MODNAME,
-        "farming-" + name.toLowerCase().replace(" ", "-"),
-        itemEntry
-    );
-    item.Name.enGB.set("Housing: Spawn " + name);
-    item.Spells.addMod((val) => {
-        val.Spell.set(spellID);
-        val.Charges.set(1, "DELETE_ITEM")
-    });
+    let item = std.Items.create(MODNAME, "farming-" + name.toLowerCase().replace(" ", "-"), itemEntry)
+        .Name.enGB.set("Housing: Spawn " + name)
+        .Spells.addMod((val) => {
+            val.Spell.set(spellID);
+            val.Charges.set(1, "DELETE_ITEM")
+        });
     return item.ID;
 }
