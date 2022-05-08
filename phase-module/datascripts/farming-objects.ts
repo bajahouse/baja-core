@@ -27,7 +27,7 @@ let item = std.Items.create(MODNAME, "farming-template-creature-spell", 44606)
     .Price.set(0, 0)
 export let itemEntry = item.ID
 
-let removeGobSpell = std.Spells.create(MODNAME, "farming-template-remove-gob", 65536)
+let removeGobSpell = std.Spells.create(MODNAME, "farming-template-remove-gob", 23618)
     .CastTime.setSimple(1000, 0, 1000)
     .Tags.add(MODNAME, 'farming-remove-gob-spell')
 let removeGobItem = std.Items.create(MODNAME, "farming-remove-gob-item", itemEntry)
