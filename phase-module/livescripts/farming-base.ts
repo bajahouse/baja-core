@@ -3,6 +3,8 @@ import { PlayerFarm, PlayerFarmCrops } from "./farming-classes";
 export function baseFarm(events: TSEvents) {
     events.Player.OnCommand((player, command, found) => {
         if (command.get() == 'farm') {
+            found.set(true)
+            player.SendAreaTriggerMessage('You have bought a farm!')
             PlayerFarm.get(player).area = player.GetAreaID()
             PlayerFarm.get(player).Save();
         }
