@@ -161,6 +161,12 @@ export class PlayerFarmGobs extends DBArrayEntry {
     spawnGuid: uint64 = 0;
     spawnedEntry: uint32 = 0;
 
+    Remove(map:TSMap)
+    {
+        this.Despawn(map)
+        this.Delete()
+    }
+
     Despawn(map: TSMap) {
         if (this.spawnGuid === 0 || this.spawnMap != map.GetMapID()) return;
         let go = map.GetGameObject(this.spawnGuid);

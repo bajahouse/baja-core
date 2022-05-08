@@ -2,7 +2,7 @@ import { CropSizes, PlayerFarmCrops, PlayerFarmGobs, PlayerFarmCreatures, Player
 
 export function RegisterFarmingSpells(events: TSEvents) {
     spellScriptsForPlacement(events)
-
+    scriptsForGobDeletion(events)
     //harvesting crop
     GetIDTag('farming-mod', 'farming-crop-final').forEach(x => {
         events.GameObjectID.OnUse(x, (obj, user, cancel) => {
@@ -19,7 +19,6 @@ export function RegisterFarmingSpells(events: TSEvents) {
             PlayerFarmCrops.get(player).forEach(element => {
                 if (element.spawnGuid == obj.GetGUID()) {
                     element.Harvest(player)
-                    
                 }
             })
         })
@@ -128,6 +127,53 @@ function spellScriptsForPlacement(events: TSEvents) {
             creature.o = player.GetO();
             creature.MarkDirty();
             creature.Spawn(player)
+        })
+    })
+}
+
+function scriptsForGobDeletion(events: TSEvents) {
+    GetIDTag('farming-mod', 'farming-remove-gob-spell').forEach(x => {
+        events.SpellID.OnCheckCast(x, (spell, result) => {
+            let player = spell.GetCaster().ToPlayer();
+            if (player.IsNull())
+                return
+            if (PlayerFarm.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+                player.SendAreaTriggerMessage("This is not your home!")
+                result.set(SpellCastResult.FAILED_DONT_REPORT)
+                return
+            }
+            let gobs = player.GetGameObjectsInRange(10, 0, 0)
+            player.GossipClearMenu()
+            if (gobs.length == 0) {
+                player.SendAreaTriggerMessage('Unable to find any objects!')
+                return
+            }
+        })
+        events.SpellID.OnCast(x, (spell) => {
+            let player = spell.GetCaster().ToPlayer()
+            let gobs = player.GetGameObjectsInRange(10, 0, 0)
+            if (gobs.length > 32) {
+                gobs = gobs.slice(0, 31)
+            }
+            for (let i = 0; i < gobs.length; i++) {
+                player.GossipMenuAddItem(0, "Remove " + gobs[i].GetName() + " Entry:" + gobs[i].GetEntry(), 0, gobs[i].GetGUID()) //, false, "", 0
+            }
+            player.GossipSendMenu(5, gobs[0], 0)
+        })
+    })
+    GetIDTag('farming-mod', 'farming-gob').forEach(x => {
+        events.GameObjectID.OnGossipSelect(x, (obj, player, menuID, selection, cancel) => {
+            player.GossipComplete()
+            if (player.GetMap().GetUInt("playerOwner", 1) != player.GetGUIDLow()) {
+                player.SendAreaTriggerMessage("This is not your home!")
+                return
+            }
+            PlayerFarmGobs.get(player).forEach(gob => {
+                if (gob.spawnGuid == selection) {
+                    gob.Remove(player.GetMap())
+                    player.RemoveItemByEntry(GetID('item_template', 'farming-mod', 'farming-remove-gob-item'), 1)
+                }
+            })
         })
     })
 }
