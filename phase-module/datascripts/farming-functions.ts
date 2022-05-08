@@ -54,7 +54,9 @@ function makeHousingSpellGob(entry: number, name: string): number {
         .Description.enGB.set("Used to place a " + name + " at a chosen location.")
         .Priority.set(entry)
         .Tags.add(MODNAME, 'farming-gob-spell')
-    spl.Effects.get(0).MiscValueA.set(entry)
+    let obj = std.GameObjectTemplates.Generic.create(MODNAME, "farming-" + name.toLowerCase().replace(" ", "-"), entry);
+        obj.Tags.add(MODNAME,'farming-gob')
+    spl.Effects.get(0).MiscValueA.set(obj.ID)
 
     return spl.ID;
 }
