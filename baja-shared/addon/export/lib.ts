@@ -1,4 +1,40 @@
-// FIXME: option to init when all data is available
+export function ConvertHex (hex: string) {
+  let c = hex as any
+  if (/^#([a-f0-9]{3}){1,2}$/.test(c)) {
+    if (c.length === 4){
+      c = '#' + [c[1], c[1], c[2], c[2], c[3], c[3]].join('')
+    }
+    c = '0x' + c.substring(1)
+    return ConvertRGB([
+      (Number(c) >> 16) & 255,
+      (Number(c) >> 8) & 255,
+      Number(c) & 255,
+    ])
+  }
+  throw `Cannot convert hex value '${hex}' to RGB`
+}
+
+export function ConvertRGB (normal: RGB) {
+  return [
+    normal[0] / 255,
+    normal[1] / 255,
+    normal[2] / 255,
+  ]
+}
+
+export const DEFAULT_BACKDROP = {
+  insets: { top: 4, right: 4, bottom: 4, left: 4 },
+  tile: true,
+  tileSize: 16,
+  edgeSize: 16,
+  bgFile: 'Interface/Tooltips/UI-Tooltip-Background',
+  edgeFile: '',
+}
+
+export function Random (min: number = 1000000, max: number = 8999999) {
+  return Math.floor(Math.random() * max) + min
+}
+
 export abstract class Addon {
   constructor () {
     if (_G[FRAME_LIST_SELECTOR] === null)
@@ -16,16 +52,18 @@ export type RGB = [number, number, number]
 export type BackdropPreset = 'tooltip' | 'tutorial' | 'border' | 'noborder' | 'dialogue'
 
 export interface FrameOptions {
-  mod: string
+  mod?: string
   uid?: string
-  type?: WoWAPI.FrameType
-  parent?: WoWAPI.UIObject
+  type?: WoWAPI.FrameType | 'CheckButton'
+  parent?: SmartFrame
+  template?: string
   level?: number
   strata?: WoWAPI.FrameStrata
   hidden?: boolean
+  scale?: number
   backdrop?: BackdropPreset | WoWAPI.Backdrop
   alpha?: number
-  color?: RGB
+  color?: RGB | string
   width?: number
   height?: number
   point?: WoWAPI.Point
@@ -43,8 +81,9 @@ export interface SliderOptions extends FrameOptions { type: 'Slider' }
 export interface StatusBarOptions extends FrameOptions { type: 'StatusBar' }
 export interface SimpleHTMLOptions extends FrameOptions { type: 'SimpleHTML' }
 export interface ColorSelectOptions extends FrameOptions { type: 'ColorSelect' }
+export interface CheckButtonOptions extends FrameOptions { type: 'CheckButton' }
 
-export interface ExtendedFrameProps {
+export interface FrameProps {
   // props
   UID: string
   Mod: string
@@ -54,6 +93,7 @@ export interface ExtendedFrameProps {
   Delete: () => void
   // type cast
   ToUIObject: () => WoWAPI.UIObject
+  ToSmartFrame: () => SmartFrame,
   ToFrame: () => WoWAPI.Frame
   ToScrollFrame: () => WoWAPI.ScrollFrame
   ToChatFrame: () => WoWAPI.ChatFrame
@@ -68,19 +108,21 @@ export interface ExtendedFrameProps {
   ToMinimap: () => WoWAPI.Minimap
   ToButton: () => WoWAPI.Button
   ToEditBox: () => WoWAPI.EditBox
+  ToCheckButton: () => WoWAPI.CheckButton
   ToAdvancedFrame: <
     O extends object = object,
-    F extends WoWAPI.UIObject = ExtendedFrame,
+    F extends WoWAPI.UIObject = SmartFrame,
   >() => WoWAPI.AdvancedFrame<F, O>
 }
 
-export type ExtendedModel = WoWAPI.AdvancedFrame<WoWAPI.Model, ExtendedFrameProps>
-export type ExtendedSlider = WoWAPI.AdvancedFrame<WoWAPI.Slider, ExtendedFrameProps>
-export type ExtendedStatusBar = WoWAPI.AdvancedFrame<WoWAPI.StatusBar, ExtendedFrameProps>
-export type ExtendedSimpleHTML = WoWAPI.AdvancedFrame<WoWAPI.SimpleHTML, ExtendedFrameProps>
-export type ExtendedScrollFrame = WoWAPI.AdvancedFrame<WoWAPI.ScrollFrame, ExtendedFrameProps>
-export type ExtendedButton = WoWAPI.AdvancedFrame<WoWAPI.Button, ExtendedFrameProps>
-export type ExtendedFrame = WoWAPI.AdvancedFrame<WoWAPI.Frame, ExtendedFrameProps>
+export type Model = WoWAPI.AdvancedFrame<WoWAPI.Model, FrameProps>
+export type Slider = WoWAPI.AdvancedFrame<WoWAPI.Slider, FrameProps>
+export type StatusBar = WoWAPI.AdvancedFrame<WoWAPI.StatusBar, FrameProps>
+export type SimpleHTML = WoWAPI.AdvancedFrame<WoWAPI.SimpleHTML, FrameProps>
+export type ScrollFrame = WoWAPI.AdvancedFrame<WoWAPI.ScrollFrame, FrameProps>
+export type Button = WoWAPI.AdvancedFrame<WoWAPI.Button, FrameProps>
+export type CheckButton = WoWAPI.AdvancedFrame<WoWAPI.CheckButton, FrameProps>
+export type SmartFrame = WoWAPI.AdvancedFrame<WoWAPI.Frame, FrameProps>
 
 export const FRAME_LIST_SELECTOR = 'frame-list'
 export const FRAME_MAP_SELECTOR = 'frame-map'
@@ -97,13 +139,13 @@ export function CleanFrame (f: WoWAPI.Frame) {
   f.UnregisterAllEvents()
   f.SetID(0)
   f.ClearAllPoints()
-  ;(f as ExtendedFrame).IsDeleted = true
+  ;(f as SmartFrame).IsDeleted = true
 }
 
-export function GetFrameList (): ExtendedFrame[] {
+export function GetFrameList (): SmartFrame[] {
   if (!_G[FRAME_LIST_SELECTOR])
     _G[FRAME_LIST_SELECTOR] = []
-  return _G[FRAME_LIST_SELECTOR] as ExtendedFrame[]
+  return _G[FRAME_LIST_SELECTOR] as SmartFrame[]
 }
 
 export function GetFrameMap (): object {
@@ -114,30 +156,33 @@ export function GetFrameMap (): object {
 
 export let current_frame_index = 0
 
-export function $ (options: ModelOptions): ExtendedModel
-export function $ (options: SliderOptions): ExtendedSlider
-export function $ (options: StatusBarOptions): ExtendedStatusBar
-export function $ (options: SimpleHTMLOptions): ExtendedSimpleHTML
-export function $ (options: ScrollFrameOptions): ExtendedScrollFrame
-export function $ (options: ButtonOptions): ExtendedButton
-export function $ (options: FrameOptions): ExtendedFrame
-export function $ (options: FrameOptions) {
-  let frame: ExtendedFrame
-  let list: ExtendedFrame[] = _G[FRAME_LIST_SELECTOR]
+export function $ (options?: CheckButtonOptions): CheckButton
+export function $ (options?: ModelOptions): Model
+export function $ (options?: SliderOptions): Slider
+export function $ (options?: StatusBarOptions): StatusBar
+export function $ (options?: SimpleHTMLOptions): SimpleHTML
+export function $ (options?: ScrollFrameOptions): ScrollFrame
+export function $ (options?: ButtonOptions): Button
+export function $ (options?: FrameOptions): SmartFrame
+export function $ (options: FrameOptions = {}) {
+  let frame: SmartFrame
+  let list: SmartFrame[] = _G[FRAME_LIST_SELECTOR]
   let map: object = _G[FRAME_MAP_SELECTOR]
   if (!list)
     _G[FRAME_LIST_SELECTOR] = list = []
   if (!map)
     _G[FRAME_MAP_SELECTOR] = map = []
-  if (!map[options.mod])
-    map[options.mod] = {}
+  const mod = options.mod || 'global'
+  const uid = options.uid || `${Random()}`
+  if (!map[mod])
+    map[mod] = {}
   if (options.uid) {
-    const s: ExtendedFrame = map[options.mod][options.uid]
+    const s: SmartFrame = map[mod][uid]
     if (s)
       if (s.IsDeleted) {
         frame = s
       } else {
-        throw `Attempting to re-assign undeleted frame ${options.mod}::${options.uid}. Frame must be deleted before re-assigning.`
+        throw `Attempting to re-assign undeleted frame ${mod}::${uid}. Frame must be deleted before re-assigning.`
       }
   } else {
     for (let f of list) {
@@ -146,18 +191,20 @@ export function $ (options: FrameOptions) {
     }
   }
   if (!frame) {
-    frame = CreateFrame(options.type || 'Frame', options.mod) as any
+    frame = (CreateFrame as any)(options.type as any, `${options.mod}::${uid}`, options.template) as any
     frame.Index = current_frame_index++
     list.push(frame)
     if (options.uid)
-      map[options.mod][options.uid] = frame
+      map[mod][options.uid] = frame
   }
   frame.IsDeleted = false
   frame.Delete = () => {
     CleanFrame(frame)
   }
-  frame.UID = options.uid || `unnamed-${frame.Index}`
-  frame.Mod = options.mod
+  // FIXME: public  - frame.Reflow (calls frame.Draw on all children that have it)
+  // FIXME: private - frame.Draw
+  frame.UID = uid
+  frame.Mod = mod
   if (options.hidden) {
     frame.Hide()
   } else {
@@ -245,10 +292,17 @@ export function $ (options: FrameOptions) {
     }
   if (options.alpha)
     frame.SetAlpha(1)
-  if (options.color)
+  if (typeof options.color === 'object') {
     frame.SetBackdropColor(options.color[0], options.color[1], options.color[2], frame.GetAlpha())
-  if (options.parent)
+  } else if (typeof options.color === 'string') {
+    const [r, g, b] = ConvertHex(options.color)
+    frame.SetBackdropColor(r, g, b, frame.GetAlpha())
+  }
+  if (options.parent) {
     frame.SetParent(options.parent)
+  } else {
+    frame.SetParent(UIParent)
+  }
   if (options.width)
     frame.SetWidth(options.width)
   if (options.height)
@@ -271,7 +325,7 @@ export function $ (options: FrameOptions) {
   frame.ToMinimap = () => frame as any as WoWAPI.Minimap
   frame.ToAdvancedFrame = <
     O extends object = object,
-    F extends WoWAPI.UIObject = ExtendedFrame,
+    F extends WoWAPI.UIObject = SmartFrame,
   >() => frame as any as WoWAPI.AdvancedFrame<F, O>
   if (options.level) {
     frame.SetFrameLevel(options.level)
@@ -288,6 +342,8 @@ export function $ (options: FrameOptions) {
       frame.SetFrameStrata('MEDIUM')
     }
   }
+  if (options.scale)
+    frame.SetScale(options.scale)
   return frame
 }
 

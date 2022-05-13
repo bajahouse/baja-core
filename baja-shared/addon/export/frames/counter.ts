@@ -1,36 +1,34 @@
-import { Component, ComponentOptions, Frame, Element } from '../app'
-import { BASE_BACKDROP } from '../constants'
+import { Input } from './input'
+import { $, SmartFrame, FrameOptions } from '../lib'
 import { Button } from './button'
 
-export interface CounterOptions extends ComponentOptions {
+export interface CounterOptions extends SmartFrame {
   width?: number
   min?: number
   max?: number
   initial?: number
-  onAccept?: (amount: number, element: Element<any, any>) => number | void
-  onCancel?: (amount: number, element: Element<any, any>) => number | void
+  onAccept?: (amount: number, element: SmartFrame) => number | void
+  onCancel?: (amount: number, element: SmartFrame) => number | void
 }
 
-export const Counter: Component<CounterOptions> = options => {
+export const Counter = options => {
   let count = options.initial || 0
-  const counter = Frame({
+  const counter = $({
     ...options,
     height: options.height || 30,
-  }) as Element<any, any>
-  counter.ref.SetBackdrop({
-    ...BASE_BACKDROP,
+    backdrop: 'tooltip',
   })
-  counter.ref.SetBackdropColor(0, 0, 0, 1)
-  counter.ref.SetHeight(options.height || 30)
+  counter.SetBackdropColor(0, 0, 0, 1)
+  counter.SetHeight(options.height || 30)
 
   const width = options.width || options.parent.inner.GetWidth()
 
-  counter.ref.SetWidth(width - 15)
+  counter.SetWidth(width - 15)
 
-  const input = Frame({
-    name: `${options.name}-input`,
-    width: counter.ref.GetWidth() - 16,
-    height: counter.ref.GetHeight(),
+  const input = Input({
+    mod: options.mod,
+    width: counter.GetWidth() - 16,
+    height: counter.GetHeight(),
     parent: counter,
   })
   input.ref.SetPoint('CENTER')
@@ -45,8 +43,8 @@ export const Counter: Component<CounterOptions> = options => {
   i.SetScript('OnTextChanged', () => {
   })
   input.inner = i as any
-  counter.ref.EnableMouse(true)
-  counter.ref.SetScript('OnMouseDown', () => {
+  counter.EnableMouse(true)
+  counter.SetScript('OnMouseDown', () => {
     i.SetFocus()
   })
   const fn = (isDontTrigger?: boolean) => {
@@ -103,7 +101,7 @@ export const Counter: Component<CounterOptions> = options => {
     options.onCancel(count, counter)
   })
   const plus = Button({
-    name: `${options.name}-plus`,
+    mod: options.mod,
     parent: input,
     text: '+',
     width: 30,
@@ -116,7 +114,7 @@ export const Counter: Component<CounterOptions> = options => {
     },
   })
   const minus = Button({
-    name: `${options.name}-minus`,
+    mod: options.mod,
     parent: input,
     text: '-',
     width: 30,
@@ -129,8 +127,8 @@ export const Counter: Component<CounterOptions> = options => {
       decrement()
     },
   })
-  plus.ref.SetPoint('TOPLEFT', i, 'TOPRIGHT', 15, 0)
-  minus.ref.SetPoint('BOTTOMLEFT', i, 'BOTTOMRIGHT', 15, 0)
+  plus.SetPoint('TOPLEFT', i, 'TOPRIGHT', 15, 0)
+  minus.SetPoint('BOTTOMLEFT', i, 'BOTTOMRIGHT', 15, 0)
 
   return counter
 }

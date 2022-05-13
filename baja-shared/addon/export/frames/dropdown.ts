@@ -1,7 +1,6 @@
-import { Component, ComponentOptions, Frame, Element } from '../app'
-import { List } from '../components/list'
-import { BASE_BACKDROP } from '../constants'
-import { Mapping } from '../types'
+import { DEFAULT_BACKDROP } from './../lib'
+import { $, SmartFrame, FrameOptions } from '../lib'
+import { List } from './list'
 
 const AUTOHIDE_TIMER = 1
 
@@ -11,25 +10,24 @@ const DEFAULT_SELECTION = {
   value: null,
 }
 
-export interface DropdownItem {
+export interface DropdownItem extends FrameOptions {
   id: string
   text: string
   disabled?: boolean
   value?: string | number | boolean | null
   tooltip?: string
-  item?: Element<DropdownOptions>
+  item?: SmartFrame
 }
 
 export type DropdownItemOptions = Omit<DropdownItem , 'item'>
 
 export interface DropdownState {
   length: number
-  items: Mapping<DropdownItem>
+  items: { [key: string]: DropdownItem }
   selection: DropdownItem
 }
 
-export interface DropdownOptions extends ComponentOptions {
-  width?: number
+export interface DropdownOptions extends FrameOptions {
   items?: DropdownItemOptions[]
   isSelectableEmpty?: boolean
   isTriggerOnInit?: boolean,
@@ -39,8 +37,7 @@ export interface DropdownOptions extends ComponentOptions {
   onSelect?: (item: DropdownItem) => void
 }
 
-export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
-  const { name } = options
+export const Dropdown = (options: DropdownOptions) => {
   const items = {
     empty: {
       id: 'empty',
@@ -51,7 +48,10 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
   const autohide = {}
   let timer = 0
 
-  const a: Element<DropdownState> = Frame(options) as any
+  const a = $({
+    backdrop: 'tooltip',
+    ...options,
+  }) as any
 
   a.state = {
     length: 0,
@@ -59,10 +59,9 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
     selection: { ...DEFAULT_SELECTION },
   }
 
-  a.ref.SetWidth(options.width || 200)
-  a.ref.SetHeight(30)
-  a.ref.SetBackdrop({ ...BASE_BACKDROP, bgFile: 'Interface/Tooltips/UI-Tooltip-Background' })
-  a.ref.SetBackdropColor(0, 0, 0, 1)
+  a.SetWidth(options.width || 200)
+  a.SetHeight(30)
+  a.SetBackdropColor(0, 0, 0, 1)
 
   autohide['a'] = false
 
@@ -79,37 +78,35 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
   })
 
   // menu
-  const p = Frame({ name: `${name}-menu-padding`, parent: a })
-  p.ref.SetPoint('TOP', a.ref, 'BOTTOM', 0, 0)
-  p.ref.SetSize(options.width || 200, 3)
-  p.ref.SetBackdrop({ ...BASE_BACKDROP, bgFile: 'Interface/Tooltips/UI-Tooltip-Background', edgeFile: ''  })
-  p.ref.SetBackdropColor(0, 0, 0, 1)
+  const p = $({ mod: options.mod, parent: a, backdrop: 'tooltip' })
+  p.SetPoint('TOP', a.ref, 'BOTTOM', 0, 0)
+  p.SetSize(options.width || 200, 3)
+  p.SetBackdropColor(0, 0, 0, 1)
 
-  const menu = Frame({ name: `${name}-menu`, parent: p })
-  menu.ref.SetSize(options.width || 200, 0)
-  menu.ref.SetPoint('TOP', p.ref, 'BOTTOM', 0, 0)
-  menu.ref.SetBackdrop({ ...BASE_BACKDROP, bgFile: 'Interface/Tooltips/UI-Tooltip-Background' })
-  menu.ref.SetBackdropColor(0, 0, 0, 1)
+  const menu = $({ mod: options.mod, parent: p, backdrop: 'tooltip' })
+  menu.SetSize(options.width || 200, 0)
+  menu.SetPoint('TOP', p, 'BOTTOM', 0, 0)
+  menu.SetBackdropColor(0, 0, 0, 1)
 
-  p.ref.Hide()
+  p.Hide()
 
   autohide['p'] = false
   autohide['menu'] = false
 
-  p.ref.HookScript('OnEnter', () => {
+  p.HookScript('OnEnter', () => {
     autohide['p'] = true
   })
 
-  p.ref.HookScript('OnLeave', () => {
+  p.HookScript('OnLeave', () => {
     autohide['p'] = false
     timer = GetTime() + AUTOHIDE_TIMER
   })
 
-  menu.ref.HookScript('OnEnter', () => {
+  menu.HookScript('OnEnter', () => {
     autohide['menu'] = true
   })
 
-  menu.ref.HookScript('OnLeave', () => {
+  menu.HookScript('OnLeave', () => {
     autohide['menu'] = false
     timer = GetTime() + AUTOHIDE_TIMER
   })
@@ -140,14 +137,14 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
   a.ref.EnableMouse(true)
   a.ref.HookScript('OnMouseDown', () => {
     PlaySound(1115)
-    if (p.ref.IsVisible()) {
-      p.ref.Hide()
+    if (p.IsVisible()) {
+      p.Hide()
       button.SetNormalTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up')
       button.SetHighlightTexture('Interface\\Buttons\\UI-Common-MouseHilight')
       button.SetPushedTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Down')
       button.SetDisabledTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Disabled')
     } else {
-      p.ref.Show()
+      p.Show()
       button.SetNormalTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollUp-Up')
       button.SetHighlightTexture('Interface\\Buttons\\UI-Common-MouseHilight')
       button.SetPushedTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollUp-Down')
@@ -157,14 +154,14 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
 
   button.HookScript('OnClick', () => {
     PlaySound(1115)
-    if (p.ref.IsVisible()) {
-      p.ref.Hide()
+    if (p.IsVisible()) {
+      p.Hide()
       button.SetNormalTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up')
       button.SetHighlightTexture('Interface\\Buttons\\UI-Common-MouseHilight')
       button.SetPushedTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Down')
       button.SetDisabledTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Disabled')
     } else {
-      p.ref.Show()
+      p.Show()
       button.SetNormalTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollUp-Up')
       button.SetHighlightTexture('Interface\\Buttons\\UI-Common-MouseHilight')
       button.SetPushedTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollUp-Down')
@@ -186,11 +183,11 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
   text.SetText(options.emptyText || 'select')
 
   // list
-  const listwrap = Frame({ name: `${name}-menu-list-wrapper`, parent: menu })
-  const list = List({ name: `${name}-menu-list`, itemHeight: 30, parent: listwrap })
+  const listwrap = $({ mod: options.mod, parent: menu })
+  const list = List({ mod: options.mod, itemHeight: 30, parent: listwrap })
 
-  listwrap.ref.SetSize(options.width || 200, 0)
-  list.ref.SetSize(options.width || 200, 0)
+  listwrap.SetSize(options.width || 200, 0)
+  list.SetSize(options.width || 200, 0)
 
   autohide['list'] = false
 
@@ -206,10 +203,11 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
 
   // item
   const Item = (options: DropdownItemOptions) => {
-    const w = Frame({ name: `${name}-${options.id}-wrapper` })
-    const t = w.ref.CreateFontString(`${name}-${options.id}-wrapper-text`)
+    const w = $({ mod: options.mod })
+    // FIXME: build ExtendedText frame
+    const t = w.CreateFontString(`${name}-${options.id}-wrapper-text`)
 
-    t.SetParent(w.ref)
+    t.SetParent(w)
     t.SetPoint('LEFT', 30, 0)
     t.SetFont('Fonts/FRIZQT__.TTF', 10)
     t.SetText(options.text)
@@ -217,19 +215,19 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
     if (options.disabled)
       t.SetTextColor(0.4, 0.4, 0.4, 1)
 
-    const e: any = w.ref
+    const e: any = w
     e.text = t
 
-    w.ref.SetBackdropColor(0, 0, 0, 1)
+    w.SetBackdropColor(0, 0, 0, 1)
 
-    w.ref.EnableMouse(true)
+    w.EnableMouse(true)
 
-    w.ref.HookScript('OnEnter', () => {
+    w.HookScript('OnEnter', () => {
       autohide['item-' + options.id] = true
       if (!options.disabled) {
         timer = 0
-        w.ref.SetBackdrop({ ...BASE_BACKDROP, bgFile: 'Interface/Tooltips/UI-Tooltip-Background', edgeFile: '' })
-        w.ref.SetBackdropColor(0.21, 0.49, 1, 1)
+        w.SetBackdrop(DEFAULT_BACKDROP)
+        w.SetBackdropColor(0.21, 0.49, 1, 1)
         if (options.tooltip) {
           GameTooltip.ClearLines()
           GameTooltip.SetOwner(UIParent, 'ANCHOR_CURSOR')
@@ -239,12 +237,12 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
       }
     })
 
-    w.ref.HookScript('OnLeave', () => {
+    w.HookScript('OnLeave', () => {
       timer = GetTime() + AUTOHIDE_TIMER
       autohide['item-' + options.id] = false
       if (!options.disabled) {
-        w.ref.SetBackdrop({ bgFile: '', insets: { left:0, right:0, top:0, bottom:0 } })
-        w.ref.SetBackdropColor(0, 0, 0, 1)
+        w.SetBackdrop({ bgFile: '', insets: { left:0, right:0, top:0, bottom:0 } })
+        w.SetBackdropColor(0, 0, 0, 1)
         if (options.tooltip) {
           GameTooltip.ClearLines()
           GameTooltip.Hide()
@@ -252,9 +250,9 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
       }
     })
 
-    w.ref.HookScript('OnMouseUp', () => {
+    w.HookScript('OnMouseUp', () => {
       if (!options.disabled) {
-        p.ref.Hide()
+        p.Hide()
         button.SetNormalTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up')
         button.SetHighlightTexture('Interface\\Buttons\\UI-Common-MouseHilight')
         button.SetPushedTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Down')
@@ -262,9 +260,9 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
         Select(options.id)
       }
     })
-    w.ref.HookScript('OnMouseDown', () => {
+    w.HookScript('OnMouseDown', () => {
       if (!options.disabled) {
-        p.ref.Hide()
+        p.Hide()
         button.SetNormalTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up')
         button.SetHighlightTexture('Interface\\Buttons\\UI-Common-MouseHilight')
         button.SetPushedTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Down')
@@ -277,10 +275,10 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
 
     a.state.length = list.state.items.length
 
-    menu.ref.SetHeight((a.state.length * 30) + 14)
-    listwrap.ref.SetHeight(a.state.length * 30)
+    menu.SetHeight((a.state.length * 30) + 14)
+    listwrap.SetHeight(a.state.length * 30)
 
-    listwrap.ref.SetPoint('CENTER')
+    listwrap.SetPoint('CENTER')
 
     autohide[`item-${options.id}`] = false
     items[options.id] = {
@@ -306,7 +304,7 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
   a.ref.SetScript('OnUpdate', () => {
     if ((timer > 0) && (GetTime() >= timer)) {
       if (!IsMouseEnter())
-        p.ref.Hide()
+        p.Hide()
         button.SetNormalTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up')
         button.SetHighlightTexture('Interface\\Buttons\\UI-Common-MouseHilight')
         button.SetPushedTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Down')
@@ -334,9 +332,9 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
     }
 
     if (item.id !== 'empty') {
-      checkmark.ref.Show()
-      checkmark.ref.SetParent(item.item.ref)
-      checkmark.ref.SetPoint('LEFT', 12, 0)
+      checkmark.Show()
+      checkmark.SetParent(item.item.ref)
+      checkmark.SetPoint('LEFT', 12, 0)
       for (const key of Object.keys(items))
         if (items[key].item)
           items[key].item.ref.text.SetPoint('LEFT', 30, 0)
@@ -344,7 +342,7 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
       for (const key of Object.keys(items))
         if (items[key].item)
           items[key].item.ref.text.SetPoint('LEFT', 12, 0)
-      checkmark.ref.Hide()
+      checkmark.Hide()
     }
 
     texture.SetAllPoints()
@@ -353,16 +351,16 @@ export const Dropdown: Component<DropdownOptions, DropdownState> = options => {
   }
 
   // checkmark
-  const checkmark = Frame({ name: `${a.ref.GetName()}-checkmark`, parent: menu })
-  checkmark.ref.SetSize(12, 12)
-  checkmark.ref.Hide()
+  const checkmark = $({ mod: options.mod, parent: menu })
+  checkmark.SetSize(12, 12)
+  checkmark.Hide()
 
-  const texture = checkmark.ref.CreateTexture()
+  const texture = checkmark.CreateTexture()
   texture.SetTexture('Interface/BUTTONS/UI-CheckBox-Check.blp')
 
   // empty
   if (options.isSelectableEmpty)
-    Item(items['empty'])
+    Item({ mod: options.mod, ...items['empty'] })
 
   // create items
   if (options.items)

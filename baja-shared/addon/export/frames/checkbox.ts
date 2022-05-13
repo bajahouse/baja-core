@@ -1,32 +1,37 @@
-import { Component, ComponentOptions, Frame, Element } from '../app'
+import { $, SmartFrame, FrameOptions } from '../lib'
 
-export interface CheckButton extends ExtendedFrame {
+export interface CheckButton extends SmartFrame {
   GetChecked: () => number | null
   SetChecked: (isChecked: number | boolean | null) => void
   SetText: (text: string) => void
 }
 
-export interface CheckboxOptions extends ComponentOptions {
+export interface CheckboxOptions extends FrameOptions {
   text: string
   initial?: number
-  onChange?: (isChecked: number, element: Element<any, any>) => void
-  onCheck?: (element: Element<any, any>) => void
-  onUncheck?: (element: Element<any, any>) => void
+  onChange?: (isChecked: number, element: SmartFrame) => void
+  onCheck?: (element: SmartFrame) => void
+  onUncheck?: (element: SmartFrame) => void
   // FIXME: min/max
 }
 
-export const Checkbox: Component<CheckboxOptions> = options => {
-  const f = Frame({ ...options }) as Element<any, any>
-  f.ref.SetSize(options.parent.inner.GetWidth(), 24)
+export const Checkbox = (options: CheckboxOptions) => {
+  const f = $({ ...options })
+  f.SetSize(options.parent.GetWidth(), 24)
 
-  const check = CreateFrame('CheckButton' as any, `${options.name}-checkbutton`, f.ref, 'ChatConfigCheckButtonTemplate') as CheckButton
+  const check = $({
+    ...options,
+    type: 'CheckButton',
+    template: 'ChatConfigCheckButtonTemplate',
+  })
   check.SetPoint('TOPLEFT')
   check.SetText('hello world')
   let isChecked = options.initial
   if (options.initial)
     check.SetChecked(true)
 
-  const t = check.CreateFontString(`${options.name}-checkbutton-text`, 'OVERLAY', 'GameTooltipText')
+  // FIXME: build ExtendedText frame
+  const t = check.CreateFontString('', 'OVERLAY', 'GameTooltipText')
   t.SetFont('Fonts/FRIZQT__.TTF', 12)
   t.SetText(options.text)
   t.SetParent(check)
@@ -34,9 +39,9 @@ export const Checkbox: Component<CheckboxOptions> = options => {
 
   check.SetScript('OnClick', () => {
     const value = check.GetChecked()
-    if ((value !== isChecked) && options.onChange)
-      options.onChange(value, f)
-    if ((value === 1) && options.onCheck) {
+    if (((value ? 1 : 0) !== isChecked) && options.onChange)
+      options.onChange(value ? 1 : 0, f)
+    if (((value ? 1 : 0) === 1) && options.onCheck) {
       options.onCheck(f)
       PlaySound(856)
     }
@@ -44,7 +49,7 @@ export const Checkbox: Component<CheckboxOptions> = options => {
       options.onUncheck(f)
       PlaySound(857)
     }
-    isChecked = value
+    isChecked = value ? 1 : 0
   })
 
   return f

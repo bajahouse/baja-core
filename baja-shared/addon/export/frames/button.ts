@@ -1,4 +1,4 @@
-import { $, ExtendedFrame, FrameOptions, RGB } from '../lib'
+import { $, SmartFrame, FrameOptions, RGB } from '../lib'
 
 export interface ButtonOptions extends FrameOptions {
   text: string
@@ -8,7 +8,7 @@ export interface ButtonOptions extends FrameOptions {
   textXOffset?: number
   textYOffset?: number
   color?: RGB
-  onClick?: (frame: ExtendedFrame) => void
+  onClick?: (frame: SmartFrame) => void
 }
 
 export const Button = (options: ButtonOptions) => {
