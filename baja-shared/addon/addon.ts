@@ -26,16 +26,16 @@ const grid = Grid({
   rowHeight: 50,
 })
 
-const test = Button({
-  parent: scroll,
-  width: 50,
-  height: 50,
-  text: '',
-  color: [1, 0, 0],
-  onClick: e => e.Delete(),
-})
-
-grid.Attach(test)
+grid.Attach(
+  Button({
+    parent: scroll,
+    width: 50,
+    height: 50,
+    text: '',
+    color: [1, 0, 0],
+    onClick: e => e.Delete(),
+  })
+)
 
 // FIXME
 // pctWidth: number
