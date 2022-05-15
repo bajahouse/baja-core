@@ -15,6 +15,14 @@ export function ConvertHex (hex: string) {
   // throw `Cannot convert hex value '${hex}' to RGB`
 }
 
+export function ConvertRGB (normal: RGB) {
+  return [
+    normal[0] / 255,
+    normal[1] / 255,
+    normal[2] / 255,
+  ]
+}
+
 export type PersistenceTarget = 'client' | 'server'
 
 export function Movable (frame: SmartFrame, button: WoWAPI.MouseButton, ersist?: PersistenceTarget) {
@@ -25,13 +33,6 @@ export function Movable (frame: SmartFrame, button: WoWAPI.MouseButton, ersist?:
   frame.SetScript('OnDragStop', f => f.StopMovingOrSizing())
 }
 
-export function ConvertRGB (normal: RGB) {
-  return [
-    normal[0] / 255,
-    normal[1] / 255,
-    normal[2] / 255,
-  ]
-}
 
 export const DEFAULT_BACKDROP = {
   insets: { top: 4, right: 4, bottom: 4, left: 4 },
@@ -185,7 +186,7 @@ export function $ (options: FrameOptions = {}) {
     _G[FRAME_LIST_SELECTOR] = list = []
   if (!map)
     _G[FRAME_MAP_SELECTOR] = map = []
-  const mod = options.mod || 'global'
+  const mod = options.mod || (options.parent && options.parent.Mod) || 'global'
   const uid = options.uid || `${Random()}`
   if (!map[mod])
     map[mod] = {}
