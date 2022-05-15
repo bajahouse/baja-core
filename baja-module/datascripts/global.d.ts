@@ -319,6 +319,20 @@ declare const enum InventorySlots /**@realType:uint32*/{
     BAG_3 = 21,
     BAG_4 = 22
 }
+declare const enum SpellMissInfo /**@realType:uint32*/ {
+    NONE                    = 0,
+    MISS                    = 1,
+    RESIST                  = 2,
+    DODGE                   = 3,
+    PARRY                   = 4,
+    BLOCK                   = 5,
+    EVADE                   = 6,
+    IMMUNE                  = 7,
+    IMMUNE2                 = 8, // one of these 2 is MISS_TEMPIMMUNE
+    DEFLECT                 = 9,
+    ABSORB                  = 10,
+    REFLECT                 = 11
+}
 declare const enum CorpseType /**@realType:uint32*/ {
     BONES             = 0,
     RESURRECTABLE_PVE = 1,
@@ -531,6 +545,403 @@ declare const enum SheathState /**@realType:uint8*/ {
     MELEE    = 1,                              // prepared melee weapon
     RANGED   = 2                               // prepared ranged weapon
 }
+declare const enum ObjectFields /**@realType:uint32*/ {
+    FIELD_GUID                         = 0x0000, // Size: 2, Type: LONG, Flags: PUBLIC
+    FIELD_TYPE                         = 0x0002, // Size: 1, Type: INT, Flags: PUBLIC
+    FIELD_ENTRY                        = 0x0003, // Size: 1, Type: INT, Flags: PUBLIC
+    FIELD_SCALE_X                      = 0x0004, // Size: 1, Type: FLOAT, Flags: PUBLIC
+    FIELD_PADDING                      = 0x0005, // Size: 1, Type: INT, Flags: NONE
+    END                                = 0x0006
+}
+declare const enum ItemFields /**@realType:uint32*/ {
+    FIELD_OWNER                          = 6 + 0x0000, // Size: 2, Type: LONG, Flags: PUBLIC
+    FIELD_CONTAINED                      = 6 + 0x0002, // Size: 2, Type: LONG, Flags: PUBLIC
+    FIELD_CREATOR                        = 6 + 0x0004, // Size: 2, Type: LONG, Flags: PUBLIC
+    FIELD_GIFTCREATOR                    = 6 + 0x0006, // Size: 2, Type: LONG, Flags: PUBLIC
+    FIELD_STACK_COUNT                    = 6 + 0x0008, // Size: 1, Type: INT, Flags: OWNER, OWNER
+    FIELD_DURATION                       = 6 + 0x0009, // Size: 1, Type: INT, Flags: OWNER, OWNER
+    FIELD_SPELL_CHARGES                  = 6 + 0x000A, // Size: 5, Type: INT, Flags: OWNER, OWNER
+    FIELD_FLAGS                          = 6 + 0x000F, // Size: 1, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_1_1                = 6 + 0x0010, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_1_3                = 6 + 0x0012, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_2_1                = 6 + 0x0013, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_2_3                = 6 + 0x0015, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_3_1                = 6 + 0x0016, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_3_3                = 6 + 0x0018, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_4_1                = 6 + 0x0019, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_4_3                = 6 + 0x001B, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_5_1                = 6 + 0x001C, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_5_3                = 6 + 0x001E, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_6_1                = 6 + 0x001F, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_6_3                = 6 + 0x0021, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_7_1                = 6 + 0x0022, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_7_3                = 6 + 0x0024, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_8_1                = 6 + 0x0025, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_8_3                = 6 + 0x0027, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_9_1                = 6 + 0x0028, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_9_3                = 6 + 0x002A, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_10_1               = 6 + 0x002B, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_10_3               = 6 + 0x002D, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_11_1               = 6 + 0x002E, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_11_3               = 6 + 0x0030, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_12_1               = 6 + 0x0031, // Size: 2, Type: INT, Flags: PUBLIC
+    FIELD_ENCHANTMENT_12_3               = 6 + 0x0033, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    FIELD_PROPERTY_SEED                  = 6 + 0x0034, // Size: 1, Type: INT, Flags: PUBLIC
+    FIELD_RANDOM_PROPERTIES_ID           = 6 + 0x0035, // Size: 1, Type: INT, Flags: PUBLIC
+    FIELD_DURABILITY                     = 6 + 0x0036, // Size: 1, Type: INT, Flags: OWNER, OWNER
+    FIELD_MAXDURABILITY                  = 6 + 0x0037, // Size: 1, Type: INT, Flags: OWNER, OWNER
+    FIELD_CREATE_PLAYED_TIME             = 6 + 0x0038, // Size: 1, Type: INT, Flags: PUBLIC
+    FIELD_PAD                            = 6 + 0x0039, // Size: 1, Type: INT, Flags: NONE
+    END                                  = 6 + 0x003A
+}
+declare const enum ContainerFields /**@realType:uint32*/ {
+    FIELD_NUM_SLOTS                 = 64 + 0x0000, // Size: 1, Type: INT, Flags: PUBLIC
+    ALIGN_PAD                       = 64 + 0x0001, // Size: 1, Type: BYTES, Flags: NONE
+    FIELD_SLOT_1                    = 64 + 0x0002, // Size: 72, Type: LONG, Flags: PUBLIC
+    END                             = 64 + 0x004A
+}
+declare const enum UnitFields /**@realType:uint32*/ {
+    UNIT_FIELD_CHARM                          = 6 + 0x0000, // Size: 2, Type: LONG, Flags: PUBLIC
+    UNIT_FIELD_SUMMON                         = 6 + 0x0002, // Size: 2, Type: LONG, Flags: PUBLIC
+    UNIT_FIELD_CRITTER                        = 6 + 0x0004, // Size: 2, Type: LONG, Flags: PRIVATE
+    UNIT_FIELD_CHARMEDBY                      = 6 + 0x0006, // Size: 2, Type: LONG, Flags: PUBLIC
+    UNIT_FIELD_SUMMONEDBY                     = 6 + 0x0008, // Size: 2, Type: LONG, Flags: PUBLIC
+    UNIT_FIELD_CREATEDBY                      = 6 + 0x000A, // Size: 2, Type: LONG, Flags: PUBLIC
+    UNIT_FIELD_TARGET                         = 6 + 0x000C, // Size: 2, Type: LONG, Flags: PUBLIC
+    UNIT_FIELD_CHANNEL_OBJECT                 = 6 + 0x000E, // Size: 2, Type: LONG, Flags: PUBLIC
+    UNIT_CHANNEL_SPELL                        = 6 + 0x0010, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_BYTES_0                        = 6 + 0x0011, // Size: 1, Type: BYTES, Flags: PUBLIC
+    UNIT_FIELD_HEALTH                         = 6 + 0x0012, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_POWER1                         = 6 + 0x0013, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_POWER2                         = 6 + 0x0014, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_POWER3                         = 6 + 0x0015, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_POWER4                         = 6 + 0x0016, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_POWER5                         = 6 + 0x0017, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_POWER6                         = 6 + 0x0018, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_POWER7                         = 6 + 0x0019, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_MAXHEALTH                      = 6 + 0x001A, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_MAXPOWER1                      = 6 + 0x001B, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_MAXPOWER2                      = 6 + 0x001C, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_MAXPOWER3                      = 6 + 0x001D, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_MAXPOWER4                      = 6 + 0x001E, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_MAXPOWER5                      = 6 + 0x001F, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_MAXPOWER6                      = 6 + 0x0020, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_MAXPOWER7                      = 6 + 0x0021, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_POWER_REGEN_FLAT_MODIFIER      = 6 + 0x0022, // Size: 7, Type: FLOAT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_POWER_REGEN_INTERRUPTED_FLAT_MODIFIER = 6 + 0x0029, // Size: 7, Type: FLOAT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_LEVEL                          = 6 + 0x0030, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_FACTIONTEMPLATE                = 6 + 0x0031, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_VIRTUAL_ITEM_SLOT_ID                 = 6 + 0x0032, // Size: 3, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_FLAGS                          = 6 + 0x0035, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_FLAGS_2                        = 6 + 0x0036, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_AURASTATE                      = 6 + 0x0037, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_BASEATTACKTIME                 = 6 + 0x0038, // Size: 2, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_RANGEDATTACKTIME               = 6 + 0x003A, // Size: 1, Type: INT, Flags: PRIVATE
+    UNIT_FIELD_BOUNDINGRADIUS                 = 6 + 0x003B, // Size: 1, Type: FLOAT, Flags: PUBLIC
+    UNIT_FIELD_COMBATREACH                    = 6 + 0x003C, // Size: 1, Type: FLOAT, Flags: PUBLIC
+    UNIT_FIELD_DISPLAYID                      = 6 + 0x003D, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_NATIVEDISPLAYID                = 6 + 0x003E, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_MOUNTDISPLAYID                 = 6 + 0x003F, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_MINDAMAGE                      = 6 + 0x0040, // Size: 1, Type: FLOAT, Flags: PRIVATE, OWNER, PARTY_LEADER
+    UNIT_FIELD_MAXDAMAGE                      = 6 + 0x0041, // Size: 1, Type: FLOAT, Flags: PRIVATE, OWNER, PARTY_LEADER
+    UNIT_FIELD_MINOFFHANDDAMAGE               = 6 + 0x0042, // Size: 1, Type: FLOAT, Flags: PRIVATE, OWNER, PARTY_LEADER
+    UNIT_FIELD_MAXOFFHANDDAMAGE               = 6 + 0x0043, // Size: 1, Type: FLOAT, Flags: PRIVATE, OWNER, PARTY_LEADER
+    UNIT_FIELD_BYTES_1                        = 6 + 0x0044, // Size: 1, Type: BYTES, Flags: PUBLIC
+    UNIT_FIELD_PETNUMBER                      = 6 + 0x0045, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_PET_NAME_TIMESTAMP             = 6 + 0x0046, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_PETEXPERIENCE                  = 6 + 0x0047, // Size: 1, Type: INT, Flags: OWNER
+    UNIT_FIELD_PETNEXTLEVELEXP                = 6 + 0x0048, // Size: 1, Type: INT, Flags: OWNER
+    UNIT_DYNAMIC_FLAGS                        = 6 + 0x0049, // Size: 1, Type: INT, Flags: DYNAMIC
+    UNIT_MOD_CAST_SPEED                       = 6 + 0x004A, // Size: 1, Type: FLOAT, Flags: PUBLIC
+    UNIT_CREATED_BY_SPELL                     = 6 + 0x004B, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_NPC_FLAGS                            = 6 + 0x004C, // Size: 1, Type: INT, Flags: DYNAMIC
+    UNIT_NPC_EMOTESTATE                       = 6 + 0x004D, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_STAT0                          = 6 + 0x004E, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_STAT1                          = 6 + 0x004F, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_STAT2                          = 6 + 0x0050, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_STAT3                          = 6 + 0x0051, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_STAT4                          = 6 + 0x0052, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_POSSTAT0                       = 6 + 0x0053, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_POSSTAT1                       = 6 + 0x0054, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_POSSTAT2                       = 6 + 0x0055, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_POSSTAT3                       = 6 + 0x0056, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_POSSTAT4                       = 6 + 0x0057, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_NEGSTAT0                       = 6 + 0x0058, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_NEGSTAT1                       = 6 + 0x0059, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_NEGSTAT2                       = 6 + 0x005A, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_NEGSTAT3                       = 6 + 0x005B, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_NEGSTAT4                       = 6 + 0x005C, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_RESISTANCES                    = 6 + 0x005D, // Size: 7, Type: INT, Flags: PRIVATE, OWNER, PARTY_LEADER
+    UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE     = 6 + 0x0064, // Size: 7, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE     = 6 + 0x006B, // Size: 7, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_BASE_MANA                      = 6 + 0x0072, // Size: 1, Type: INT, Flags: PUBLIC
+    UNIT_FIELD_BASE_HEALTH                    = 6 + 0x0073, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_BYTES_2                        = 6 + 0x0074, // Size: 1, Type: BYTES, Flags: PUBLIC
+    UNIT_FIELD_ATTACK_POWER                   = 6 + 0x0075, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_ATTACK_POWER_MODS              = 6 + 0x0076, // Size: 1, Type: TWO_SHORT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_ATTACK_POWER_MULTIPLIER        = 6 + 0x0077, // Size: 1, Type: FLOAT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_RANGED_ATTACK_POWER            = 6 + 0x0078, // Size: 1, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_RANGED_ATTACK_POWER_MODS       = 6 + 0x0079, // Size: 1, Type: TWO_SHORT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER = 6 + 0x007A, // Size: 1, Type: FLOAT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_MINRANGEDDAMAGE                = 6 + 0x007B, // Size: 1, Type: FLOAT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_MAXRANGEDDAMAGE                = 6 + 0x007C, // Size: 1, Type: FLOAT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_POWER_COST_MODIFIER            = 6 + 0x007D, // Size: 7, Type: INT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_POWER_COST_MULTIPLIER          = 6 + 0x0084, // Size: 7, Type: FLOAT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_MAXHEALTHMODIFIER              = 6 + 0x008B, // Size: 1, Type: FLOAT, Flags: PRIVATE, OWNER
+    UNIT_FIELD_HOVERHEIGHT                    = 6 + 0x008C, // Size: 1, Type: FLOAT, Flags: PUBLIC
+    UNIT_FIELD_PADDING                        = 6 + 0x008D, // Size: 1, Type: INT, Flags: NONE
+    UNIT_END                                  = 6 + 0x008E,
+
+    PLAYER_DUEL_ARBITER                       = 148 + 0x0000, // Size: 2, Type: LONG, Flags: PUBLIC
+    PLAYER_FLAGS                              = 148 + 0x0002, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_GUILDID                            = 148 + 0x0003, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_GUILDRANK                          = 148 + 0x0004, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_BYTES                              = 148 + 0x0005, // Size: 1, Type: BYTES, Flags: PUBLIC
+    PLAYER_BYTES_2                            = 148 + 0x0006, // Size: 1, Type: BYTES, Flags: PUBLIC
+    PLAYER_BYTES_3                            = 148 + 0x0007, // Size: 1, Type: BYTES, Flags: PUBLIC
+    PLAYER_DUEL_TEAM                          = 148 + 0x0008, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_GUILD_TIMESTAMP                    = 148 + 0x0009, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_QUEST_LOG_1_1                      = 148 + 0x000A, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_1_2                      = 148 + 0x000B, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_1_3                      = 148 + 0x000C, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_1_4                      = 148 + 0x000E, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_2_1                      = 148 + 0x000F, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_2_2                      = 148 + 0x0010, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_2_3                      = 148 + 0x0011, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_2_5                      = 148 + 0x0013, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_3_1                      = 148 + 0x0014, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_3_2                      = 148 + 0x0015, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_3_3                      = 148 + 0x0016, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_3_5                      = 148 + 0x0018, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_4_1                      = 148 + 0x0019, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_4_2                      = 148 + 0x001A, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_4_3                      = 148 + 0x001B, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_4_5                      = 148 + 0x001D, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_5_1                      = 148 + 0x001E, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_5_2                      = 148 + 0x001F, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_5_3                      = 148 + 0x0020, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_5_5                      = 148 + 0x0022, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_6_1                      = 148 + 0x0023, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_6_2                      = 148 + 0x0024, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_6_3                      = 148 + 0x0025, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_6_5                      = 148 + 0x0027, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_7_1                      = 148 + 0x0028, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_7_2                      = 148 + 0x0029, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_7_3                      = 148 + 0x002A, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_7_5                      = 148 + 0x002C, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_8_1                      = 148 + 0x002D, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_8_2                      = 148 + 0x002E, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_8_3                      = 148 + 0x002F, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_8_5                      = 148 + 0x0031, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_9_1                      = 148 + 0x0032, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_9_2                      = 148 + 0x0033, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_9_3                      = 148 + 0x0034, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_9_5                      = 148 + 0x0036, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_10_1                     = 148 + 0x0037, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_10_2                     = 148 + 0x0038, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_10_3                     = 148 + 0x0039, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_10_5                     = 148 + 0x003B, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_11_1                     = 148 + 0x003C, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_11_2                     = 148 + 0x003D, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_11_3                     = 148 + 0x003E, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_11_5                     = 148 + 0x0040, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_12_1                     = 148 + 0x0041, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_12_2                     = 148 + 0x0042, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_12_3                     = 148 + 0x0043, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_12_5                     = 148 + 0x0045, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_13_1                     = 148 + 0x0046, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_13_2                     = 148 + 0x0047, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_13_3                     = 148 + 0x0048, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_13_5                     = 148 + 0x004A, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_14_1                     = 148 + 0x004B, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_14_2                     = 148 + 0x004C, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_14_3                     = 148 + 0x004D, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_14_5                     = 148 + 0x004F, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_15_1                     = 148 + 0x0050, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_15_2                     = 148 + 0x0051, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_15_3                     = 148 + 0x0052, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_15_5                     = 148 + 0x0054, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_16_1                     = 148 + 0x0055, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_16_2                     = 148 + 0x0056, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_16_3                     = 148 + 0x0057, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_16_5                     = 148 + 0x0059, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_17_1                     = 148 + 0x005A, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_17_2                     = 148 + 0x005B, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_17_3                     = 148 + 0x005C, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_17_5                     = 148 + 0x005E, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_18_1                     = 148 + 0x005F, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_18_2                     = 148 + 0x0060, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_18_3                     = 148 + 0x0061, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_18_5                     = 148 + 0x0063, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_19_1                     = 148 + 0x0064, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_19_2                     = 148 + 0x0065, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_19_3                     = 148 + 0x0066, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_19_5                     = 148 + 0x0068, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_20_1                     = 148 + 0x0069, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_20_2                     = 148 + 0x006A, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_20_3                     = 148 + 0x006B, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_20_5                     = 148 + 0x006D, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_21_1                     = 148 + 0x006E, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_21_2                     = 148 + 0x006F, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_21_3                     = 148 + 0x0070, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_21_5                     = 148 + 0x0072, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_22_1                     = 148 + 0x0073, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_22_2                     = 148 + 0x0074, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_22_3                     = 148 + 0x0075, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_22_5                     = 148 + 0x0077, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_23_1                     = 148 + 0x0078, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_23_2                     = 148 + 0x0079, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_23_3                     = 148 + 0x007A, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_23_5                     = 148 + 0x007C, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_24_1                     = 148 + 0x007D, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_24_2                     = 148 + 0x007E, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_24_3                     = 148 + 0x007F, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_24_5                     = 148 + 0x0081, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_25_1                     = 148 + 0x0082, // Size: 1, Type: INT, Flags: PARTY_MEMBER
+    PLAYER_QUEST_LOG_25_2                     = 148 + 0x0083, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_25_3                     = 148 + 0x0084, // Size: 2, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_QUEST_LOG_25_5                     = 148 + 0x0086, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_VISIBLE_ITEM_1_ENTRYID             = 148 + 0x0087, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_1_ENCHANTMENT         = 148 + 0x0088, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_2_ENTRYID             = 148 + 0x0089, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_2_ENCHANTMENT         = 148 + 0x008A, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_3_ENTRYID             = 148 + 0x008B, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_3_ENCHANTMENT         = 148 + 0x008C, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_4_ENTRYID             = 148 + 0x008D, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_4_ENCHANTMENT         = 148 + 0x008E, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_5_ENTRYID             = 148 + 0x008F, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_5_ENCHANTMENT         = 148 + 0x0090, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_6_ENTRYID             = 148 + 0x0091, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_6_ENCHANTMENT         = 148 + 0x0092, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_7_ENTRYID             = 148 + 0x0093, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_7_ENCHANTMENT         = 148 + 0x0094, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_8_ENTRYID             = 148 + 0x0095, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_8_ENCHANTMENT         = 148 + 0x0096, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_9_ENTRYID             = 148 + 0x0097, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_9_ENCHANTMENT         = 148 + 0x0098, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_10_ENTRYID            = 148 + 0x0099, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_10_ENCHANTMENT        = 148 + 0x009A, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_11_ENTRYID            = 148 + 0x009B, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_11_ENCHANTMENT        = 148 + 0x009C, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_12_ENTRYID            = 148 + 0x009D, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_12_ENCHANTMENT        = 148 + 0x009E, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_13_ENTRYID            = 148 + 0x009F, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_13_ENCHANTMENT        = 148 + 0x00A0, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_14_ENTRYID            = 148 + 0x00A1, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_14_ENCHANTMENT        = 148 + 0x00A2, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_15_ENTRYID            = 148 + 0x00A3, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_15_ENCHANTMENT        = 148 + 0x00A4, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_16_ENTRYID            = 148 + 0x00A5, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_16_ENCHANTMENT        = 148 + 0x00A6, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_17_ENTRYID            = 148 + 0x00A7, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_17_ENCHANTMENT        = 148 + 0x00A8, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_18_ENTRYID            = 148 + 0x00A9, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_18_ENCHANTMENT        = 148 + 0x00AA, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_19_ENTRYID            = 148 + 0x00AB, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_VISIBLE_ITEM_19_ENCHANTMENT        = 148 + 0x00AC, // Size: 1, Type: TWO_SHORT, Flags: PUBLIC
+    PLAYER_CHOSEN_TITLE                       = 148 + 0x00AD, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_FAKE_INEBRIATION                   = 148 + 0x00AE, // Size: 1, Type: INT, Flags: PUBLIC
+    PLAYER_FIELD_PAD_0                        = 148 + 0x00AF, // Size: 1, Type: INT, Flags: NONE
+    PLAYER_FIELD_INV_SLOT_HEAD                = 148 + 0x00B0, // Size: 46, Type: LONG, Flags: PRIVATE
+    PLAYER_FIELD_PACK_SLOT_1                  = 148 + 0x00DE, // Size: 32, Type: LONG, Flags: PRIVATE
+    PLAYER_FIELD_BANK_SLOT_1                  = 148 + 0x00FE, // Size: 56, Type: LONG, Flags: PRIVATE
+    PLAYER_FIELD_BANKBAG_SLOT_1               = 148 + 0x0136, // Size: 14, Type: LONG, Flags: PRIVATE
+    PLAYER_FIELD_VENDORBUYBACK_SLOT_1         = 148 + 0x0144, // Size: 24, Type: LONG, Flags: PRIVATE
+    PLAYER_FIELD_KEYRING_SLOT_1               = 148 + 0x015C, // Size: 64, Type: LONG, Flags: PRIVATE
+    PLAYER_FIELD_CURRENCYTOKEN_SLOT_1         = 148 + 0x019C, // Size: 64, Type: LONG, Flags: PRIVATE
+    PLAYER_FARSIGHT                           = 148 + 0x01DC, // Size: 2, Type: LONG, Flags: PRIVATE
+    PLAYER__FIELD_KNOWN_TITLES                 = 148 + 0x01DE, // Size: 2, Type: LONG, Flags: PRIVATE
+    PLAYER__FIELD_KNOWN_TITLES1                = 148 + 0x01E0, // Size: 2, Type: LONG, Flags: PRIVATE
+    PLAYER__FIELD_KNOWN_TITLES2                = 148 + 0x01E2, // Size: 2, Type: LONG, Flags: PRIVATE
+    PLAYER_FIELD_KNOWN_CURRENCIES             = 148 + 0x01E4, // Size: 2, Type: LONG, Flags: PRIVATE
+    PLAYER_XP                                 = 148 + 0x01E6, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_NEXT_LEVEL_XP                      = 148 + 0x01E7, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_SKILL_INFO_1_1                     = 148 + 0x01E8, // Size: 384, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_CHARACTER_POINTS1                  = 148 + 0x0368, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_CHARACTER_POINTS2                  = 148 + 0x0369, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_TRACK_CREATURES                    = 148 + 0x036A, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_TRACK_RESOURCES                    = 148 + 0x036B, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_BLOCK_PERCENTAGE                   = 148 + 0x036C, // Size: 1, Type: FLOAT, Flags: PRIVATE
+    PLAYER_DODGE_PERCENTAGE                   = 148 + 0x036D, // Size: 1, Type: FLOAT, Flags: PRIVATE
+    PLAYER_PARRY_PERCENTAGE                   = 148 + 0x036E, // Size: 1, Type: FLOAT, Flags: PRIVATE
+    PLAYER_EXPERTISE                          = 148 + 0x036F, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_OFFHAND_EXPERTISE                  = 148 + 0x0370, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_CRIT_PERCENTAGE                    = 148 + 0x0371, // Size: 1, Type: FLOAT, Flags: PRIVATE
+    PLAYER_RANGED_CRIT_PERCENTAGE             = 148 + 0x0372, // Size: 1, Type: FLOAT, Flags: PRIVATE
+    PLAYER_OFFHAND_CRIT_PERCENTAGE            = 148 + 0x0373, // Size: 1, Type: FLOAT, Flags: PRIVATE
+    PLAYER_SPELL_CRIT_PERCENTAGE1             = 148 + 0x0374, // Size: 7, Type: FLOAT, Flags: PRIVATE
+    PLAYER_SHIELD_BLOCK                       = 148 + 0x037B, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_SHIELD_BLOCK_CRIT_PERCENTAGE       = 148 + 0x037C, // Size: 1, Type: FLOAT, Flags: PRIVATE
+    PLAYER_EXPLORED_ZONES_1                   = 148 + 0x037D, // Size: 128, Type: BYTES, Flags: PRIVATE
+    PLAYER_REST_STATE_EXPERIENCE              = 148 + 0x03FD, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_COINAGE                      = 148 + 0x03FE, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_MOD_DAMAGE_DONE_POS          = 148 + 0x03FF, // Size: 7, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_MOD_DAMAGE_DONE_NEG          = 148 + 0x0406, // Size: 7, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_MOD_DAMAGE_DONE_PCT          = 148 + 0x040D, // Size: 7, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_MOD_HEALING_DONE_POS         = 148 + 0x0414, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_MOD_HEALING_PCT              = 148 + 0x0415, // Size: 1, Type: FLOAT, Flags: PRIVATE
+    PLAYER_FIELD_MOD_HEALING_DONE_PCT         = 148 + 0x0416, // Size: 1, Type: FLOAT, Flags: PRIVATE
+    PLAYER_FIELD_MOD_TARGET_RESISTANCE        = 148 + 0x0417, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_MOD_TARGET_PHYSICAL_RESISTANCE = 148 + 0x0418, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_BYTES                        = 148 + 0x0419, // Size: 1, Type: BYTES, Flags: PRIVATE
+    PLAYER_AMMO_ID                            = 148 + 0x041A, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_SELF_RES_SPELL                     = 148 + 0x041B, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_PVP_MEDALS                   = 148 + 0x041C, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_BUYBACK_PRICE_1              = 148 + 0x041D, // Size: 12, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_BUYBACK_TIMESTAMP_1          = 148 + 0x0429, // Size: 12, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_KILLS                        = 148 + 0x0435, // Size: 1, Type: TWO_SHORT, Flags: PRIVATE
+    PLAYER_FIELD_TODAY_CONTRIBUTION           = 148 + 0x0436, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_YESTERDAY_CONTRIBUTION       = 148 + 0x0437, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_LIFETIME_HONORABLE_KILLS     = 148 + 0x0438, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_BYTES2                       = 148 + 0x0439, // Size: 1, Type: 6, Flags: PRIVATE
+    PLAYER_FIELD_WATCHED_FACTION_INDEX        = 148 + 0x043A, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_COMBAT_RATING_1              = 148 + 0x043B, // Size: 25, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_ARENA_TEAM_INFO_1_1          = 148 + 0x0454, // Size: 21, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_HONOR_CURRENCY               = 148 + 0x0469, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_ARENA_CURRENCY               = 148 + 0x046A, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_MAX_LEVEL                    = 148 + 0x046B, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_DAILY_QUESTS_1               = 148 + 0x046C, // Size: 25, Type: INT, Flags: PRIVATE
+    PLAYER_RUNE_REGEN_1                       = 148 + 0x0485, // Size: 4, Type: FLOAT, Flags: PRIVATE
+    PLAYER_NO_REAGENT_COST_1                  = 148 + 0x0489, // Size: 3, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_GLYPH_SLOTS_1                = 148 + 0x048C, // Size: 6, Type: INT, Flags: PRIVATE
+    PLAYER_FIELD_GLYPHS_1                     = 148 + 0x0492, // Size: 6, Type: INT, Flags: PRIVATE
+    PLAYER_GLYPHS_ENABLED                     = 148 + 0x0498, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_PET_SPELL_POWER                    = 148 + 0x0499, // Size: 1, Type: INT, Flags: PRIVATE
+    PLAYER_END                                = 148 + 0x049A
+}
+declare const enum GameObjectFields /**@realType:uint32*/ {
+    OBJECT_FIELD_CREATED_BY                   = 6 + 0x0000, // Size: 2, Type: LONG, Flags: PUBLIC
+    GAMEOBJECT_DISPLAYID                      = 6 + 0x0002, // Size: 1, Type: INT, Flags: PUBLIC
+    GAMEOBJECT_FLAGS                          = 6 + 0x0003, // Size: 1, Type: INT, Flags: PUBLIC
+    GAMEOBJECT_PARENTROTATION                 = 6 + 0x0004, // Size: 4, Type: FLOAT, Flags: PUBLIC
+    GAMEOBJECT_DYNAMIC                        = 6 + 0x0008, // Size: 1, Type: TWO_SHORT, Flags: DYNAMIC
+    GAMEOBJECT_FACTION                        = 6 + 0x0009, // Size: 1, Type: INT, Flags: PUBLIC
+    GAMEOBJECT_LEVEL                          = 6 + 0x000A, // Size: 1, Type: INT, Flags: PUBLIC
+    GAMEOBJECT_BYTES_1                        = 6 + 0x000B, // Size: 1, Type: BYTES, Flags: PUBLIC
+    GAMEOBJECT_END                            = 6 + 0x000C
+}
+declare const enum DynamicObjectFields /**@realType:uint32*/ {
+    CASTER                      = 6 + 0x0000, // Size: 2, Type: LONG, Flags: PUBLIC
+    BYTES                       = 6 + 0x0002, // Size: 1, Type: BYTES, Flags: PUBLIC
+    SPELLID                     = 6 + 0x0003, // Size: 1, Type: INT, Flags: PUBLIC
+    RADIUS                      = 6 + 0x0004, // Size: 1, Type: FLOAT, Flags: PUBLIC
+    CASTTIME                    = 6 + 0x0005, // Size: 1, Type: INT, Flags: PUBLIC
+    END                         = 6 + 0x0006
+}
+declare const enum CorpseFields /**@realType:uint32*/ {
+    FIELD_OWNER                        = 6 + 0x0000, // Size: 2, Type: LONG, Flags: PUBLIC
+    FIELD_PARTY                        = 6 + 0x0002, // Size: 2, Type: LONG, Flags: PUBLIC
+    FIELD_DISPLAY_ID                   = 6 + 0x0004, // Size: 1, Type: INT, Flags: PUBLIC
+    FIELD_ITEM                         = 6 + 0x0005, // Size: 19, Type: INT, Flags: PUBLIC
+    FIELD_BYTES_1                      = 6 + 0x0018, // Size: 1, Type: BYTES, Flags: PUBLIC
+    FIELD_BYTES_2                      = 6 + 0x0019, // Size: 1, Type: BYTES, Flags: PUBLIC
+    FIELD_GUILD                        = 6 + 0x001A, // Size: 1, Type: INT, Flags: PUBLIC
+    FIELD_FLAGS                        = 6 + 0x001B, // Size: 1, Type: INT, Flags: PUBLIC
+    FIELD_DYNAMIC_FLAGS                = 6 + 0x001C, // Size: 1, Type: INT, Flags: DYNAMIC
+    FIELD_PAD                          = 6 + 0x001D, // Size: 1, Type: INT, Flags: NONE
+    END                                = 6 + 0x001E
+}
+declare type UpdateFields = uint16 | ObjectFields | ItemFields | ContainerFields | UnitFields | GameObjectFields | DynamicObjectFields | CorpseFields
 declare const enum SpellSchools /**@realType:uint32*/ {
     NORMAL                 = 0, // TITLE Physical
     HOLY                   = 1, // TITLE Holy
@@ -603,6 +1014,20 @@ declare const enum AuraRemoveMode /**@realType:uint32*/ {
     BY_ENEMY_SPELL,       // dispel and absorb aura destroy
     BY_EXPIRE,            // aura duration has ended
     BY_DEATH
+}
+
+declare const enum AuraEffectHandleMode /**@realType:uint32*/ {
+    DEFAULT = 0x0,
+    REAL = 0x01, // handler applies/removes effect from unit
+    SEND_FOR_CLIENT = 0x02, // handler sends apply/remove packet to unit
+    CHANGE_AMOUNT = 0x04, // handler updates effect on target after effect amount change
+    REAPPLY = 0x08, // handler updates effect on target after aura is reapplied on target
+    STAT = 0x10, // handler updates effect on target when stat removal/apply is needed for calculations by core
+    SKILL = 0x20, // handler updates effect on target when skill removal/apply is needed for calculations by core
+    SEND_FOR_CLIENT_MASK = (SEND_FOR_CLIENT | REAL), // any case handler need to send packet
+    CHANGE_AMOUNT_MASK = (CHANGE_AMOUNT | REAL), // any case handler applies effect depending on amount
+    CHANGE_AMOUNT_SEND_FOR_CLIENT_MASK = (CHANGE_AMOUNT_MASK | SEND_FOR_CLIENT_MASK),
+    REAL_OR_REAPPLY_MASK = (REAPPLY | REAL)
 }
 
 declare const enum Stats /**@realType:uint32*/ {
@@ -1157,6 +1582,15 @@ declare const enum SpellFinishReason /**@realType:uint8*/ {
     SUCCESSFUL_CAST = 0, // spell has sucessfully launched
     CANCELED = 1, // spell has been canceled (interrupts)
     CHANNELING_COMPLETE = 2  // spell channeling has been finished
+}
+
+declare const enum GlyphMask /**@realType:uint32 */ {
+    MAJOR_1 = 0x1,
+    MINOR_1 = 0x2,
+    MINOR_2 = 0x4,
+    MAJOR_2 = 0x8,
+    MINOR_3 = 0x10,
+    MAJOR_3 = 0x20,
 }
 
 declare const enum TriggerCastFlags /**@realType:uint32*/ {
@@ -2019,6 +2453,16 @@ declare interface TSPlayer extends TSUnit {
      * @return [Unit] unit
      */
     GetSelection() : TSUnit
+
+    /**
+     * Returns the [Player]s currently selected [Unit] object,
+     * even if said unit is in another map or in no map at all.
+     *
+     * @warn not thread-safe
+     * @warn currently only works across maps if the selected unit is a player.
+     * @return [Player] target player
+     */
+    GetGlobalSelection(): TSPlayer
 
     /**
      * Returns the [Player]s GM Rank
@@ -4023,6 +4467,13 @@ declare interface TSCreature extends TSUnit {
     SetHover(enable : bool) : void
 
     /**
+     * Sets whether the Creature can fly. Usually mixed with Disable Gravity.
+     *
+     * @param bool enable = true : `true` to enable flying, `false` to disable
+     */
+    SetCanFly(enable : bool) : void
+
+    /**
      * Despawn this [Creature].
      *
      * @param uint32 delay = 0 : dely to despawn in milliseconds
@@ -5797,7 +6248,21 @@ declare interface TSSpell {
      *
      * @return [Unit] caster
      */
-    GetCaster() : TSUnit
+    GetCaster() : TSWorldObject
+
+    /**
+     * Returns the [WorldObject] that originally casted the [Spell].
+     *
+     * @return [WorldObject] original caster
+     */
+    GetOriginalCaster(): TSWorldObject
+
+    /**
+     * Returns the [WorldObject] that originally casted the [Spell], or the current caster.
+     *
+     * @return [WorldObject] original or current caster
+     */
+    GetOriginalOrCurrentCaster(): TSWorldObject
 
     /**
      * Returns the cast time of the [Spell].
@@ -5850,6 +6315,8 @@ declare interface TSSpell {
      */
     GetTarget() : TSObject
 
+    GetGlyphSlot() : uint32
+
     /**
      * Sets the [Spell] to automatically repeat.
      *
@@ -5874,6 +6341,84 @@ declare interface TSSpell {
      */
     Finish() : void
 }
+
+declare interface TSSpellModifier {
+    GetOp(): uint32;
+    SetOp(op: uint32): void;
+    GetType(): uint32;
+    SetType(type: uint32): void;
+    GetValue(): int32;
+    SetValue(value: int32): void;
+    GetMaskA(): uint32;
+    SetMaskA(mask: uint32): void;
+    GetMaskB(): uint32;
+    SetMaskB(mask: uint32): void;
+    GetMaskC(): uint32;
+    SetMaskC(mask: uint32): void;
+    GetSpellID(): uint32;
+    SetSpellID(spell: uint32): void;
+    GetOwnerAura(): TSAura;
+}
+
+declare interface TSSpellDestination {
+    GetX(): float;
+    GetY(): float;
+    GetZ(): float;
+    GetO(): float;
+    GetMap(): float;
+
+    GetOffsetX(): float;
+    GetOffsetY(): float;
+    GetOffsetZ(): float;
+    GetOffsetO(): float;
+
+    GetTransportGUID(): uint64;
+    Relocate(x: float, y: float, z: float, o: float): void;
+    RelocateOffset(x: float, y: float, z: float, o: float): void;
+}
+
+declare interface TSSpellImplicitTargetInfo
+{
+    IsArea(): bool;
+    GetSelectionCategory(): uint32;
+    GetReferenceType(): uint32;
+    GetObjectType(): uint32;
+    GetCheckType(): uint32;
+    GetDirectionType(): uint32;
+    CalcDirectionAngle(): float;
+    GetTarget(): uint32;
+    GetExplicitTargetMask(): uint32;
+    IsSourceSet(): bool;
+    IsTargetSet(): bool;
+}
+
+declare interface TSDispelInfo
+{
+    GetDispeller(): TSWorldObject;
+    GetDispellerSpellId(): uint32;
+    GetRemovedCharges(): uint8;
+    SetRemovedCharges(amount: uint8): void;
+}
+
+declare interface TSProcEventInfo
+{
+    GetActor(): TSUnit;
+    GetActionTarget(): TSUnit;
+    GetProcTarget(): TSUnit;
+    GetTypeMask(): uint32;
+    GetSpellTypeMask(): uint32;
+    GetSpellPhaseMask(): uint32;
+    GetHitMask(): uint32;
+    GetSpellInfo(): TSSpellInfo;
+    GetSchoolMask(): uint32;
+    GetDamageInfo(): TSDamageInfo;
+    GetHealInfo(): TSHealInfo;
+    GetSpell(): TSSpell;
+}
+
+
+
+
 
 declare interface TSVehicle {
     IsNull() : bool
@@ -5967,7 +6512,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 spell : entry of a spell
      * @param bool triggered = false : if true the spell is instant and has no cost
      */
-     CastSpell(target : TSWorldObject,spell : uint32,triggered : bool) : SpellCastResult
+     CastSpell(target : TSWorldObject,spell : uint32,triggered?: bool) : SpellCastResult
 
      /**
       * Casts the [Spell] at target [Unit] with custom basepoints or casters.
@@ -5993,7 +6538,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
       * @param uint32 spell : entry of a spell
       * @param bool triggered = false : if true the spell is instant and has no cost
       */
-    CastSpellAoF(_x : float,_y : float,_z : float,spell : uint32,triggered : bool) : SpellCastResult
+    CastSpellAoF(_x : float,_y : float,_z : float,spell : uint32,triggered?: bool) : SpellCastResult
 
     /**
      * Returns the name of the [WorldObject]
@@ -6356,6 +6901,23 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetPlayer(guid: uint64): TSPlayer
 }
 
+declare interface TSWorldObjectCollection {
+    filterInPlace(callback: (obj: TSWorldObject)=>bool): void
+    forEach(callback: (obj: TSWorldObject)=>void) :void
+    find(callback: (obj: TSWorldObject)=>bool): TSWorldObject
+    length: uint32
+    /**
+     * @warn This is an O(n) operation, because the backing type is an std::list
+     * @param index
+     */
+    get(index: uint32): TSWorldObject
+}
+
+declare interface TSMutableWorldObject {
+    get(): TSWorldObject
+    set(obj: TSWorldObject): void
+}
+
 declare class TSObject extends TSEntityProvider {
     IsNull() : bool
     IsUnit() : bool
@@ -6389,7 +6951,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return int32 value
      */
-    GetCoreInt32(index : uint16) : int32
+    GetCoreInt32(index : UpdateFields) : int32
 
     /**
      * Returns the data at the specified index, casted to a unsigned 32-bit integer.
@@ -6397,7 +6959,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return uint32 value
      */
-    GetCoreUInt32(index : uint16) : uint32
+    GetCoreUInt32(index : UpdateFields) : uint32
 
     /**
      * Returns the data at the specified index, casted to a single-precision floating point value.
@@ -6405,7 +6967,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return float value
      */
-    GetCoreFloat(index : uint16) : float
+    GetCoreFloat(index : UpdateFields) : float
 
     /**
      * Returns the data at the specified index and offset, casted to an unsigned 8-bit integer.
@@ -6416,7 +6978,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0, 1, 2, or 3
      * @return uint8 value
      */
-    GetCoreByte(index : uint16,offset : uint8) : uint8
+    GetCoreByte(index : UpdateFields,offset : uint8) : uint8
 
     /**
      * Returns the data at the specified index and offset, casted to a signed 16-bit integer.
@@ -6427,7 +6989,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0 or 1
      * @return uint16 value
      */
-    GetCoreUInt16(index : uint16,offset : uint8) : uint16
+    GetCoreUInt16(index : UpdateFields,offset : uint8) : uint16
 
     /**
      * Returns the scale/size of the [Object].
@@ -6499,7 +7061,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return uint64 value
      */
-    GetCoreUInt64(index : uint16) : uint64
+    GetCoreUInt64(index : UpdateFields) : uint64
 
     /**
      * Sets the specified flag in the data value at the specified index.
@@ -6519,7 +7081,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param int32 value
      */
-    SetCoreInt32(index : uint16,value : int32) : void
+    SetCoreInt32(index : UpdateFields,value : int32) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
@@ -6527,7 +7089,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param uint32 value
      */
-    SetCoreUInt32(index : uint16,value : uint32) : void
+    SetCoreUInt32(index : UpdateFields,value : uint32) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
@@ -6535,7 +7097,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param uint32 value
      */
-    UpdateCoreUInt32(index : uint16,value : uint32) : void
+    UpdateCoreUInt32(index : UpdateFields,value : uint32) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to a single-precision floating point value.
@@ -6543,7 +7105,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param float value
      */
-    SetCoreFloat(index : uint16,value : float) : void
+    SetCoreFloat(index : UpdateFields,value : float) : void
 
     /**
      * Sets the data at the specified index and offset to the given value, converted to an unsigned 8-bit integer.
@@ -6552,7 +7114,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0, 1, 2, or 3
      * @param uint8 value
      */
-    SetCoreByte(index : uint16,offset : uint8,value : uint8) : void
+    SetCoreByte(index : UpdateFields,offset : uint8,value : uint8) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to an unsigned 16-bit integer.
@@ -6561,16 +7123,32 @@ declare class TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0 or 1
      * @param uint16 value
      */
-    SetCoreUInt16(index : uint16,offset : uint8,value : uint16) : void
+    SetCoreUInt16(index : UpdateFields,offset : uint8,value : uint16) : void
 
     /**
-     * Sets the data at the specified index to the given value, converted to a signed 16-bit integer.
-     *
-     * @param uint16 index
-     * @param uint8 offset : should be 0 or 1
-     * @param int16 value
+     * Sets the data at the specified index and offset to the given value.
+     * @note: Cannot be used with numbers larger than int16/uint16
+     * @param index
+     * @param offset
+     * @param value
      */
-    SetCoreInt16(index : uint16,offset : uint8,value : int16) : void
+    SetUpdateField<T extends uint8|int8|uint16|int16>(index: UpdateFields, offset: uint8, value: T): void
+
+    /**
+     * Sets the data at the specified index to the given value.
+     * @param index
+     * @param offset
+     * @param value
+     */
+    SetUpdateField<T extends uint8|int8|uint16|int16|uint32|int32|uint64|int64|float|double>(index: UpdateFields, value: T): void
+
+    /**
+     * Sets the data at the specified index to the given value.
+     * @param index
+     * @param offset
+     * @param value
+     */
+    GetUpdateField<T extends uint8|int8|uint16|int16|uint32|int32|uint64|int64|float|double>(index: UpdateFields): T
 
     /**
      * Sets the [Object]'s scale/size to the given value.
@@ -6585,7 +7163,7 @@ declare class TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param uint64 value
      */
-    SetCoreUInt64(index : uint16,value : uint64) : void
+    SetCoreUInt64(index : UpdateFields,value : uint64) : void
 
     /**
      * Removes a flag from the value at the specified index.
@@ -7694,6 +8272,26 @@ declare interface TSUnit extends TSWorldObject {
     MoveTo(id : uint32,x : float,y : float,z : float,genPath : bool) : void
 
     /**
+     * The [Unit] will take off from the ground and fly to the coordinates.
+     *
+     * @param uint32 id : unique waypoint Id
+     * @param float x
+     * @param float y
+     * @param float z
+     */
+    MoveTakeoff(id : uint32, x : float, y : float, z : float) : void
+
+    /**
+     * The [Unit] will land from the air at the coordinates.
+     *
+     * @param uint32 id : unique waypoint Id
+     * @param float x
+     * @param float y
+     * @param float z
+     */
+    MoveLand(id : uint32, x : float, y : float, z : float) : void
+
+    /**
      * Makes the [Unit] jump to the coordinates
      *
      * @param float x
@@ -8525,7 +9123,18 @@ declare namespace _hidden {
         OnUpdateRangedAttackPower(callback: (
               player: TSPlayer
             , attackPower: TSMutable<float>
-        )=>void)
+        ) => void)
+
+        /**
+         * @param player
+         * @param activeGlyphSlots - Bitmask of GlyphMask representing the active glyphs.
+         *
+         * @note Use with Spell.OnEffectApplyGlyph
+         */
+        OnGlyphInitForLevel(callback: (
+            player: TSPlayer
+            , activeGlyphSlot: TSMutable<uint32> /* active glyph slots bitmask 0x3F = 0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 for 80 level */
+        ) => void)
     }
 
     export class Account<T> {
@@ -8561,8 +9170,15 @@ declare namespace _hidden {
     export class SpellID<T> {
         OnCast(spell: EventID, callback : (spell: TSSpell)=>void);
         OnCheckCast(spell: EventID, callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void);
-        OnDispel(spell: EventID, callback: (spell: TSSpell, dispelType: uint32)=>void);
+        OnSuccessfulDispel(spell: EventID, callback: (spell: TSSpell, dispelType: uint32)=>void);
         OnEffect(spell: EventID, callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
+        /**
+         * @note Use with Player.OnGlyphInitForLevel
+         */
+        OnEffectApplyGlyph(spell: EventID, callback: (
+              spell: TSSpell
+            , locked: TSMutable<bool>
+        ) => void)
         OnHit(spell: EventID, callback: (spell: TSSpell)=>void);
         OnTick(spell: EventID, callback: (effect: TSAuraEffect)=>void);
         OnRemove(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
@@ -8585,6 +9201,7 @@ declare namespace _hidden {
           , effectMask: uint32
         )=>void)
         OnPeriodicDamage(spell: EventID, callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
+        OnCalcMiss(spell: EventID, callback: (spell: TSSpell, target: TSUnit, missCondition: TSMutable<SpellMissInfo>, effectMask: TSMutable<uint32>) => void)
         /** critChance should be between 0 and 1 */
         OnCalcCrit(spell: EventID, callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
         /** critChance should be between 0 and 1 */
@@ -8622,13 +9239,51 @@ declare namespace _hidden {
             , receiver: TSPlayer
             , allow: TSMutable<bool>
         )=>void)
+
+        OnCheckAreaTarget(spell: EventID, callback: (aura: TSAura, unit: TSUnit, result: TSMutable<bool>, cancel: TSMutable<bool>)=>void)
+        OnCheckEffectProc(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, procEvent: TSProcEventInfo, result: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnCheckProc(spell: EventID, callback: (application: TSAuraApplication, procEvent: TSProcEventInfo, result: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnEffectPeriodic(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, cancel: TSMutable<bool> )=>void)
+        OnEffectProc(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, eventInfo: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnPrepareProc(spell: EventID, callback: (application: TSAuraApplication, procEvent: TSProcEventInfo, prepare: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnProc(spell: EventID, callback: (application: TSAuraApplication, proc: TSProcEventInfo, handled: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnAfterDispel(spell: EventID, callback: (aura: TSAura, dispel: TSDispelInfo, cancel: TSMutable<bool>)=>void)
+        OnAfterEffectApply(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, modes: AuraEffectHandleMode, cancel: TSMutable<bool> )=>void)
+        OnAfterEffectProc(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, proc: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnAfterEffectRemove(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, modes: AuraEffectHandleMode, cancel: TSMutable<bool> )=>void)
+        OnAfterProc(spell: EventID, callback: (application: TSAuraApplication, proc: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnDispel(spell: EventID, callback: (aura: TSAura, dispel: TSDispelInfo, cancel: TSMutable<bool> )=>void)
+        OnEffectAbsorb(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectAfterAbsorb(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectAfterManaShield(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcAmount(spell: EventID, callback: (effect: TSAuraEffect, amount: TSMutable<int32>, canBeReclalculated: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcPeriodic(spell: EventID, callback: (effect: TSAuraEffect, isPeriodic: TSMutable<bool>, amplitude: TSMutable<int32>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcSpellMod(spell: EventID, callback: (effect: TSAuraEffect, modifier: TSSpellModifier, cancel: TSMutable<bool> )=>void)
+        OnEffectManaShield(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectSplit(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, splitAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnAfterCast(spell: EventID, callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnAfterHit(spell: EventID, callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnBeforeCast(spell: EventID, callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnBeforeHit(spell: EventID, callback: (spell: TSSpell, miss: SpellMissInfo, cancel: TSMutable<bool> )=>void)
+        OnDestinationTargetSelect(spell: EventID, callback: (spell: TSSpell, dest: TSSpellDestination, index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnObjectAreaTargetSelect(spell: EventID, callback: (spell: TSSpell, objects: TSWorldObjectCollection , index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnObjectTargetSelect(spell: EventID, callback: (spell: TSSpell, object: TSMutableWorldObject, index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnResistAbsorbCalculate(spell: EventID, callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutable<uint32>, absorbAmount: TSMutable<int32>, cancel: TSMutable<bool> )=>void)
     }
 
     export class Spells<T> {
         OnCast(callback : (spell: TSSpell)=>void): T;
         OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void): T;
-        OnDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
+        OnSuccessfulDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
         OnEffect(callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
+        /**
+         * @note Use with Player.OnGlyphInitForLevel
+         */
+        OnEffectApplyGlyph(callback: (
+              spell: TSSpell
+            , locked: TSMutable<bool>
+        ) => void)
+
         OnHit(callback: (spell: TSSpell)=>void): T;
         OnTick(callback: (effect: TSAuraEffect)=>void): T;
         OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
@@ -8651,6 +9306,7 @@ declare namespace _hidden {
             , effectMask: uint32
         )=>void): T
         OnPeriodicDamage(callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void): T
+        OnCalcMiss(callback: (spell: TSSpell, target: TSUnit, missCondition: TSMutable<SpellMissInfo>, effectMask: TSMutable<uint32>) => void)
         /** critChance should be between 0 and 1 */
         OnCalcCrit(callback : (spelL: TSSpell, chance: TSMutable<float>)=>void): T
         /** critChance should be between 0 and 1 */
@@ -8682,6 +9338,36 @@ declare namespace _hidden {
             , caster: TSUnit
         )=>void): T
         OnTrainerSend(callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<bool>)=>void): T
+
+        OnCheckAreaTarget(callback: (aura: TSAura, unit: TSUnit, result: TSMutable<bool>, cancel: TSMutable<bool>)=>void)
+        OnCheckEffectProc(callback: (effect: TSAuraEffect, application: TSAuraApplication, procEvent: TSProcEventInfo, result: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnCheckProc(callback: (application: TSAuraApplication, procEvent: TSProcEventInfo, result: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnEffectPeriodic(callback: (effect: TSAuraEffect, application: TSAuraApplication, cancel: TSMutable<bool> )=>void)
+        OnEffectProc(callback: (effect: TSAuraEffect, application: TSAuraApplication, eventInfo: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnPrepareProc(callback: (application: TSAuraApplication, procEvent: TSProcEventInfo, prepare: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnProc(callback: (application: TSAuraApplication, proc: TSProcEventInfo, handled: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnAfterDispel(callback: (aura: TSAura, dispel: TSDispelInfo, cancel: TSMutable<bool>)=>void)
+        OnAfterEffectApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, modes: AuraEffectHandleMode, cancel: TSMutable<bool> )=>void)
+        OnAfterEffectProc(callback: (effect: TSAuraEffect, application: TSAuraApplication, proc: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnAfterEffectRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, modes: AuraEffectHandleMode, cancel: TSMutable<bool> )=>void)
+        OnAfterProc(callback: (application: TSAuraApplication, proc: TSProcEventInfo, cancel: TSMutable<bool> )=>void)
+        OnDispel(callback: (aura: TSAura, dispel: TSDispelInfo, cancel: TSMutable<bool> )=>void)
+        OnEffectAbsorb(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectAfterAbsorb(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectAfterManaShield(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcAmount(callback: (effect: TSAuraEffect, amount: TSMutable<int32>, canBeReclalculated: TSMutable<bool>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcPeriodic(callback: (effect: TSAuraEffect, isPeriodic: TSMutable<bool>, amplitude: TSMutable<int32>, cancel: TSMutable<bool> )=>void)
+        OnEffectCalcSpellMod(callback: (effect: TSAuraEffect, modifier: TSSpellModifier, cancel: TSMutable<bool> )=>void)
+        OnEffectManaShield(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, absorbAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnEffectSplit(callback: (effect: TSAuraEffect, application: TSAuraApplication, damage: TSDamageInfo, splitAmount: TSMutable<uint32>, cancel: TSMutable<bool> )=>void)
+        OnAfterCast(callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnAfterHit(callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnBeforeCast(callback: (spell: TSSpell, cancel: TSMutable<bool> )=>void)
+        OnBeforeHit(callback: (spell: TSSpell, miss: SpellMissInfo, cancel: TSMutable<bool> )=>void)
+        OnDestinationTargetSelect(callback: (spell: TSSpell, dest: TSSpellDestination, index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnObjectAreaTargetSelect(callback: (spell: TSSpell, objects: TSWorldObjectCollection , index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnObjectTargetSelect(callback: (spell: TSSpell, object: TSMutableWorldObject, index: SpellEffIndex, target: TSSpellImplicitTargetInfo, cancel: TSMutable<bool> )=>void)
+        OnResistAbsorbCalculate(callback: (spelL: TSSpell, damage: TSDamageInfo, resistAmount: TSMutable<uint32>, absorbAmount: TSMutable<int32>, cancel: TSMutable<bool> )=>void)
     }
 
     export class CreatureID<T> {
@@ -10196,6 +10882,36 @@ declare class TSSpellDamageInfo {
     GetHitInfo(): uint32;
     GetCleanDamage(): uint32;
     GetFullBlock(): bool;
+}
+
+declare interface TSHealInfo {
+    AbsorbHeal(amount: uint32): void;
+    SetEffectiveHeal(amount: uint32): void;
+    GetHealer(): TSUnit;
+    GetTarget(): TSUnit;
+    GetHeal(): uint32;
+    GetEffectiveHeal(): uint32;
+    GetAbsorb(): uint32;
+    GetSpellInfo(): TSSpellInfo;
+    GetSchoolMask(): uint32;
+    GetHitMask(): uint32;
+}
+
+declare interface TSDamageInfo {
+    ModifyDamage(amount: int32): void;
+    AbsorbDamage(amount: uint32): void;
+    ResistDamage(amount: uint32): void;
+    BlockDamage(amount: uint32): void;
+    GetAttacker(): TSUnit;
+    GetVictim(): TSUnit;
+    GetSpellInfo(): TSSpellInfo;
+    GetSchoolMask(): uint32;
+    GetDamageType(): uint32;
+    GetAttackType(): uint32;
+    GetDamage(): uint32;
+    GetAbsorb(): uint32;
+    GetBlock(): uint32;
+    GetHitMask(): uint32;
 }
 
 declare class TSPacketWrite {
