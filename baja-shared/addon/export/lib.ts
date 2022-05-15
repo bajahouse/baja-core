@@ -88,6 +88,7 @@ export interface FrameProps {
   UID: string
   Mod: string
   Index: number
+  Inner: <F extends WoWAPI.UIObject = SmartFrame>(newInner?: F) => SmartFrame
   // delete
   IsDeleted: boolean
   Delete: () => void
@@ -200,6 +201,12 @@ export function $ (options: FrameOptions = {}) {
   frame.IsDeleted = false
   frame.Delete = () => {
     CleanFrame(frame)
+  }
+  let inner: SmartFrame = frame
+  frame.Inner = <F extends WoWAPI.UIObject = SmartFrame>(newInner?: F) => {
+    if (newInner)
+      inner = newInner as any
+    return inner as SmartFrame
   }
   // FIXME: public  - frame.Reflow (calls frame.Draw on all children that have it)
   // FIXME: private - frame.Draw

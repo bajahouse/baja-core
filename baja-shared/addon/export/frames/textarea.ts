@@ -14,24 +14,21 @@ export const Textarea = options => {
   const a = $({
     ...options,
     backdrop: 'tooltip',
-    // FIXME: Inner
-    width: (options.parent as any).Inner().GetWidth(),
-    height: (options.parent as any).Inner().GetHeight(),
+    width: options.parent.Inner().GetWidth(),
+    height: options.parent.Inner().GetHeight(),
     point: 'TOPLEFT',
   })
   const b = $({
     parent: a,
     point: 'CENTER',
-    // FIXME: Inner
-    width: (options.parent as any).Inner().GetWidth() - 20,
-    height: (options.parent as any).Inner().GetHeight() - 20,
+    width: options.parent.Inner().GetWidth() - 20,
+    height: options.parent.Inner().GetHeight() - 20,
   })
   const s = Scroll({ scrollHeight: 50, parent: b })
-  // FIXME: Inner
-  const e = CreateFrame('EditBox', `${options.name}-inner`, (s as any).Inner())
+  const e = CreateFrame('EditBox', `${s.UID}-inner`, s.Inner())
   e.SetPoint('TOPLEFT')
-  e.SetWidth((s as any).Inner().GetWidth() - 10)
-  e.SetHeight((s as any).Inner().GetHeight())
+  e.SetWidth(s.Inner().GetWidth() - 10)
+  e.SetHeight(s.Inner().GetHeight())
   e.SetFont('Fonts/FRIZQT__.TTF', 12)
   e.SetAutoFocus(false)
   e.SetMultiLine(true)

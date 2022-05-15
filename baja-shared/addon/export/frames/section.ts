@@ -16,8 +16,7 @@ export const Section = (options: SectionOptions) => {
 
   // padding
   p.SetHeight(options.bg ? options.height : (options.height - 20))
-  // FIXME: Inner
-  p.SetWidth(options.width || ((options.parent as any).Inner().GetWidth() - 6))
+  p.SetWidth(options.width || (options.parent.Inner().GetWidth() - 6))
 
   // x, y
   const x = options.x || 0
@@ -41,7 +40,7 @@ export const Section = (options: SectionOptions) => {
   }
   f.SetPoint('CENTER')
   // Inner
-  ;(p as any).Inner(f)
+  p.Inner(f)
 
   // title
   if (options.title) {

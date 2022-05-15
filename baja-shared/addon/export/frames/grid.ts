@@ -32,8 +32,7 @@ export const Grid = (options: GridOptions): GridFrame => {
   const state: GridState = {
     itemsPerRow: options.itemsPerRow,
     rowHeight: options.rowHeight,
-    // FIXME: implement SmartFrame#Inner
-    itemWidth: (options.parent as any).Inner().GetWidth() / options.itemsPerRow,
+    itemWidth: options.parent.Inner().GetWidth() / options.itemsPerRow,
     list: [],
     index: 0,
     x: 0,

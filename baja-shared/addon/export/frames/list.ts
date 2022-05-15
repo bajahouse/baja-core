@@ -48,8 +48,7 @@ export interface ListFrame extends SmartFrame {
 export const List = (options: ListOptions): ListFrame => {
   const list = $(options).ToAdvancedFrame<ListFrame>()
 
-  // FIXME: Inner
-  list.SetAllPoints((options.parent as any).Inner())
+  list.SetAllPoints(options.parent.Inner())
 
   const state: ListState = {
     items: [],

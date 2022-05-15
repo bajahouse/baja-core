@@ -13,8 +13,7 @@ export interface ScrollFrame extends SmartFrame {
 
 export const Scroll = (options: ScrollOptions): ScrollFrame => {
   const a = $(options).ToAdvancedFrame<ScrollFrame>()
-  // FIXME
-  const frame = (a as any).Inner()
+  const frame = a.Inner()
 
   frame.SetAllPoints(frame.GetParent() as WoWAPI.Frame)
 
@@ -69,8 +68,7 @@ export const Scroll = (options: ScrollOptions): ScrollFrame => {
     ref.SetVerticalScroll(ref.GetVerticalScrollRange())
   }
 
-  // FIXME: inner
-  (a as any).Inner(moduleoptions)
+  a.Inner(moduleoptions)
 
   return a
 }

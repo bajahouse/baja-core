@@ -37,8 +37,7 @@ export const Input = options => {
     if (options.onChange)
       options.onChange(text, input)
   })
-  // FIXME: Inner
-  ;(input as any).Inner(e)
+  input.Inner(e)
   input.EnableMouse(true)
   input.SetScript('OnMouseDown', () => {
     e.SetFocus()

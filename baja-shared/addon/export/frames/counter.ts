@@ -42,8 +42,7 @@ export const Counter = options => {
   i.ClearFocus()
   i.SetScript('OnTextChanged', () => {
   })
-  // FIXME: Inner
-  ;(input as any).Inner(i)
+  input.Inner(i)
   counter.EnableMouse(true)
   counter.SetScript('OnMouseDown', () => {
     i.SetFocus()

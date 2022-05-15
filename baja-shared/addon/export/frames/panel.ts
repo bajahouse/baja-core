@@ -52,8 +52,7 @@ export const Panel = options => {
     point: 'CENTER',
   })
 
-  // fixme: Inner
-  ;(title as any).Inner(b)
+  title.Inner(b)
 
   // pages
   const pages: { [key: string]: SmartFrame } = {}
@@ -78,8 +77,7 @@ export const Panel = options => {
 
         pages[id] = page
 
-        // FIXME: Inner
-        page.ref.SetParent((title as any).Inner() as any)
+        page.ref.SetParent(title.Inner())
         page.ref.SetPoint('CENTER')
       }
 

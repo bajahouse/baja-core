@@ -16,8 +16,7 @@ export const Numeric = (options: NumericOptions) => {
     backdrop: 'tooltip',
   })
 
-  // FIXME: Inner
-  const width = options.width || (options.parent as any).Inner().GetWidth()
+  const width = options.width || options.parent.Inner().GetWidth()
 
   input.SetWidth(width)
 
@@ -39,8 +38,7 @@ export const Numeric = (options: NumericOptions) => {
     if (options.onChange)
       options.onChange(number, input)
   })
-  // FIXME: inner
-  ;(inner as any).Inner(e)
+  inner.Inner(e)
   input.EnableMouse(true)
   input.SetScript('OnMouseDown', () => {
     e.SetFocus()
