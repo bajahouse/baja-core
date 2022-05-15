@@ -20,7 +20,6 @@ export const Scroll = (options: ScrollOptions) => {
     parent: a,
   })
 
-
   const ref = scrollframe as WoWAPI.ScrollFrame
 
   const scrollchild = $({
