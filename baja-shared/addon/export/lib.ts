@@ -309,7 +309,7 @@ export function $ (options: FrameOptions = {}) {
     frame.SetBackdropColor(0, 0, 0, frame.GetAlpha())
   }
   if (options.parent) {
-    frame.SetParent(options.parent)
+    frame.SetParent(options.parent.Inner())
   } else {
     frame.SetParent(UIParent)
   }

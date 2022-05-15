@@ -6,7 +6,7 @@ export interface GridOptions extends FrameOptions {
 }
 
 export interface GridItemOptions extends FrameOptions {
-  item: Element
+  item: SmartFrame
   width: number
   height: number
   x: number
@@ -23,7 +23,7 @@ interface GridState {
   y: number
 }
 
-export interface GridFrame extends SmartFrame {
+export interface GridFrame extends FrameOptions {
   Attach: (frame: SmartFrame) => void
 }
 
@@ -63,10 +63,12 @@ export const Grid = (options: GridOptions): GridFrame => {
     state.list.push(f)
   }
 
+  frame.SetAllPoints()
+
   return frame
 }
 
-export const GridItem = options => {
+export const GridItem = (options: GridItemOptions) => {
   const frame = $(options)
 
   frame.SetPoint('TOPLEFT', options.x, options.y)
