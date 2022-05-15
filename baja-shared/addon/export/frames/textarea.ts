@@ -1,7 +1,3 @@
-import { Component, ComponentOptions, Frame } from '../app'
-import { BASE_BACKDROP } from '../constants'
-import { Scroll } from './scroll'
-
 export interface TextareaOptions extends ComponentOptions {
   initial?: string
   onAccept?: (text: string) => void

@@ -1,10 +1,3 @@
-import { Get } from '../app'
-import { Component, ComponentOptions, Frame, Element } from '../app'
-import { Dropdown, DropdownItemOptions } from './dropdown'
-import { BASE_BACKDROP } from '../constants'
-import { Movable } from '../utils'
-import { Mapping } from '../types'
-
 let is_first_load = true
 
 export interface PanelOptions extends ComponentOptions {

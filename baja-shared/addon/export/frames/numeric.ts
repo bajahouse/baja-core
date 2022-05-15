@@ -1,6 +1,3 @@
-import { Component, ComponentOptions, Frame, Element } from '../app'
-import { BASE_BACKDROP } from '../constants'
-
 export interface NumericOptions extends ComponentOptions {
   initial?: number
   onAccept?: (text: number, element: Element<any, any>) => number | void

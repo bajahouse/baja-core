@@ -1,5 +1,3 @@
-import { Frame, Component, ComponentOptions, Element } from '../app'
-
 export const SCROLL_WIDTH = 20
 
 export interface ScrollOptions extends ComponentOptions {

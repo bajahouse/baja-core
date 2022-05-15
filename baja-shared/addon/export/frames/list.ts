@@ -1,6 +1,3 @@
-import { Mapping } from '../types'
-import { Frame, Component, ComponentOptions, Element } from '../app'
-
 export interface ListItemOptions extends ComponentOptions {
   id: string,
   width: number

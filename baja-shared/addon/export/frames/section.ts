@@ -1,8 +1,3 @@
-import { Component, ComponentOptions, Frame, Element } from '../app'
-import { BASE_BACKDROP } from '../constants'
-import { rgb } from '../utils'
-import { Rgb } from '../types'
-
 export interface SectionOptions extends ComponentOptions {
   name: string
   parent: Element<any, any>
