@@ -1,5 +1,5 @@
 import { itemCreationSetup } from "./item_create";
-import { example } from "./item_create_example";
+import { example } from "./item_examples";
 
 export function Main(events: TSEvents) {
     itemCreationSetup(events)
