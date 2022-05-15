@@ -47,7 +47,7 @@ export const Counter = options => {
   counter.SetScript('OnMouseDown', () => {
     i.SetFocus()
   })
-  const fn = (isDontTrigger?: boolean) => {
+  const fn = () => {
     i.ClearFocus()
     let current = i.GetNumber()
     if (!!options.max && (current > options.max))
@@ -106,7 +106,7 @@ export const Counter = options => {
     text: '+',
     width: 30,
     fontSize: 20,
-    isBordered: false,
+    noBorder: true,
     scale: 0.5,
     textXOffset: -2,
     onClick: () => {
@@ -119,7 +119,7 @@ export const Counter = options => {
     text: '-',
     width: 30,
     fontSize: 24,
-    isBordered: false,
+    noBorder: true,
     scale: 0.5,
     textXOffset: 0,
     textYOffset: 2,

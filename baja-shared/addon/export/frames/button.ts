@@ -4,7 +4,7 @@ export interface ButtonOptions extends FrameOptions {
   text: string
   width: number
   fontSize?: number
-  isBordered?: boolean
+  noBorder?: boolean
   textXOffset?: number
   textYOffset?: number
   color?: RGB
@@ -14,38 +14,44 @@ export interface ButtonOptions extends FrameOptions {
 export const Button = (options: ButtonOptions) => {
   // setup
   const f = $({
-    ...options,
-    backdrop: options.isBordered ? 'tooltip' : 'noborder',
+    backdrop: (options.noBorder === true)
+      ? 'noborder'
+      : 'tooltip',
     color: options.color,
     width: options.width,
     height: 30,
     mouse: true,
+    ...options,
   })
+
+  const color = options.color || [0.5, 0.5, 0.5]
+  if (!options.color)
+    f.SetBackdropColor(color[0], color[1], color[2], 1)
 
   // scripts
   f.SetScript('OnLeave', e => {
     e.SetBackdropColor(
-      options.color[0],
-      options.color[1],
-      options.color[2],
+      color[0],
+      color[1],
+      color[2],
       1,
     )
   })
 
   f.SetScript('OnEnter', e => {
     e.SetBackdropColor(
-      options.color[0] * 0.8,
-      options.color[1] * 0.8,
-      options.color[2] * 0.8,
+      color[0] * 0.8,
+      color[1] * 0.8,
+      color[2] * 0.8,
       1,
     )
   })
 
   f.SetScript('OnMouseDown', e => {
     e.SetBackdropColor(
-      options.color[0] * 0.6,
-      options.color[1] * 0.6,
-      options.color[2] * 0.6,
+      color[0] * 0.6,
+      color[1] * 0.6,
+      color[2] * 0.6,
       1,
     )
     if (options.onClick)
@@ -55,9 +61,9 @@ export const Button = (options: ButtonOptions) => {
 
   f.SetScript('OnMouseUp', e => {
     e.SetBackdropColor(
-      options.color[0] * 0.8,
-      options.color[1] * 0.8,
-      options.color[2] * 0.8,
+      color[0] * 0.8,
+      color[1] * 0.8,
+      color[2] * 0.8,
       1,
     )
   })
@@ -65,7 +71,7 @@ export const Button = (options: ButtonOptions) => {
   // text
   // FIXME: Delete -> clean/reuse
   const t = f.CreateFontString(
-    `${options.uid}-text`,
+    `${f.UID}-text`,
     'OVERLAY',
     'GameTooltipText',
   )

@@ -1,17 +1,18 @@
 export function ConvertHex (hex: string) {
   let c = hex as any
-  if (/^#([a-f0-9]{3}){1,2}$/.test(c)) {
-    if (c.length === 4){
-      c = '#' + [c[1], c[1], c[2], c[2], c[3], c[3]].join('')
-    }
-    c = '0x' + c.substring(1)
-    return ConvertRGB([
-      (Number(c) >> 16) & 255,
-      (Number(c) >> 8) & 255,
-      Number(c) & 255,
-    ])
-  }
-  throw `Cannot convert hex value '${hex}' to RGB`
+  return [0, 0, 0]
+  // if (/^#([a-f0-9]{3}){1,2}$/.test(c)) {
+  //  if (c.length === 4){
+  //    c = '#' + [c[1], c[1], c[2], c[2], c[3], c[3]].join('')
+  //  }
+  //  c = '0x' + c.substring(1)
+  //  return ConvertRGB([
+  //    0,// (Number(c) >> 16) & 255,
+  //    0,// (Number(c) >> 8) & 255,
+  //    0,// Number(c) & 255,
+  //  ])
+  // }
+  // throw `Cannot convert hex value '${hex}' to RGB`
 }
 
 export function ConvertRGB (normal: RGB) {
@@ -192,7 +193,7 @@ export function $ (options: FrameOptions = {}) {
     }
   }
   if (!frame) {
-    frame = (CreateFrame as any)(options.type as any, `${options.mod}::${uid}`, options.template) as any
+    frame = CreateFrame((options.type as WoWAPI.FrameType) || 'Frame', `${mod}::${uid}`, UIParent, options.template) as any
     frame.Index = current_frame_index++
     list.push(frame)
     if (options.uid)
