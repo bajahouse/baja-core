@@ -1,107 +1,103 @@
-export interface ListItemOptions extends ComponentOptions {
+import { $, SmartFrame, FrameOptions } from '../lib'
+
+export interface ListItemOptions extends FrameOptions {
   id: string,
   width: number
   height: number
   y: number
-  child: Element<any, any>
+  child: SmartFrame
 }
 
-export interface ListItemState {
-  id: string
-}
-
-export interface ListItemFns {
+export interface ListItemFrame extends SmartFrame {
   Reflow: (newY?: number) => void
+  Id: string | null
 }
-export const ListItem: Component<ListItemOptions, ListItemState, ListItemFns> = options => {
-  const frame: Element<ListItemState, ListItemFns> = Frame({ name: `${options.id}-list-item`, parent: options.parent }) as any
+
+export const ListItem = (options: ListItemOptions): ListItemFrame => {
+  const frame = $({ parent: options.parent }).ToAdvancedFrame<ListItemFrame>()
   let y = options.y || 0
-  frame.ref.SetSize(options.width, options.height)
-  options.child.ref.SetAllPoints(frame.ref)
-  frame.state = {
-    id: options.id,
+  frame.SetSize(options.width, options.height)
+  options.child.SetAllPoints(frame)
+  frame.Id = options.id
+  frame.Reflow = (newY?: number) => {
+    y = newY || y
+    frame.SetPoint('TOPLEFT', 0, y)
   }
-  frame.fns = {
-    Reflow: (newY?: number) => {
-      y = newY || y
-      frame.ref.SetPoint('TOPLEFT', 0, y)
-    }
-  }
-  frame.fns.Reflow()
-  options.child.ref.SetParent(frame.ref)
+
+  frame.Reflow()
+  options.child.SetParent(frame)
   return frame
 }
 
-export interface ListOptions extends ComponentOptions {
+export interface ListOptions extends FrameOptions {
   itemHeight: number
 }
 
 export interface ListState {
-  items: Element<ListItemState, ListItemFns>[]
-  map: Mapping<number>
+  items: ListItemFrame[]
+  map: { [key: string]: number }
   y: number
 }
 
-export interface ListFns {
-  Attach: (id: string, element: Element<any, any>) => void
+export interface ListFrame extends SmartFrame {
+  Attach: (id: string, element: SmartFrame) => void
   Detach: (id: string) => void
   Reflow: () => void
 }
 
-export const List: Component<ListOptions, ListState, ListFns> = options => {
-  const list: Element<ListState, ListFns> = Frame({ ...options }) as any
+export const List = (options: ListOptions): ListFrame => {
+  const list = $(options).ToAdvancedFrame<ListFrame>()
 
-  list.ref.SetAllPoints(options.parent.inner)
+  // FIXME: Inner
+  list.SetAllPoints((options.parent as any).Inner())
 
-  list.state = {
+  const state: ListState = {
     items: [],
     map: {},
     y: 0,
   }
 
-  list.fns = {
-    Reflow: () => {
-      list.state.y = 0
-      list.state.map = {}
+  list.Reflow = () => {
+    state.y = 0
+    state.map = {}
 
-      list.state.items.forEach((item, index) => {
-        list.state.map[item.state.id] = index
-        item.fns.Reflow(list.state.y)
-        list.state.y = list.state.y - options.itemHeight
-      })
-    },
+    state.items.forEach((item, index) => {
+      state.map[item.UID] = index
+      item.Reflow(state.y)
+      state.y = state.y - options.itemHeight
+    })
+  }
 
-    Attach: (id: string, child: Element<any, any>) => {
-      const item = ListItem({
-        id,
-        child,
-        width: list.ref.GetWidth(),
-        height: options.itemHeight,
-        y: list.state.y,
-        parent: list,
-      })
+  list.Attach = (id: string, child: SmartFrame) => {
+    const item = ListItem({
+      id,
+      child,
+      width: list.GetWidth(),
+      height: options.itemHeight,
+      y: state.y,
+      parent: list,
+    })
 
-      list.state.y = list.state.y - options.itemHeight
-      list.state.items.push(item)
-      list.state.map[id] = list.state.items.length - 1
-      item.ref.Show()
-    },
+    state.y = state.y - options.itemHeight
+    state.items.push(item)
+    state.map[id] = state.items.length - 1
+    item.Show()
+  }
 
-    Detach: (id: string) => {
-      let item: any
+  list.Detach = (id: string) => {
+    let item: any
 
-      list.state.items = list.state.items.filter(i => {
-        const isMatch = i.state.id === id
-        if (isMatch)
-          item = i
-        return !isMatch
-      })
+    state.items = state.items.filter(i => {
+      const isMatch = i.Id === id
+      if (isMatch)
+        item = i
+      return !isMatch
+    })
 
-      if (item) {
-        item.state.id = null
-        item.ref.Hide()
-        list.fns.Reflow()
-      }
+    if (item) {
+      item.Id = null
+      item.Hide()
+      list.Reflow()
     }
   }
 
