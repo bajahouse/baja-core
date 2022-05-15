@@ -1,7 +1,6 @@
 import { createItemRandom } from "./item_create"
 
-export function example(events:TSEvents)
-{
+export function example(events: TSEvents) {
     events.Player.OnCommand((player, command, found) => {
         const cmd = command.get().split(' ')
         if (cmd[0] == 'createitem') {
