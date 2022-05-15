@@ -1,36 +1,33 @@
-export interface InputOptions extends ComponentOptions {
+import { $, SmartFrame, FrameOptions } from '../lib'
+
+export interface InputOptions extends SmartFrame {
   initial?: string
-  onAccept?: (text: string, element: Element<any, any>) => string | void
-  onCancel?: (text: string, element: Element<any, any>) => string | void
-  onChange?: (text: string, element: Element<any, any>) => string | void
+  onAccept?: (text: string, element: SmartFrame) => string | void
+  onCancel?: (text: string, element: SmartFrame) => string | void
+  onChange?: (text: string, element: SmartFrame) => string | void
   // FIXME: min/max
 }
 
-export const Input: Component<InputOptions> = options => {
+export const Input = options => {
   let text = options.initial || ''
-  const input = Frame({
+  const input = $({
     ...options,
     height: options.height || 30,
-  }) as Element<any, any>
-  input.ref.SetBackdrop({
-    ...BASE_BACKDROP,
+    backdrop: 'tooltip',
   })
-  input.ref.SetBackdropColor(0, 0, 0, 1)
-  input.ref.SetHeight(options.height || 30)
 
   const width = options.width || options.parent.inner.GetWidth()
 
-  input.ref.SetWidth(width)
+  input.SetWidth(width)
 
-  const inner = Frame({
-    name: `${options.name}-input`,
-    width: input.ref.GetWidth() - 16,
-    height: input.ref.GetHeight(),
+  const inner = $({
+    width: input.GetWidth() - 16,
+    height: input.GetHeight(),
     parent: input,
   })
-  inner.ref.SetPoint('CENTER')
-  const e = CreateFrame('EditBox', `${options.name}-editbox`, inner.ref)
-  e.SetAllPoints(inner.ref)
+  inner.SetPoint('CENTER')
+  const e = CreateFrame('EditBox', `${options.name}-editbox`, inner)
+  e.SetAllPoints(inner)
   e.SetText(text)
   e.SetPoint('CENTER')
   e.SetAutoFocus(false)
@@ -40,9 +37,10 @@ export const Input: Component<InputOptions> = options => {
     if (options.onChange)
       options.onChange(text, input)
   })
-  input.inner = e as any
-  input.ref.EnableMouse(true)
-  input.ref.SetScript('OnMouseDown', () => {
+  // FIXME: Inner
+  ;(input as any).Inner(e)
+  input.EnableMouse(true)
+  input.SetScript('OnMouseDown', () => {
     e.SetFocus()
   })
   const fn = () => {
@@ -52,7 +50,7 @@ export const Input: Component<InputOptions> = options => {
       options.onAccept(text, input)
     PlaySound(1115)
   }
-  inner.ref.EnableMouseWheel(true)
+  inner.EnableMouseWheel(true)
   e.SetScript('OnTabPressed', () => fn())
   e.SetScript('OnEnterPressed', () => fn())
   e.SetScript('OnEscapePressed', () => {
