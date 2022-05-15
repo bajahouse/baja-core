@@ -1,34 +1,35 @@
+import { $, SmartFrame, FrameOptions } from '../lib'
+
 export const SCROLL_WIDTH = 20
 
-export interface ScrollOptions extends ComponentOptions {
+export interface ScrollOptions extends FrameOptions {
   scrollHeight?: number
 }
 
-export interface ScrollFns {
+export interface ScrollFrame extends SmartFrame {
   Height: (amount: number) => void,
   Bottom: () => void,
 }
 
-export const Scroll: Component<ScrollOptions, any, ScrollFns> = options => {
-  const a: Element<any, ScrollFns> = Frame(options) as any
-  const frame = a.inner
+export const Scroll = (options: ScrollOptions): ScrollFrame => {
+  const a = $(options).ToAdvancedFrame<ScrollFrame>()
+  // FIXME
+  const frame = (a as any).Inner()
 
   frame.SetAllPoints(frame.GetParent() as WoWAPI.Frame)
 
-  const scrollframe = Frame({
-    name: `${options.name}-scrollframe`,
-    inherits: 'UIPanelScrollFrameTemplate',
+  const scrollframe = $({
+    template: 'UIPanelScrollFrameTemplate',
     type: 'ScrollFrame',
     parent: a,
   })
 
 
-  const ref = scrollframe.ref as WoWAPI.ScrollFrame
+  const ref = scrollframe as WoWAPI.ScrollFrame
 
-  const scrollchild = Frame({
-    name: `${options.name}-scrollchild`,
+  const scrollchild = $({
     parent: scrollframe,
-  }).ref
+  })
 
   const scrollbarName = ref.GetName()
 
@@ -37,10 +38,10 @@ export const Scroll: Component<ScrollOptions, any, ScrollFns> = options => {
   const scrolldownbutton = _G[scrollbarName + 'ScrollBarScrollDownButton']
 
   scrollupbutton.ClearAllPoints()
-  scrollupbutton.SetPoint('TOPRIGHT', scrollframe.ref, 'TOPRIGHT', -2, -2)
+  scrollupbutton.SetPoint('TOPRIGHT', scrollframe, 'TOPRIGHT', -2, -2)
 
   scrolldownbutton.ClearAllPoints()
-  scrolldownbutton.SetPoint('BOTTOMRIGHT', scrollframe.ref, 'BOTTOMRIGHT', -2, 2)
+  scrolldownbutton.SetPoint('BOTTOMRIGHT', scrollframe, 'BOTTOMRIGHT', -2, 2)
 
   scrollbar.ClearAllPoints()
   scrollbar.SetPoint('TOP', scrollupbutton, 'BOTTOM', 0, -2)
@@ -59,17 +60,17 @@ export const Scroll: Component<ScrollOptions, any, ScrollFns> = options => {
   moduleoptions.SetWidth(scrollchild.GetWidth() - SCROLL_WIDTH)
   moduleoptions.SetHeight(scrollchild.GetHeight())
 
-  a.fns = {
-    Height: (amount: number) => {
-      scrollchild.SetHeight(amount)
-      moduleoptions.SetHeight(amount)
-    },
-    Bottom: () => {
-      ref.SetVerticalScroll(ref.GetVerticalScrollRange())
-    },
+  a.Height = (amount: number) => {
+    scrollchild.SetHeight(amount)
+    moduleoptions.SetHeight(amount)
   }
 
-  a.inner = moduleoptions
+  a.Bottom = () => {
+    ref.SetVerticalScroll(ref.GetVerticalScrollRange())
+  }
+
+  // FIXME: inner
+  (a as any).Inner(moduleoptions)
 
   return a
 }

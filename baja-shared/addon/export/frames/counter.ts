@@ -2,7 +2,7 @@ import { Input } from './input'
 import { $, SmartFrame, FrameOptions } from '../lib'
 import { Button } from './button'
 
-export interface CounterOptions extends SmartFrame {
+export interface CounterOptions extends FrameOptions {
   width?: number
   min?: number
   max?: number

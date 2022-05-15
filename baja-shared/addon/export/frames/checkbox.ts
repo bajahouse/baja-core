@@ -52,6 +52,8 @@ export const Checkbox = (options: CheckboxOptions) => {
     isChecked = value ? 1 : 0
   })
 
+  // FIXME: implement api
+
   return f
 }
 

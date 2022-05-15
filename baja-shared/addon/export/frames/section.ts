@@ -1,69 +1,58 @@
-export interface SectionOptions extends ComponentOptions {
+import { $, SmartFrame, FrameOptions, RGB, DEFAULT_BACKDROP } from '../lib'
+
+export interface SectionOptions extends FrameOptions {
   name: string
-  parent: Element<any, any>
+  parent: SmartFrame
   height: number
-  previous?: Element<any, any>
+  previous?: SmartFrame
   x?: number
   y?: number
   title?: string
   bg?: boolean
-  color?: Rgb
 }
 
-export const Section: Component<SectionOptions> = options => {
-  const p = Frame(options)
+export const Section = (options: SectionOptions) => {
+  const p = $(options)
 
   // padding
-  p.ref.SetHeight(options.bg ? options.height : (options.height - 20))
-  p.ref.SetWidth(options.width || (options.parent.inner.GetWidth() - 6))
+  p.SetHeight(options.bg ? options.height : (options.height - 20))
+  // FIXME: Inner
+  p.SetWidth(options.width || ((options.parent as any).Inner().GetWidth() - 6))
 
   // x, y
   const x = options.x || 0
   const y = options.y || -12
 
   // position based on y
-  p.ref.SetPoint('TOPLEFT', x, y)
+  p.SetPoint('TOPLEFT', x, y)
 
   // position based on previous
   if (options.previous)
-    p.ref.SetPoint('TOPLEFT', options.previous.ref, 'BOTTOMLEFT', x, -26)
+    p.SetPoint('TOPLEFT', options.previous, 'BOTTOMLEFT', x, -26)
 
   // inner
-  const f = Frame({ name: `${options.name}-inner`, parent: p })
+  const f = $({ parent: p })
   if (options.bg) {
-    f.ref.SetHeight(p.ref.GetHeight() - 20)
-    f.ref.SetWidth(p.ref.GetWidth() - 20)
+    f.SetHeight(p.GetHeight() - 20)
+    f.SetWidth(p.GetWidth() - 20)
   } else {
-    f.ref.SetWidth(p.ref.GetWidth() + 4)
-    f.ref.SetHeight(p.ref.GetHeight() - 4)
+    f.SetWidth(p.GetWidth() + 4)
+    f.SetHeight(p.GetHeight() - 4)
   }
-  f.ref.SetPoint('CENTER')
-  p.inner = f.ref
+  f.SetPoint('CENTER')
+  // Inner
+  ;(p as any).Inner(f)
 
   // title
   if (options.title) {
-    const text = p.ref.CreateFontString(
-      `${p.ref.GetName()}-title`,
+    const text = p.CreateFontString(
+      `${p.UID}-title`,
       'OVERLAY',
       'GameTooltipText',
     )
     text.SetFont('Fonts/FRIZQT__.TTF', 12)
     text.SetText(options.title)
     text.SetPoint('TOPLEFT', 0, 12)
-  }
-
-  // color
-  if (options.bg) {
-    p.ref.SetBackdrop({
-      ...BASE_BACKDROP,
-      bgFile: options.color ? 'Interface/Tooltips/UI-Tooltip-Background' : '',
-      edgeFile: options.bg ? BASE_BACKDROP.edgeFile : '',
-    })
-
-    p.ref.SetBackdropColor(0, 0, 0, 0)
-
-    if (options.color)
-      p.ref.SetBackdropColor(...rgb(...options.color), 1)
   }
 
   return p
