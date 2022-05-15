@@ -191,12 +191,12 @@ export const Dropdown = (options: DropdownOptions) => {
 
   autohide['list'] = false
 
-  list.ref.HookScript('OnEnter', () => {
+  list.HookScript('OnEnter', () => {
     autohide['list'] = true
     timer = 0
   })
 
-  list.ref.HookScript('OnLeave', () => {
+  list.HookScript('OnLeave', () => {
     autohide['list'] = false
     timer = GetTime() + AUTOHIDE_TIMER
   })
@@ -205,7 +205,7 @@ export const Dropdown = (options: DropdownOptions) => {
   const Item = (options: DropdownItemOptions) => {
     const w = $({ mod: options.mod })
     // FIXME: build ExtendedText frame
-    const t = w.CreateFontString(`${name}-${options.id}-wrapper-text`)
+    const t = w.CreateFontString(`${options.id}-wrapper-text`)
 
     t.SetParent(w)
     t.SetPoint('LEFT', 30, 0)
@@ -271,9 +271,9 @@ export const Dropdown = (options: DropdownOptions) => {
       }
     })
 
-    list.fns.Attach(options.id, w)
+    list.Attach(options.id, w)
 
-    a.state.length = list.state.items.length
+    a.state.length = (list as any).state.items.length
 
     menu.SetHeight((a.state.length * 30) + 14)
     listwrap.SetHeight(a.state.length * 30)

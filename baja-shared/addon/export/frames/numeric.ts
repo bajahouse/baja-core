@@ -1,36 +1,34 @@
-export interface NumericOptions extends ComponentOptions {
+import { $, SmartFrame, FrameOptions } from '../lib'
+
+export interface NumericOptions extends FrameOptions {
   initial?: number
-  onAccept?: (text: number, element: Element<any, any>) => number | void
-  onCancel?: (text: number, element: Element<any, any>) => number | void
-  onChange?: (text: number, element: Element<any, any>) => number | void
+  onAccept?: (text: number, element: SmartFrame) => number | void
+  onCancel?: (text: number, element: SmartFrame) => number | void
+  onChange?: (text: number, element: SmartFrame) => number | void
   // FIXME: min/max
 }
 
-export const Numeric: Component<NumericOptions> = options => {
+export const Numeric = (options: NumericOptions) => {
   let number = options.initial || 0
-  const input = Frame({
+  const input = $({
     ...options,
     height: options.height || 30,
-  }) as Element<any, any>
-  input.ref.SetBackdrop({
-    ...BASE_BACKDROP,
+    backdrop: 'tooltip',
   })
-  input.ref.SetBackdropColor(0, 0, 0, 1)
-  input.ref.SetHeight(options.height || 30)
 
-  const width = options.width || options.parent.inner.GetWidth()
+  // FIXME: Inner
+  const width = options.width || (options.parent as any).Inner().GetWidth()
 
-  input.ref.SetWidth(width)
+  input.SetWidth(width)
 
-  const inner = Frame({
-    name: `${options.name}-input`,
-    width: input.ref.GetWidth() - 16,
-    height: input.ref.GetHeight(),
+  const inner = $({
+    width: input.GetWidth() - 16,
+    height: input.GetHeight(),
     parent: input,
   })
-  inner.ref.SetPoint('CENTER')
-  const e = CreateFrame('EditBox', `${options.name}-editbox`, inner.ref)
-  e.SetAllPoints(inner.ref)
+  inner.SetPoint('CENTER')
+  const e = CreateFrame('EditBox', `${options.uid}-editbox`, inner)
+  e.SetAllPoints(inner)
   e.SetNumeric()
   e.SetNumber(number)
   e.SetPoint('CENTER')
@@ -41,9 +39,10 @@ export const Numeric: Component<NumericOptions> = options => {
     if (options.onChange)
       options.onChange(number, input)
   })
-  inner.inner = e as any
-  input.ref.EnableMouse(true)
-  input.ref.SetScript('OnMouseDown', () => {
+  // FIXME: inner
+  ;(inner as any).Inner(e)
+  input.EnableMouse(true)
+  input.SetScript('OnMouseDown', () => {
     e.SetFocus()
   })
   const fn = () => {
@@ -53,7 +52,7 @@ export const Numeric: Component<NumericOptions> = options => {
       options.onAccept(number, input)
     PlaySound(1115)
   }
-  inner.ref.EnableMouseWheel(true)
+  inner.EnableMouseWheel(true)
   e.SetScript('OnTabPressed', () => fn())
   e.SetScript('OnEnterPressed', () => fn())
   e.SetScript('OnEscapePressed', () => {

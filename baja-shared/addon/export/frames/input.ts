@@ -1,6 +1,6 @@
 import { $, SmartFrame, FrameOptions } from '../lib'
 
-export interface InputOptions extends SmartFrame {
+export interface InputOptions extends FrameOptions {
   initial?: string
   onAccept?: (text: string, element: SmartFrame) => string | void
   onCancel?: (text: string, element: SmartFrame) => string | void

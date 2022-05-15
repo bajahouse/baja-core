@@ -1,67 +1,76 @@
+import { DropdownItemOptions, Dropdown } from './dropdown'
+import { $, SmartFrame, FrameOptions } from '../lib'
+
+
 let is_first_load = true
 
-export interface PanelOptions extends ComponentOptions {
+export interface PanelOptions extends FrameOptions {
   nav?: DropdownItemOptions[]
-  components?: Mapping<any>
+  components?: { [key: string]: SmartFrame }
   defaultSelectionId?: string
   isHiddenOnEmpty?: boolean
   title?: string
 }
 
-export const Panel: Component<PanelOptions> = options => {
-  const $ = Get()
+export const Panel = options => {
+  // const $ = Get()
 
   // title
-  const title: Element<PanelOptions> = Frame(options) as any
+  const title = $({
+    backdrop: 'tooltip',
+    width: 168,
+    height: 30,
+    point: 'CENTER',
+    ...options,
+  })
 
-  title.ref.SetSize(168, 30)
-  title.ref.SetBackdrop({ ...BASE_BACKDROP, bgFile: 'Interface/Tooltips/UI-Tooltip-Background' })
-  title.ref.SetBackdropColor(0, 0, 0, 1)
-  title.ref.SetPoint('CENTER', 0, 0)
-
-  const titleText = title.ref.CreateFontString(
+  const titleText = title.CreateFontString(
     'talent-countertext',
     'OVERLAY',
     'GameTooltipText',
   )
-  titleText.SetParent(title.ref)
+  titleText.SetParent(title)
   titleText.SetPoint('CENTER')
   titleText.SetFont('Fonts/FRIZQT__.TTF', 10)
   titleText.SetText(options.title)
 
   // panel
-  const a = Frame({ name: `${title.ref.GetName()}-panel`, parent: title })
+  const a = $({
+    parent: title,
+    backdrop: 'tooltip',
+    width: 340,
+    height: 410,
+  })
 
-  a.ref.SetSize(340, 410)
-  a.ref.SetBackdrop({ ...BASE_BACKDROP, bgFile: 'Interface/Tooltips/UI-Tooltip-Background' })
-  a.ref.SetBackdropColor(0, 0, 0, 1)
-  a.ref.SetPoint('TOP', title.ref, 'BOTTOMLEFT', -2, -3)
+  a.SetPoint('TOP', title, 'BOTTOMLEFT', -2, -3)
 
   // panel-inner
-  const b = Frame({ name: `${title.ref.GetName()}-inner`, parent: a })
+  const b = $({
+    parent: a,
+    width: 300 - 30,
+    height: 400 - 30,
+    point: 'CENTER',
+  })
 
-  b.ref.SetSize(300 - 30, 400 - 30)
-  b.ref.SetPoint('CENTER')
-
-  title.inner = b.ref
+  // fixme: Inner
+  ;(title as any).Inner(b)
 
   // pages
-  const pages: Mapping<Element<any, any>> = {}
+  const pages: { [key: string]: SmartFrame } = {}
   const components = options.components
 
   //dropdown
   const dropdown = Dropdown({
-    name: `${a.ref.GetName()}-dropdown`,
     width: 168,
-    defaultSelectionId: $.store.Get('CHARACTER', `${options.name}-panel-selection`, ''),
+    // defaultSelectionId: $.store.Get('CHARACTER', `${options.name}-panel-selection`, ''),
     isTriggerOnInit: true,
     items: options.nav,
     onSelect: ({ id }) => {
-      $.store.Set('CHARACTER', `${options.name}-panel-selection`, id)
+      // $.store.Set('CHARACTER', `${options.name}-panel-selection`, id)
 
       for (let key of Object.keys(pages)) {
         const page = pages[key]
-        page.ref.Hide()
+        page.Hide()
       }
 
       if (!pages[id] && components[id]) {
@@ -69,21 +78,22 @@ export const Panel: Component<PanelOptions> = options => {
 
         pages[id] = page
 
-        page.ref.SetParent(title.inner)
+        // FIXME: Inner
+        page.ref.SetParent((title as any).Inner() as any)
         page.ref.SetPoint('CENTER')
       }
 
       if (pages[id])
-        pages[id].ref.Show()
+        pages[id].Show()
     },
   })
 
-  dropdown.ref.SetParent(title.ref)
-  dropdown.ref.SetPoint('RIGHT', title.ref, 'LEFT', -4, -1)
+  dropdown.SetParent(title)
+  dropdown.SetPoint('RIGHT', title, 'LEFT', -4, -1)
 
   // frame level
-  a.ref.SetFrameStrata('LOW')
-  dropdown.ref.SetFrameStrata('HIGH')
+  a.SetFrameStrata('LOW')
+  dropdown.SetFrameStrata('HIGH')
 
   // toggle visibility
   const TogglePanel = () => {
@@ -91,34 +101,34 @@ export const Panel: Component<PanelOptions> = options => {
       is_first_load = false
 
     if (dropdown.ref.IsVisible()) {
-      $.store.Set('CHARACTER', `${options.name}-panel-visibility`, false)
+      // $.store.Set('CHARACTER', `${options.name}-panel-visibility`, false)
       dropdown.ref.Hide()
-      a.ref.Hide()
+      a.Hide()
     } else {
-      $.store.Set('CHARACTER', `${options.name}-panel-visibility`, true)
+      // $.store.Set('CHARACTER', `${options.name}-panel-visibility`, true)
       dropdown.ref.Show()
-      a.ref.Show()
+      a.Show()
     }
 
     if (!is_first_load)
       PlaySound(828)
   }
 
-  title.ref.HookScript('OnEnter', () => title.ref.SetBackdropColor(0.21, 0.49, 1, 1))
-  title.ref.HookScript('OnLeave', () => title.ref.SetBackdropColor(0, 0, 0, 1))
+  title.HookScript('OnEnter', () => title.SetBackdropColor(0.21, 0.49, 1, 1))
+  title.HookScript('OnLeave', () => title.SetBackdropColor(0, 0, 0, 1))
 
-  title.ref.SetScript('OnMouseDown', (frame, type: WoWAPI.MouseButton) => {
+  title.SetScript('OnMouseDown', (frame, type: WoWAPI.MouseButton) => {
     if (type === 'LeftButton')
       TogglePanel()
   })
 
-  if (!$.store.Get('CHARACTER', `${options.name}-panel-visibility`)) {
-    dropdown.ref.Hide()
-    a.ref.Hide()
-  }
+  // if (!$.store.Get('CHARACTER', `${options.name}-panel-visibility`)) {
+  //   dropdown.ref.Hide()
+  //   a.ref.Hide()
+  // }
 
   // make title movable
-  Movable(title)
+  // Movable(title)
 
   return title
 }

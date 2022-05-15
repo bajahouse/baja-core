@@ -31,9 +31,9 @@ export const Counter = options => {
     height: counter.GetHeight(),
     parent: counter,
   })
-  input.ref.SetPoint('CENTER')
-  const i = CreateFrame('EditBox', `${options.name}-editbox`, input.ref)
-  i.SetAllPoints(input.ref)
+  input.SetPoint('CENTER')
+  const i = CreateFrame('EditBox', `${options.name}-editbox`, input)
+  i.SetAllPoints(input)
   i.SetNumeric()
   i.SetNumber(count)
   i.SetPoint('CENTER')
@@ -42,7 +42,8 @@ export const Counter = options => {
   i.ClearFocus()
   i.SetScript('OnTextChanged', () => {
   })
-  input.inner = i as any
+  // FIXME: Inner
+  ;(input as any).Inner(i)
   counter.EnableMouse(true)
   counter.SetScript('OnMouseDown', () => {
     i.SetFocus()
@@ -85,8 +86,8 @@ export const Counter = options => {
       count = r
     i.SetNumber(current)
   }
-  input.ref.EnableMouseWheel(true)
-  input.ref.SetScript('OnMouseWheel', (_, d) => {
+  input.EnableMouseWheel(true)
+  input.SetScript('OnMouseWheel', (_, d) => {
     if (d > 0)
       increment()
     if (d < 0)
