@@ -15,6 +15,16 @@ export function ConvertHex (hex: string) {
   // throw `Cannot convert hex value '${hex}' to RGB`
 }
 
+export type PersistenceTarget = 'client' | 'server'
+
+export function Movable (frame: SmartFrame, button: WoWAPI.MouseButton, ersist?: PersistenceTarget) {
+  frame.EnableMouse(true)
+  frame.SetMovable(true)
+  frame.RegisterForDrag(button)
+  frame.SetScript('OnDragStart', f => f.StartMoving())
+  frame.SetScript('OnDragStop', f => f.StopMovingOrSizing())
+}
+
 export function ConvertRGB (normal: RGB) {
   return [
     normal[0] / 255,

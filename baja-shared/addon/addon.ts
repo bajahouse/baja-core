@@ -1,7 +1,7 @@
 import { Grid } from './export/frames/grid'
 import { Scroll } from './export/frames/scroll'
 import { Button } from './export/frames/Button'
-import { $ } from './export/lib'
+import { $, Movable } from './export/lib'
 
 const picker = $({
   width: 300,
@@ -9,6 +9,8 @@ const picker = $({
   backdrop: 'tooltip',
   point: 'CENTER',
 })
+
+Movable(picker, 'RightButton')
 
 const scroll = Scroll({
   parent: picker,
