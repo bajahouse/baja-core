@@ -85,29 +85,29 @@ function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float)
     let flat1 = statsPrimary * .1//forced value to each stat
     let flat2 = statsSecondary * .1//forced value to each stat
     let stats = CreateDictionary<uint32, int32>({})
-    //apply flats
-    for (let i = 0; i < group.length; i++) {
-        for (let j = 0; j < group[i].length; j++) {
-            if (i == 0) {
-                stats[group[i][j]] = flat1
-                statsPrimary -= flat1
-            }
-            if (i == 1) {
-                stats[group[i][j]] = flat2
-                statsSecondary -= flat2
-            }
-        }
+
+    //apply flat primary
+    for (let j = 0; j < group[0].length; j++) {
+        stats[group[0][j]] = flat1
+        statsPrimary -= flat1
     }
     //distribute primary stats
     while (statsPrimary > 0) {
         stats[group[0][getRandNumber(group[0].length)]]++
         statsPrimary--
     }
+    
+    //apply flat secondary
+    for (let j = 0; j < group[1].length; j++) {
+        stats[group[1][j]] = flat2
+        statsSecondary -= flat2
+    }
     //distribute secondary stats
     while (statsSecondary > 0) {
         stats[group[1][getRandNumber(group[1].length)]]++
         statsSecondary--
     }
+
     //apply stats to item
     let index = 0
     stats.forEach((key, val) => {
