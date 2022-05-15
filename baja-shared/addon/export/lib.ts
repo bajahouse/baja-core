@@ -305,6 +305,8 @@ export function $ (options: FrameOptions = {}) {
   } else if (typeof options.color === 'string') {
     const [r, g, b] = ConvertHex(options.color)
     frame.SetBackdropColor(r, g, b, frame.GetAlpha())
+  } else {
+    frame.SetBackdropColor(0, 0, 0, frame.GetAlpha())
   }
   if (options.parent) {
     frame.SetParent(options.parent)

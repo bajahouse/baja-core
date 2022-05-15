@@ -332,15 +332,15 @@ export const Dropdown = (options: DropdownOptions) => {
 
     if (item.id !== 'empty') {
       checkmark.Show()
-      checkmark.SetParent(item.item.ref)
+      checkmark.SetParent(item.item)
       checkmark.SetPoint('LEFT', 12, 0)
       for (const key of Object.keys(items))
         if (items[key].item)
-          items[key].item.ref.text.SetPoint('LEFT', 30, 0)
+          items[key].item.text.SetPoint('LEFT', 30, 0)
     } else {
       for (const key of Object.keys(items))
         if (items[key].item)
-          items[key].item.ref.text.SetPoint('LEFT', 12, 0)
+          items[key].item.text.SetPoint('LEFT', 12, 0)
       checkmark.Hide()
     }
 

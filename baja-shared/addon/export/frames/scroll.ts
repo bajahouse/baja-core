@@ -13,9 +13,6 @@ export interface ScrollFrame extends SmartFrame {
 
 export const Scroll = (options: ScrollOptions): ScrollFrame => {
   const a = $(options).ToAdvancedFrame<ScrollFrame>()
-  const frame = a.Inner()
-
-  frame.SetAllPoints(frame.GetParent() as WoWAPI.Frame)
 
   const scrollframe = $({
     template: 'UIPanelScrollFrameTemplate',
@@ -46,10 +43,10 @@ export const Scroll = (options: ScrollOptions): ScrollFrame => {
   scrollbar.SetPoint('TOP', scrollupbutton, 'BOTTOM', 0, -2)
   scrollbar.SetPoint('BOTTOM', scrolldownbutton, 'TOP', 0, 2)
 
-  frame.SetPoint('CENTER')
+  a.SetPoint('CENTER')
 
   ref.SetScrollChild(scrollchild)
-  ref.SetAllPoints(frame)
+  ref.SetAllPoints(a)
 
   scrollchild.SetSize(ref.GetWidth(), options.scrollHeight || ref.GetHeight() * 2)
 

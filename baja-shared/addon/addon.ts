@@ -1,10 +1,13 @@
+import { Scroll } from './export/frames/scroll'
 import { Panel } from './export/frames/Panel'
 import { $ } from './export/lib'
 
-Panel({
+Scroll({
   point: 'CENTER',
   width: 100,
-  title: 'Spell Picker',
+  height: 100,
+  scrollHeight: 500,
+  backdrop: 'tooltip',
 })
 
 
