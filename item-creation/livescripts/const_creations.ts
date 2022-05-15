@@ -100,75 +100,106 @@ export const qualityMultiplier = [
     0.9,//epic
     1//legendary
 ]
+const enum itemStats {
+    MANA = 0,
+    HEALTH = 1,
+    AGILITY = 3,
+    STRENGTH = 4,
+    INTELLECT = 5,
+    SPIRIT = 6,
+    STAMINA = 7,
+    DEFENSE_SKILL_RATING = 12,
+    DODGE_RATING = 13,
+    PARRY_RATING = 14,
+    BLOCK_RATING = 15,
+    HIT_MELEE_RATING = 16,
+    HIT_RANGED_RATING = 17,
+    HIT_SPELL_RATING = 18,
+    CRIT_MELEE_RATING = 19,
+    CRIT_RANGED_RATING = 20,
+    CRIT_SPELL_RATING = 21,
+    HIT_TAKEN_MELEE_RATING = 22,
+    HIT_TAKEN_RANGED_RATING = 23,
+    HIT_TAKEN_SPELL_RATING = 24,
+    CRIT_TAKEN_MELEE_RATING = 25,
+    CRIT_TAKEN_RANGED_RATING = 26,
+    CRIT_TAKEN_SPELL_RATING = 27,
+    HASTE_MELEE_RATING = 28,
+    HASTE_RANGED_RATING = 29,
+    HASTE_SPELL_RATING = 30,
+    HIT_RATING = 31,
+    CRIT_RATING = 32,
+    HIT_TAKEN_RATING = 33,
+    CRIT_TAKEN_RATING = 34,
+    RESILIENCE_RATING = 35,
+    HASTE_RATING = 36,
+    EXPERTISE_RATING = 37,
+    ATTACK_POWER = 38,
+    RANGED_ATTACK_POWER = 39,
+    FERAL_ATTACK_POWER = 40,
+    SPELL_HEALING_DONE = 41,
+    SPELL_DAMAGE_DONE = 42,
+    MANA_REGENERATION = 43,
+    ARMOR_PENETRATION_RATING = 44,
+    SPELL_POWER = 45,
+    HEALTH_REGEN = 46,
+    SPELL_PENETRATION = 47,
+    BLOCK_VALUE = 48,
+}
 
-let mana = 0
-let hp = 1
-let agi = 3
-let str = 4
-let intl = 5
-let spi = 6
-let stam = 7
-let hit = 31
-let crit = 32
-let haste = 36
-let expertise = 37
-let ap = 38
-let apen = 44
-let sp = 45
-let spen = 47
 
 export const statGroups: TSArray<TSArray<TSArray<float>>> = <TSArray<TSArray<TSArray<float>>>>[//statgroups
     //str groups
     [
-        [str, stam],//primary statIDs
-        [haste, hit]//secondary statIDs
+        [itemStats.STRENGTH, itemStats.STAMINA],//primary statIDs
+        [itemStats.HASTE_RATING, itemStats.HIT_RATING]//secondary statIDs
     ],
     [
-        [str, stam],
-        [ap, expertise]
+        [itemStats.STRENGTH, itemStats.STAMINA],
+        [itemStats.ATTACK_POWER, itemStats.EXPERTISE_RATING]
     ],
     [
-        [str, stam],
-        [hp, crit]
+        [itemStats.STRENGTH, itemStats.STAMINA],
+        [itemStats.HEALTH, itemStats.CRIT_RATING]
     ],
     [
-        [str, stam],
-        [apen, hit]
+        [itemStats.STRENGTH, itemStats.STAMINA],
+        [itemStats.ARMOR_PENETRATION_RATING, itemStats.HIT_MELEE_RATING]
     ],
 
     //agi groups
     [
-        [agi, stam],//primary statIDs
-        [haste, hit]//secondary statIDs
+        [itemStats.AGILITY, itemStats.STAMINA],//primary statIDs
+        [itemStats.HASTE_RATING, itemStats.HIT_RATING]//secondary statIDs
     ],
     [
-        [agi, stam],
-        [ap, expertise]
+        [itemStats.AGILITY, itemStats.STAMINA],
+        [itemStats.ATTACK_POWER, itemStats.EXPERTISE_RATING]
     ],
     [
-        [agi, stam],
-        [hp, crit]
+        [itemStats.AGILITY, itemStats.STAMINA],
+        [itemStats.HEALTH, itemStats.CRIT_MELEE_RATING]
     ],
     [
-        [agi, stam],
-        [apen, hit]
+        [itemStats.AGILITY, itemStats.STAMINA],
+        [itemStats.ARMOR_PENETRATION_RATING, itemStats.HIT_RATING]
     ],
 
     //int groups
     [
-        [intl, spi],//primary statIDs
-        [haste, hit]//secondary statIDs
+        [itemStats.INTELLECT, itemStats.SPIRIT],//primary statIDs
+        [itemStats.HASTE_RATING, itemStats.HIT_RATING]//secondary statIDs
     ],
     [
-        [intl],
-        [spi, spen]
+        [itemStats.INTELLECT],
+        [itemStats.SPIRIT, itemStats.SPELL_PENETRATION]
     ],
     [
-        [intl, stam],
-        [crit, sp]
+        [itemStats.INTELLECT, itemStats.STAMINA],
+        [itemStats.CRIT_SPELL_RATING, itemStats.SPELL_POWER]
     ],
     [
-        [intl, mana],
-        [spen, hit]
+        [itemStats.INTELLECT, itemStats.MANA],
+        [itemStats.SPELL_PENETRATION, itemStats.HIT_RATING]
     ],
 ]
