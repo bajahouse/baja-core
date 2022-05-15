@@ -1,18 +1,17 @@
 import { DropdownItemOptions, Dropdown } from './dropdown'
 import { $, SmartFrame, FrameOptions } from '../lib'
 
-
 let is_first_load = true
 
 export interface PanelOptions extends FrameOptions {
   nav?: DropdownItemOptions[]
-  components?: { [key: string]: SmartFrame }
+  frames?: ((options: FrameOptions) => SmartFrame)[]
   defaultSelectionId?: string
   isHiddenOnEmpty?: boolean
   title?: string
 }
 
-export const Panel = options => {
+export const Panel = (options: PanelOptions) => {
   // const $ = Get()
 
   // title
@@ -56,7 +55,7 @@ export const Panel = options => {
 
   // pages
   const pages: { [key: string]: SmartFrame } = {}
-  const components = options.components
+  const frames = options.frames
 
   //dropdown
   const dropdown = Dropdown({
@@ -72,13 +71,13 @@ export const Panel = options => {
         page.Hide()
       }
 
-      if (!pages[id] && components[id]) {
-        const page = components[id]({ parent: b })
+      if (!pages[id] && frames[id]) {
+        const page = frames[id]({ parent: b })
 
         pages[id] = page
 
-        page.ref.SetParent(title.Inner())
-        page.ref.SetPoint('CENTER')
+        page.SetParent(title.Inner())
+        page.SetPoint('CENTER')
       }
 
       if (pages[id])
@@ -98,13 +97,13 @@ export const Panel = options => {
     if (is_first_load)
       is_first_load = false
 
-    if (dropdown.ref.IsVisible()) {
+    if (dropdown.IsVisible()) {
       // $.store.Set('CHARACTER', `${options.name}-panel-visibility`, false)
-      dropdown.ref.Hide()
+      dropdown.Hide()
       a.Hide()
     } else {
       // $.store.Set('CHARACTER', `${options.name}-panel-visibility`, true)
-      dropdown.ref.Show()
+      dropdown.Show()
       a.Show()
     }
 

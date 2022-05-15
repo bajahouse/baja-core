@@ -1,13 +1,12 @@
+import { Panel } from './export/frames/Panel'
 import { $ } from './export/lib'
 
-const a = $()
-const b = $({
-  width: 500,
-  height: 500,
+Panel({
   point: 'CENTER',
-  backdrop: 'tooltip',
-  color: '#1b1d1e',
+  width: 100,
+  title: 'Spell Picker',
 })
+
 
 // FIXME
 // pctWidth: number
