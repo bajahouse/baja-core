@@ -51,9 +51,9 @@ export const Dropdown = (options: DropdownOptions) => {
   const a = $({
     backdrop: 'tooltip',
     ...options,
-  }) as any
+  })
 
-  a.state = {
+  const state = {
     length: 0,
     items: items,
     selection: { ...DEFAULT_SELECTION },
@@ -65,21 +65,21 @@ export const Dropdown = (options: DropdownOptions) => {
 
   autohide['a'] = false
 
-  a.ref.HookScript('OnEnter', () => {
+  a.HookScript('OnEnter', () => {
     autohide['a'] = true
     timer = 0
-    a.ref.SetBackdropColor(0.21, 0.49, 1, 1)
+    a.SetBackdropColor(0.21, 0.49, 1, 1)
   })
 
-  a.ref.HookScript('OnLeave', () => {
+  a.HookScript('OnLeave', () => {
     autohide['a'] = false
     timer = GetTime() + AUTOHIDE_TIMER
-    a.ref.SetBackdropColor(0, 0, 0, 1)
+    a.SetBackdropColor(0, 0, 0, 1)
   })
 
   // menu
   const p = $({ mod: options.mod, parent: a, backdrop: 'tooltip' })
-  p.SetPoint('TOP', a.ref, 'BOTTOM', 0, 0)
+  p.SetPoint('TOP', a, 'BOTTOM', 0, 0)
   p.SetSize(options.width || 200, 3)
   p.SetBackdropColor(0, 0, 0, 1)
 
@@ -112,7 +112,7 @@ export const Dropdown = (options: DropdownOptions) => {
   })
 
   // button
-  const button = CreateFrame('Button', `${name}-button`, a.ref)
+  const button = CreateFrame('Button', `${a}-button`, a)
 
   button.SetNormalTexture('Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up')
   button.SetHighlightTexture('Interface\\Buttons\\UI-Common-MouseHilight')
@@ -134,8 +134,8 @@ export const Dropdown = (options: DropdownOptions) => {
   })
 
   // toggle
-  a.ref.EnableMouse(true)
-  a.ref.HookScript('OnMouseDown', () => {
+  a.EnableMouse(true)
+  a.HookScript('OnMouseDown', () => {
     PlaySound(1115)
     if (p.IsVisible()) {
       p.Hide()
@@ -170,14 +170,13 @@ export const Dropdown = (options: DropdownOptions) => {
   })
 
   // text
-  const textName = `${a.ref.GetName()}-label`
-  const text = a.ref.CreateFontString(
-    textName,
+  const text = a.CreateFontString(
+    `${a.UID}-label`,
     'OVERLAY',
     'GameTooltipText',
   )
 
-  text.SetParent(a.ref)
+  text.SetParent(a)
   text.SetPoint('LEFT', 10, 0)
   text.SetFont('Fonts/FRIZQT__.TTF', 10)
   text.SetText(options.emptyText || 'select')
@@ -273,10 +272,10 @@ export const Dropdown = (options: DropdownOptions) => {
 
     list.Attach(options.id, w)
 
-    a.state.length = (list as any).state.items.length
+    state.length = (list as any).state.items.length
 
-    menu.SetHeight((a.state.length * 30) + 14)
-    listwrap.SetHeight(a.state.length * 30)
+    menu.SetHeight((state.length * 30) + 14)
+    listwrap.SetHeight(state.length * 30)
 
     listwrap.SetPoint('CENTER')
 
@@ -301,7 +300,7 @@ export const Dropdown = (options: DropdownOptions) => {
     return bool
   }
 
-  a.ref.SetScript('OnUpdate', () => {
+  a.SetScript('OnUpdate', () => {
     if ((timer > 0) && (GetTime() >= timer)) {
       if (!IsMouseEnter())
         p.Hide()
@@ -319,16 +318,16 @@ export const Dropdown = (options: DropdownOptions) => {
     if (!item)
       item = items[options.defaultSelectionId] || items['empty']
 
-    if (a.state.selection.id === item.id) {
+    if (state.selection.id === item.id) {
       if (options.isTriggerOnReselect && options.onSelect && isTrigger)
-        options.onSelect(a.state.selection)
+        options.onSelect(state.selection)
     } else {
-      a.state.selection = { ...item }
+      state.selection = { ...item }
 
       text.SetText(item.text)
 
       if (options.onSelect && isTrigger)
-        options.onSelect(a.state.selection)
+        options.onSelect(state.selection)
     }
 
     if (item.id !== 'empty') {
