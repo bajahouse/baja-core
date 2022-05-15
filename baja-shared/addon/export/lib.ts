@@ -125,6 +125,7 @@ export interface FrameProps {
     O extends object = object,
     F extends WoWAPI.UIObject = SmartFrame,
   >() => WoWAPI.AdvancedFrame<F, O>
+  ToExtendedFrame: <F extends WoWAPI.UIObject = SmartFrame>() => F
 }
 
 export type Model = WoWAPI.AdvancedFrame<WoWAPI.Model, FrameProps>
@@ -347,6 +348,9 @@ export function $ (options: FrameOptions = {}) {
     O extends object = object,
     F extends WoWAPI.UIObject = SmartFrame,
   >() => frame as any as WoWAPI.AdvancedFrame<F, O>
+  frame.ToExtendedFrame = <
+    F extends WoWAPI.UIObject = SmartFrame
+  >() => frame as any as F
   if (options.level) {
     frame.SetFrameLevel(options.level)
   } else {

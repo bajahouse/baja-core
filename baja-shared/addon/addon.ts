@@ -38,6 +38,9 @@ grid.Attach(
 )
 
 // FIXME
+
+// build Global container
+
 // pctWidth: number
 // pctHeight: number
 // widthFn: parent => number

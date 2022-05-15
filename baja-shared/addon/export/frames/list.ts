@@ -13,8 +13,8 @@ export interface ListItemFrame extends SmartFrame {
   Id: string | null
 }
 
-export const ListItem = (options: ListItemOptions): ListItemFrame => {
-  const frame = $({ parent: options.parent }).ToAdvancedFrame<ListItemFrame>()
+export const ListItem = (options: ListItemOptions) => {
+  const frame = $({ parent: options.parent }).ToExtendedFrame<ListItemFrame>()
   let y = options.y || 0
   frame.SetSize(options.width, options.height)
   options.child.SetAllPoints(frame)
@@ -45,8 +45,8 @@ export interface ListFrame extends SmartFrame {
   Reflow: () => void
 }
 
-export const List = (options: ListOptions): ListFrame => {
-  const list = $(options).ToAdvancedFrame<ListFrame>()
+export const List = (options: ListOptions) => {
+  const list = $(options).ToExtendedFrame<ListFrame>()
 
   list.SetAllPoints(options.parent.Inner())
 

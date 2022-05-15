@@ -11,8 +11,8 @@ export interface ScrollFrame extends SmartFrame {
   Bottom: () => void,
 }
 
-export const Scroll = (options: ScrollOptions): ScrollFrame => {
-  const a = $(options).ToAdvancedFrame<ScrollFrame>()
+export const Scroll = (options: ScrollOptions) => {
+  const a = $(options).ToExtendedFrame<ScrollFrame>()
 
   const scrollframe = $({
     template: 'UIPanelScrollFrameTemplate',

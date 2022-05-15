@@ -23,12 +23,12 @@ interface GridState {
   y: number
 }
 
-export interface GridFrame extends FrameOptions {
+export interface GridFrame extends SmartFrame {
   Attach: (frame: SmartFrame) => void
 }
 
-export const Grid = (options: GridOptions): GridFrame => {
-  const frame = $(options).ToAdvancedFrame<GridFrame>()
+export const Grid = (options: GridOptions) => {
+  const frame = $(options).ToExtendedFrame<GridFrame>()
   const state: GridState = {
     itemsPerRow: options.itemsPerRow,
     rowHeight: options.rowHeight,
