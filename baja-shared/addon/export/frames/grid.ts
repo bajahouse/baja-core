@@ -1,12 +1,11 @@
-import { Unique } from '../utils'
-import { Frame, Component, ComponentOptions, Element, ElementFn } from '../app'
+import { $, SmartFrame, FrameOptions } from '../lib'
 
-export interface GridOptions extends ComponentOptions {
+export interface GridOptions extends FrameOptions {
   itemsPerRow: number
   rowHeight: number
 }
 
-export interface GridItemOptions extends ComponentOptions {
+export interface GridItemOptions extends FrameOptions {
   item: Element
   width: number
   height: number
@@ -14,78 +13,68 @@ export interface GridItemOptions extends ComponentOptions {
   y: number
 }
 
-export interface GridState {
+interface GridState {
   itemsPerRow: number
   rowHeight: number
   itemWidth: number
-  list: Element[]
+  list: SmartFrame[]
   index: number
   x: number
   y: number
 }
 
-export interface GridFns {
-  Attach: ElementFn
-  // Show
-  // Hide
+export interface GridFrame extends SmartFrame {
+  Attach: (frame: SmartFrame) => void
 }
 
-export const GridItem: Component<GridItemOptions> = options => {
-  const frame = Frame(options)
+export const Grid = (options: GridOptions): GridFrame => {
+  const frame = $(options).ToAdvancedFrame<GridFrame>()
+  const state: GridState = {
+    itemsPerRow: options.itemsPerRow,
+    rowHeight: options.rowHeight,
+    // FIXME: implement SmartFrame#Inner
+    itemWidth: (options.parent as any).Inner().GetWidth() / options.itemsPerRow,
+    list: [],
+    index: 0,
+    x: 0,
+    y: 0,
+  }
 
-  frame.ref.SetPoint('TOPLEFT', options.x, options.y)
-  frame.ref.SetSize(options.width, options.height)
+  frame.Attach = child => {
+    const isEndOfRow = state.index === ((state.itemsPerRow || 3) - 1)
 
-  options.item.ref.SetParent(frame.ref)
-  options.item.ref.SetPoint('CENTER')
+    const f = GridItem({
+      parent: frame,
+      item: child,
+      width: state.itemWidth,
+      height: state.rowHeight,
+      x: state.x,
+      y: state.y,
+    })
+
+    if (isEndOfRow) {
+      state.index = 0
+      state.x = 0
+      state.y -= state.rowHeight
+    } else {
+      state.index++
+      state.x += state.itemWidth
+    }
+
+    state.list.push(f)
+  }
 
   return frame
 }
 
-export const Grid: Component<GridOptions, GridState, GridFns> = options => {
-  const frame: Element<GridState, GridFns>  = Frame(options) as any
+export const GridItem = options => {
+  const frame = $(options)
 
-  frame.state.itemsPerRow = options.itemsPerRow
-  frame.state.rowHeight = options.rowHeight
-  frame.state.itemWidth = frame.parent.inner.GetWidth() / options.itemsPerRow
-  frame.state.list = []
-  frame.state.index = 0
-  frame.state.x = 0
-  frame.state.y = 0
+  frame.SetPoint('TOPLEFT', options.x, options.y)
+  frame.SetSize(options.width, options.height)
 
-  frame.fns.Attach = child => {
-    const isEndOfRow = frame.state.index === ((frame.state.itemsPerRow || 3) - 1)
-
-    const element = GridItem({
-      parent: frame,
-      // FIXME: is this needed?
-      name: Unique(`${options.name}-griditem`),
-      item: child,
-      width: frame.state.itemWidth,
-      height: frame.state.rowHeight,
-      x: frame.state.x,
-      y: frame.state.y,
-    })
-
-    if (isEndOfRow) {
-      frame.state.index = 0
-      frame.state.x = 0
-      frame.state.y -= frame.state.rowHeight
-    } else {
-      frame.state.index++
-      frame.state.x += frame.state.itemWidth
-    }
-
-    frame.state.list.push(element)
-  }
-
-  // onShow () {
-  //   this.list.forEach(item => item.Show(true))
-  // }
-
-  // onHide () {
-  //   this.list.forEach(item => item.Hide(true))
-  // }
+  options.item.SetParent(frame)
+  options.item.SetPoint('CENTER')
 
   return frame
 }
