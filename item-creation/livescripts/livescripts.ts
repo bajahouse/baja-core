@@ -1,7 +1,9 @@
-import { itemCreate } from "./item_create";
+import { itemCreationSetup } from "./item_create";
+import { example } from "./item_create_example";
 
 export function Main(events: TSEvents) {
-    itemCreate(events)
+    itemCreationSetup(events)
+    example(events)
 }
 
 export function getRandNumber(max: uint32): uint32 {
