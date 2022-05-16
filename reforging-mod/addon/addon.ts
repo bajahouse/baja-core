@@ -1,0 +1,1 @@
+console.log("Hello from baja-core.reforging-mod AddOn!")
