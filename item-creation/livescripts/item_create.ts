@@ -1,4 +1,4 @@
-import { emptyQuality, itemClassInfo, qualityMultiplier, statGroups } from "./const_creations";
+import { emptyQuality, itemClassInfo, qualityMultiplier, statChoices, statCounts } from "./const_creations";
 import { getRandNumber } from "./livescripts";
 
 let startID = 200000
@@ -18,19 +18,19 @@ export function itemCreationSetup(events: TSEvents) {
 
 export function createItemRandom(player: TSPlayer) {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
-    temp = modifyItemProperties(temp, chooseItemType(), player.GetLevel())
+    temp = modifyItemProperties(temp, chooseItemType(), player.GetLevel(), getRandNumber(3))
     player.SendItemQueryPacket(temp)
     player.AddItem(temp.GetEntry(), 1)
 }
 
-export function createItemWithChoices(player: TSPlayer, i1: number, i2: number, level: uint32): TSItem {
+export function createItemWithChoices(player: TSPlayer, i1: uint32, i2: uint32, level: uint32, statType: number): TSItem {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
-    temp = modifyItemProperties(temp, itemClassInfo[i1][i2], level)
+    temp = modifyItemProperties(temp, itemClassInfo[i1][i2], level, statType)
     player.SendItemQueryPacket(temp)
     return player.AddItem(temp.GetEntry(), 1)
 }
 
-function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, playerLevel: uint32): TSItemTemplate {
+function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, playerLevel: uint32, statType: number): TSItemTemplate {
     const itemLevel: uint32 = ((playerLevel * 2) * qualityMultiplier[temp.GetQuality()]) + 1
     temp.SetItemLevel(itemLevel);
     temp.SetRequiredLevel(playerLevel)
@@ -71,19 +71,19 @@ function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, pl
     }
     temp.SetName(getName(itemInfo, temp.GetQuality()))
     temp.SetDisplayInfoID(getDisplayID(itemInfo, temp.GetQuality()))
-    temp = generateStats(itemLevel, temp, itemInfo[5])
+    temp = generateStats(itemLevel, temp, itemInfo[5], statType)
 
     temp.Save()
     return temp
 }
 
-function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float): TSItemTemplate {
-    let group = statGroups[getRandNumber(statGroups.length)]
+function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float, statType: number): TSItemTemplate {
+    let group = getStatGroup(statType, temp.GetQuality())
     let totalStats = slotMult * itemLevel * 20 * qualityMultiplier[temp.GetQuality()]
     let statsPrimary: uint32 = totalStats * .7
     let statsSecondary: uint32 = totalStats * .3
-    let flat1 = statsPrimary * .1//forced value to each stat
-    let flat2 = statsSecondary * .1//forced value to each stat
+    let flat1: uint32 = statsPrimary * .1//forced value to each stat
+    let flat2: uint32 = statsSecondary * .1//forced value to each stat
     let stats = CreateDictionary<uint32, int32>({})
 
     //apply flat primary
@@ -96,7 +96,7 @@ function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float)
         stats[group[0][getRandNumber(group[0].length)]]++
         statsPrimary--
     }
-    
+
     //apply flat secondary
     for (let j = 0; j < group[1].length; j++) {
         stats[group[1][j]] = flat2
@@ -120,7 +120,7 @@ function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float)
 }
 
 
-function GetRandQuality(): number {
+function GetRandQuality(): uint32 {
     let qualityCheck = getRandNumber(100)
     if (qualityCheck < 50) {//uncommon
         return 2
@@ -134,8 +134,7 @@ function GetRandQuality(): number {
 }
 
 function chooseItemType(): TSArray<float> {
-    let qualityCheck = getRandNumber(100)
-    if (qualityCheck < 85) {//armor
+    if (getRandNumber(100) < 85) {//armor
         return itemClassInfo[0][getRandNumber(itemClassInfo[0].length)]
     } else {//weapon
         return itemClassInfo[1][getRandNumber(itemClassInfo[1].length)]
@@ -176,6 +175,8 @@ function setupStartingID() {
     let q = QueryCharacters('SELECT MAX(entry) FROM custom_item_template')
     while (q.GetRow()) {
         startID = (q.GetUInt32(0) + 1)
+        if (startID < 200000)
+            startID = 200000
     }
 }
 
@@ -185,4 +186,16 @@ function setupDisplayIDDict() {
     while (q.GetRow()) {
         displayDict[q.GetUInt32(0)][q.GetUInt32(1)][q.GetUInt32(3)][q.GetUInt32(2)].push(q.GetUInt32(4))
     }
+}
+
+function getStatGroup(statType: uint32, quality: uint32): TSArray<TSArray<uint32>> {
+    let curStatCounts = statCounts[quality]
+    let statGroup = <TSArray<TSArray<uint32>>>[<TSArray<uint32>>[], <TSArray<uint32>>[]]
+    for (let i = 0; i < curStatCounts[0]; i++) {
+        statGroup[0].push(statChoices[0][statType][getRandNumber(statChoices[0][statType].length)])
+    }
+    for (let i = 0; i < curStatCounts[1]; i++) {
+        statGroup[1].push(statChoices[1][statType][getRandNumber(statChoices[1][statType].length)])
+    }
+    return statGroup
 }

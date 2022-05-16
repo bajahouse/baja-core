@@ -94,13 +94,22 @@ export const itemClassInfo: TSArray<TSArray<TSArray<float>>> = [//class,subclass
 
 export const qualityMultiplier = [
     0.5,//no quality 0
-    0.6,//common unused
-    0.7,//uncommon
-    0.8,//rare
-    0.9,//epic
+    0.4,//common unused
+    0.5,//uncommon
+    0.6,//rare
+    0.75,//epic
     1//legendary
 ]
-const enum itemStats {
+
+export const statCounts = [
+    [0, 0], // no quality 0
+    [1, 1],//common unused
+    [2, 1],//uncommon
+    [2, 3],//rare
+    [2, 4],//epic
+    [3, 5]//legendary
+]
+const enum itemStats /**@realType:uint32*/ {
     MANA = 0,
     HEALTH = 1,
     AGILITY = 3,
@@ -145,60 +154,63 @@ const enum itemStats {
     SPELL_PENETRATION = 47,
     BLOCK_VALUE = 48,
 }
-
-
-export const statGroups: TSArray<TSArray<TSArray<float>>> = <TSArray<TSArray<TSArray<float>>>>[//statgroups
-    //str groups
-    [
-        [itemStats.STRENGTH, itemStats.STAMINA],//primary statIDs
-        [itemStats.HASTE_RATING, itemStats.HIT_RATING]//secondary statIDs
+export const statChoices: TSArray<TSArray<TSArray<uint32>>> = <TSArray<TSArray<TSArray<uint32>>>>[
+    <TSArray<TSArray<uint32>>>[//primaries
+        <TSArray<uint32>>[//str group
+            itemStats.STRENGTH,
+            itemStats.STAMINA,
+            itemStats.AGILITY
+        ],
+        <TSArray<uint32>>[//agi group
+            itemStats.AGILITY,
+            itemStats.STAMINA,
+            itemStats.STRENGTH,
+        ],
+        <TSArray<uint32>>[//int group
+            itemStats.INTELLECT,
+            itemStats.STAMINA,
+            itemStats.SPIRIT
+        ],
     ],
-    [
-        [itemStats.STRENGTH, itemStats.STAMINA],
-        [itemStats.ATTACK_POWER, itemStats.EXPERTISE_RATING]
-    ],
-    [
-        [itemStats.STRENGTH, itemStats.STAMINA],
-        [itemStats.HEALTH, itemStats.CRIT_RATING]
-    ],
-    [
-        [itemStats.STRENGTH, itemStats.STAMINA],
-        [itemStats.ARMOR_PENETRATION_RATING, itemStats.HIT_MELEE_RATING]
-    ],
-
-    //agi groups
-    [
-        [itemStats.AGILITY, itemStats.STAMINA],//primary statIDs
-        [itemStats.HASTE_RATING, itemStats.HIT_RATING]//secondary statIDs
-    ],
-    [
-        [itemStats.AGILITY, itemStats.STAMINA],
-        [itemStats.ATTACK_POWER, itemStats.EXPERTISE_RATING]
-    ],
-    [
-        [itemStats.AGILITY, itemStats.STAMINA],
-        [itemStats.HEALTH, itemStats.CRIT_MELEE_RATING]
-    ],
-    [
-        [itemStats.AGILITY, itemStats.STAMINA],
-        [itemStats.ARMOR_PENETRATION_RATING, itemStats.HIT_RATING]
-    ],
-
-    //int groups
-    [
-        [itemStats.INTELLECT, itemStats.SPIRIT],//primary statIDs
-        [itemStats.HASTE_RATING, itemStats.HIT_RATING]//secondary statIDs
-    ],
-    [
-        [itemStats.INTELLECT],
-        [itemStats.SPIRIT, itemStats.SPELL_PENETRATION]
-    ],
-    [
-        [itemStats.INTELLECT, itemStats.STAMINA],
-        [itemStats.CRIT_SPELL_RATING, itemStats.SPELL_POWER]
-    ],
-    [
-        [itemStats.INTELLECT, itemStats.MANA],
-        [itemStats.SPELL_PENETRATION, itemStats.HIT_RATING]
+    <TSArray<TSArray<uint32>>>[//secondaries
+        <TSArray<uint32>>[//str group
+            itemStats.HEALTH,
+            itemStats.DEFENSE_SKILL_RATING,
+            itemStats.BLOCK_RATING,
+            itemStats.HIT_RATING,
+            itemStats.CRIT_RATING,
+            itemStats.HIT_TAKEN_RATING,
+            itemStats.RESILIENCE_RATING,
+            itemStats.HASTE_RATING,
+            itemStats.EXPERTISE_RATING,
+            itemStats.ATTACK_POWER,
+            itemStats.ARMOR_PENETRATION_RATING,
+            itemStats.STRENGTH,
+            itemStats.AGILITY,
+        ],
+        <TSArray<uint32>>[//agi group
+            itemStats.HEALTH,
+            itemStats.DODGE_RATING,
+            itemStats.HIT_RATING,
+            itemStats.CRIT_RATING,
+            itemStats.CRIT_TAKEN_RATING,
+            itemStats.HASTE_RATING,
+            itemStats.EXPERTISE_RATING,
+            itemStats.ATTACK_POWER,
+            itemStats.ARMOR_PENETRATION_RATING,
+            itemStats.AGILITY,
+            itemStats.STRENGTH,
+        ],
+        <TSArray<uint32>>[//int group
+            itemStats.MANA,
+            itemStats.SPIRIT,
+            itemStats.INTELLECT,
+            itemStats.CRIT_RATING,
+            itemStats.HIT_RATING,
+            itemStats.HASTE_RATING,
+            itemStats.MANA_REGENERATION,
+            itemStats.SPELL_POWER,
+            itemStats.SPELL_PENETRATION,
+        ],
     ],
 ]
