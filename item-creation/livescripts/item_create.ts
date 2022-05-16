@@ -23,14 +23,14 @@ export function createItemRandom(player: TSPlayer) {
     player.AddItem(temp.GetEntry(), 1)
 }
 
-export function createItemWithChoices(player: TSPlayer, i1: uint32, i2: uint32, level: uint32, statType: number): TSItem {
+export function createItemWithChoices(player: TSPlayer, i1: uint32, i2: uint32, level: uint32, statType: uint32): TSItem {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
     temp = modifyItemProperties(temp, itemClassInfo[i1][i2], level, statType)
     player.SendItemQueryPacket(temp)
     return player.AddItem(temp.GetEntry(), 1)
 }
 
-function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, playerLevel: uint32, statType: number): TSItemTemplate {
+function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, playerLevel: uint32, statType: uint32): TSItemTemplate {
     const itemLevel: uint32 = ((playerLevel * 2) * qualityMultiplier[temp.GetQuality()]) + 1
     temp.SetItemLevel(itemLevel);
     temp.SetRequiredLevel(playerLevel)
@@ -77,7 +77,7 @@ function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, pl
     return temp
 }
 
-function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float, statType: number): TSItemTemplate {
+function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float, statType: uint32): TSItemTemplate {
     let group = getStatGroup(statType, temp.GetQuality())
     let totalStats = slotMult * itemLevel * 20 * qualityMultiplier[temp.GetQuality()]
     let statsPrimary: uint32 = totalStats * .7
