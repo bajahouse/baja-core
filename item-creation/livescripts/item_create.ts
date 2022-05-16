@@ -35,7 +35,6 @@ function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, pl
     temp.SetItemLevel(itemLevel);
     temp.SetRequiredLevel(playerLevel)
     temp.SetQuality(GetRandQuality())
-    temp.SetStatsCount(temp.GetQuality() - 1)
 
     temp.SetClass(itemInfo[0])
     temp.SetSubClass(itemInfo[1])
@@ -118,7 +117,6 @@ function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float,
     temp.SetStatsCount(index)
     return temp
 }
-
 
 function GetRandQuality(): uint32 {
     let qualityCheck = getRandNumber(100)
