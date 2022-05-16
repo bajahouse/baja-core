@@ -1,7 +1,7 @@
 import { statToName } from "./const_creations"
 
-export function Main(events: TSEvents) {
-    events.GameObjectID.OnGossipHello(GetID('gameobject_template','reforging-mod','reforge-master'), (gameObject, player, cancel) => {
+export function reforging(events: TSEvents) {
+    events.GameObjectID.OnGossipHello(GetID('gameobject_template','item-creation','reforge-master'), (gameObject, player, cancel) => {
         player.SetUInt('selCount', 0)
         player.SetUInt('reforge_item_choice', 0)
         player.SetUInt('reforge_item_stat_choice_loss', 0)
@@ -16,7 +16,7 @@ export function Main(events: TSEvents) {
         player.GossipSendMenu(5, gameObject, 1)
     })
     
-    events.GameObjectID.OnGossipSelect(GetID('gameobject_template','reforging-mod','reforge-master'), (gameObject, player, menu, selection, cancel) => {
+    events.GameObjectID.OnGossipSelect(GetID('gameobject_template','item-creation','reforge-master'), (gameObject, player, menu, selection, cancel) => {
         player.GossipComplete()
         player.GossipClearMenu()
         if (player.GetUInt('selCount', 0) == 0) {
