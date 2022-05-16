@@ -36,7 +36,7 @@ export function Main(events: TSEvents) {
             let isPrim = isPrimary(itemTemplate.GetStatType(selection))
             for (let i = 0; i < itemTemplate.GetStatsCount(); i++) {
                 if (i != selection && isPrim == isPrimary(itemTemplate.GetStatType(i))) {
-                    player.GossipMenuAddItem(1, "Reforge Stat Type Replace: " + statToName[itemTemplate.GetStatType(i)], gameObject.GetGUID(), i)
+                    player.GossipMenuAddItem(1, 'Reforge 40% of ' + statToName[itemTemplate.GetStatType(selection)] + ' to ' + statToName[itemTemplate.GetStatType(i)], gameObject.GetGUID(), i, false, 'are you sure you want to replace 40% of ' + statToName[itemTemplate.GetStatType(selection)] + ' with ' + statToName[itemTemplate.GetStatType(i)] + '?')
                 }
             }
             player.GossipSendMenu(5, gameObject, 1)
