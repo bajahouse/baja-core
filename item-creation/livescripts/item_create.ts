@@ -31,7 +31,9 @@ export function createItemWithChoices(player: TSPlayer, i1: uint32, i2: uint32, 
 }
 
 function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, playerLevel: uint32, statType: uint32): TSItemTemplate {
-    const itemLevel: uint32 = ((playerLevel * 2) * qualityMultiplier[temp.GetQuality()]) + 1
+    const qualMult = qualityMultiplier[temp.GetQuality()]
+    const itemLevel: uint32 = ((playerLevel * 2) * qualMult) + 1
+
     temp.SetItemLevel(itemLevel);
     temp.SetRequiredLevel(playerLevel)
     temp.SetQuality(GetRandQuality())
@@ -46,25 +48,25 @@ function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, pl
     {
         if (temp.GetSubClass() != 23)//if not tome
         {
-            temp.SetArmor(<uint32>(10 * itemLevel * itemInfo[5] * qualityMultiplier[temp.GetQuality()]))
+            temp.SetArmor(<uint32>(12 * itemLevel * itemInfo[5] * qualMult))
         }
         if (itemInfo[2] == 14)//if shield
         {
-            temp.SetBlock(<uint32>(itemLevel * itemInfo[5] * qualityMultiplier[temp.GetQuality()]))
+            temp.SetBlock(<uint32>(itemLevel * itemInfo[5] * qualMult))
         }
 
     } else {//setup weapon swing damage
-        temp.SetDamageMinA(<uint32>(10 * itemLevel * itemInfo[5] * qualityMultiplier[temp.GetQuality()]))
-        temp.SetDamageMaxA(<uint32>(20 * itemLevel * itemInfo[5] * qualityMultiplier[temp.GetQuality()]))
+        temp.SetDamageMinA(<uint32>(20 * itemLevel * itemInfo[5] * qualMult))
+        temp.SetDamageMaxA(<uint32>(26 * itemLevel * itemInfo[5] * qualMult))
         if (temp.GetQuality() == 5) {
-            temp.SetDamageMinB(<uint32>(3 * itemLevel * itemInfo[5] * qualityMultiplier[temp.GetQuality()]))
-            temp.SetDamageMaxB(<uint32>(5 * itemLevel * itemInfo[5] * qualityMultiplier[temp.GetQuality()]))
+            temp.SetDamageMinB(<uint32>(3 * itemLevel * itemInfo[5] * qualMult))
+            temp.SetDamageMaxB(<uint32>(5 * itemLevel * itemInfo[5] * qualMult))
         }
         if (itemInfo[2] == 13) {//1h
             temp.SetDelay(1700 + (getRandNumber(5) * 100))
         } else if (itemInfo[2] == 17) {//2h
             temp.SetDelay(2500 + (getRandNumber(5) * 100))
-        } else if (itemInfo[2] == 26) {//ranged
+        } else if (itemInfo[2] == 26 || itemInfo[2] == 15) {//ranged
             temp.SetDelay(1800 + (getRandNumber(5) * 100))
         }
     }
@@ -78,9 +80,9 @@ function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, pl
 
 function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float, statType: uint32): TSItemTemplate {
     let group = getStatGroup(statType, temp.GetQuality())
-    let totalStats = slotMult * itemLevel * 20 * qualityMultiplier[temp.GetQuality()]
+    let totalStats = slotMult * itemLevel * 16 * qualityMultiplier[temp.GetQuality()]
     let statsPrimary: uint32 = totalStats * .7
-    let statsSecondary: uint32 = totalStats * .3
+    let statsSecondary: uint32 = totalStats * .35
     let flat1: uint32 = statsPrimary * .1//forced value to each stat
     let flat2: uint32 = statsSecondary * .1//forced value to each stat
     let stats = CreateDictionary<uint32, int32>({})
