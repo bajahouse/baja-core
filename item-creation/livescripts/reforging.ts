@@ -25,7 +25,8 @@ export function reforging(events: TSEvents) {
             let chosenItem = player.GetItemByPos(255, selection)
             let itemTemplate = chosenItem.GetTemplate()
             for (let i = 0; i < itemTemplate.GetStatsCount(); i++) {
-                player.GossipMenuAddItem(1, "Reforge Stat Type: " + statToName[itemTemplate.GetStatType(i)], gameObject.GetGUID(), i)
+                let choice = isPrimary(itemTemplate.GetStatType(i)) ? '(Primary Stat) ' : '(Secondary Stat) ';
+                player.GossipMenuAddItem(1, choice + "Reforge Stat Type: " + statToName[itemTemplate.GetStatType(i)], gameObject.GetGUID(), i)
             }
             player.GossipSendMenu(5, gameObject, 1)
         } else if (player.GetUInt('selCount', 0) == 1) {
