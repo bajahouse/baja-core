@@ -1,7 +1,12 @@
 import { statToName } from "./const_creations"
+//reforge % modifier
+const reforgePercent = 0.4
+//dont touch below
+const reforgeOpposite = 1 - reforgePercent
+const reforgeWholeNumber:uint32 = Math.floor(reforgePercent * 100)
 
 export function reforging(events: TSEvents) {
-    events.GameObjectID.OnGossipHello(GetID('gameobject_template','item-creation','reforge-master'), (gameObject, player, cancel) => {
+    events.GameObjectID.OnGossipHello(GetID('gameobject_template', 'item-creation', 'reforge-master'), (gameObject, player, cancel) => {
         player.SetUInt('selCount', 0)
         player.SetUInt('reforge_item_choice', 0)
         player.SetUInt('reforge_item_stat_choice_loss', 0)
@@ -15,8 +20,8 @@ export function reforging(events: TSEvents) {
         }
         player.GossipSendMenu(5, gameObject, 1)
     })
-    
-    events.GameObjectID.OnGossipSelect(GetID('gameobject_template','item-creation','reforge-master'), (gameObject, player, menu, selection, cancel) => {
+
+    events.GameObjectID.OnGossipSelect(GetID('gameobject_template', 'item-creation', 'reforge-master'), (gameObject, player, menu, selection, cancel) => {
         player.GossipComplete()
         player.GossipClearMenu()
         if (player.GetUInt('selCount', 0) == 0) {
@@ -37,19 +42,19 @@ export function reforging(events: TSEvents) {
             let isPrim = isPrimary(itemTemplate.GetStatType(selection))
             for (let i = 0; i < itemTemplate.GetStatsCount(); i++) {
                 if (i != selection && isPrim == isPrimary(itemTemplate.GetStatType(i))) {
-                    player.GossipMenuAddItem(1, 'Reforge 40% of ' + statToName[itemTemplate.GetStatType(selection)] + ' to ' + statToName[itemTemplate.GetStatType(i)], gameObject.GetGUID(), i, false, 'are you sure you want to replace 40% of ' + statToName[itemTemplate.GetStatType(selection)] + ' with ' + statToName[itemTemplate.GetStatType(i)] + '?')
+                    player.GossipMenuAddItem(1, 'Reforge  ' + reforgeWholeNumber + '% of ' + statToName[itemTemplate.GetStatType(selection)] + ' to ' + statToName[itemTemplate.GetStatType(i)], gameObject.GetGUID(), i, false, 'are you sure you want to replace ' + reforgeWholeNumber + '% of ' + statToName[itemTemplate.GetStatType(selection)] + ' with ' + statToName[itemTemplate.GetStatType(i)] + '?')
                 }
             }
             player.GossipSendMenu(5, gameObject, 1)
         } else if (player.GetUInt('selCount', 0) == 2) {
-            player.SetUInt('selCount', 3)
             let chosenItem = player.GetItemByPos(255, player.GetUInt('reforge_item_choice', 0))
             player.RemoveItemMods(chosenItem, player.GetUInt('reforge_item_choice', 0))
             let itemTemplate = chosenItem.GetTemplate()
             //increase stat 2
-            itemTemplate.SetStatValue(selection, <int32>(itemTemplate.GetStatValue(selection) + (itemTemplate.GetStatValue(player.GetUInt('reforge_item_stat_choice_loss', 0)) * 0.4)))
+            itemTemplate.SetStatValue(selection, <int32>(itemTemplate.GetStatValue(selection) + (itemTemplate.GetStatValue(player.GetUInt('reforge_item_stat_choice_loss', 0)) * reforgePercent)))
             //decrease stat 1
-            itemTemplate.SetStatValue(player.GetUInt('reforge_item_stat_choice_loss', 0), <int32>(itemTemplate.GetStatValue(player.GetUInt('reforge_item_stat_choice_loss', 0)) * 0.6))
+            itemTemplate.SetStatValue(player.GetUInt('reforge_item_stat_choice_loss', 0), <int32>(itemTemplate.GetStatValue(player.GetUInt('reforge_item_stat_choice_loss', 0)) * reforgeOpposite))
+            //item cannot be reforged twice
             itemTemplate.SetPageMaterial(1)
             player.ApplyItemMods(chosenItem, player.GetUInt('reforge_item_choice', 0), true, true)
             player.SendItemQueryPacket(itemTemplate)
