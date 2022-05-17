@@ -1,5 +1,5 @@
 
-import { emptyQuality, itemClassInfo, qualityMultiplier, statCounts, statChoices } from "./const-creations";
+import { emptyQuality, itemClassInfo, qualityMultiplier, statCounts, statChoices, statToWeight } from "./const-creations";
 import { getRandNumber } from "../livescripts";
 
 let startID = 200000
@@ -114,7 +114,7 @@ function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float,
     let index = 0
     stats.forEach((key, val) => {
         temp.SetStatType(index, key)
-        temp.SetStatValue(index, val)
+        temp.SetStatValue(index, <int32>(val * statToWeight[key]))
         index++
     })
     temp.SetStatsCount(index)
