@@ -1,6 +1,6 @@
-import { itemCreationSetup } from "./item_create";
-import { example } from "./item_examples";
-import { reforging } from "./reforging";
+import { itemCreationSetup } from "./item-create/item-create-lib";
+import { example } from "./example-usage";
+import { reforging } from "./reforging/reforging";
 
 export function Main(events: TSEvents) {
     itemCreationSetup(events)

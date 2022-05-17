@@ -1,4 +1,5 @@
-import { statToName } from "./const_creations"
+import { statToName } from "../item-create/const-creations"
+
 //reforge % modifier
 const reforgePercent = 0.4
 //dont touch below

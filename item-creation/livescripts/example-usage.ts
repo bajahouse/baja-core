@@ -1,4 +1,4 @@
-import { createItemRandom } from "./item_create"
+import { createItemRandom } from "./item-create/item-create-lib"
 
 export function example(events: TSEvents) {
     events.Player.OnCommand((player, command, found) => {

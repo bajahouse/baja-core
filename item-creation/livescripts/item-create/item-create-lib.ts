@@ -1,5 +1,6 @@
-import { emptyQuality, itemClassInfo, qualityMultiplier, statChoices, statCounts } from "./const_creations";
-import { getRandNumber } from "./livescripts";
+
+import { emptyQuality, itemClassInfo, qualityMultiplier, statCounts, statChoices } from "./const-creations";
+import { getRandNumber } from "../livescripts";
 
 let startID = 200000
 const templateItemID = 38
