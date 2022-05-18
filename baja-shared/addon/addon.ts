@@ -29,9 +29,9 @@ const grid = Grid({
 grid.Attach(
   Button({
     parent: scroll,
-    width: 50,
-    height: 50,
-    text: '',
+    pctWidth: 1,
+    point: 'TOPLEFT',
+    text: 'test',
     color: [1, 0, 0],
     onClick: e => e.Delete(),
   })
@@ -41,11 +41,8 @@ grid.Attach(
 
 // build Global container
 
-// pctWidth: number
-// pctHeight: number
-// widthFn: parent => number
-// heightFn: parent => number
 // position: 'ALL', WoWAPI.Point | { self: 'BOTTOMLEFT', parent: 'TOPLEFT', x: 0, y: 0 }
 // z: [strata, level]
 // reflow: z, sizing, scaling, isDeleted (recursively reflow all children)
+// grid reflow
 // delete -> reflow(isDeleted)

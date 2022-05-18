@@ -78,6 +78,8 @@ export interface FrameOptions {
   color?: RGB | string
   width?: number
   height?: number
+  pctWidth?: number
+  pctHeight?: number
   point?: WoWAPI.Point
   mouse?: boolean
   mousewheel?: boolean
@@ -97,6 +99,7 @@ export interface CheckButtonOptions extends FrameOptions { type: 'CheckButton' }
 
 export interface FrameProps {
   // props
+  Parent: SmartFrame
   UID: string
   Mod: string
   Index: number
@@ -322,9 +325,15 @@ export function $ (options: FrameOptions = {}) {
   }
   if (options.parent) {
     frame.SetParent(options.parent.Inner())
+    frame.Parent = options.parent.Inner()
   } else {
     frame.SetParent(UIParent)
+    frame.Parent = UIParent as any
   }
+  if (options.pctWidth && frame.Parent.GetWidth)
+    frame.SetWidth(frame.Parent.GetWidth() * options.pctWidth)
+  if (options.pctHeight && frame.Parent.GetHeight)
+    frame.SetHeight(frame.Parent.GetHeight() * options.pctHeight)
   if (options.width)
     frame.SetWidth(options.width)
   if (options.height)

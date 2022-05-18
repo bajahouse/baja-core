@@ -2,7 +2,6 @@ import { $, SmartFrame, FrameOptions, RGB } from '../lib'
 
 export interface ButtonOptions extends FrameOptions {
   text: string
-  width: number
   fontSize?: number
   noBorder?: boolean
   textXOffset?: number
@@ -18,7 +17,6 @@ export const Button = (options: ButtonOptions) => {
       ? 'noborder'
       : 'tooltip',
     color: options.color,
-    width: options.width,
     height: 30,
     mouse: true,
     ...options,
