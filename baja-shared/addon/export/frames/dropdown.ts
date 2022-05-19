@@ -78,12 +78,12 @@ export const Dropdown = (options: DropdownOptions) => {
   })
 
   // menu
-  const p = $({ mod: options.mod, parent: a, backdrop: 'tooltip' })
+  const p = $({ parent: a, backdrop: 'tooltip' })
   p.SetPoint('TOP', a, 'BOTTOM', 0, 0)
   p.SetSize(options.width || 200, 3)
   p.SetBackdropColor(0, 0, 0, 1)
 
-  const menu = $({ mod: options.mod, parent: p, backdrop: 'tooltip' })
+  const menu = $({ parent: p, backdrop: 'tooltip' })
   menu.SetSize(options.width || 200, 0)
   menu.SetPoint('TOP', p, 'BOTTOM', 0, 0)
   menu.SetBackdropColor(0, 0, 0, 1)
@@ -182,8 +182,8 @@ export const Dropdown = (options: DropdownOptions) => {
   text.SetText(options.emptyText || 'select')
 
   // list
-  const listwrap = $({ mod: options.mod, parent: menu })
-  const list = List({ mod: options.mod, itemHeight: 30, parent: listwrap })
+  const listwrap = $({ parent: menu })
+  const list = List({ itemHeight: 30, parent: listwrap })
 
   listwrap.SetSize(options.width || 200, 0)
   list.SetSize(options.width || 200, 0)
@@ -202,7 +202,7 @@ export const Dropdown = (options: DropdownOptions) => {
 
   // item
   const Item = (options: DropdownItemOptions) => {
-    const w = $({ mod: options.mod })
+    const w = $()
     // FIXME: build ExtendedText frame
     const t = w.CreateFontString(`${options.id}-wrapper-text`)
 
@@ -350,7 +350,7 @@ export const Dropdown = (options: DropdownOptions) => {
   }
 
   // checkmark
-  const checkmark = $({ mod: options.mod, parent: menu })
+  const checkmark = $({ parent: menu })
   checkmark.SetSize(12, 12)
   checkmark.Hide()
 
@@ -359,7 +359,7 @@ export const Dropdown = (options: DropdownOptions) => {
 
   // empty
   if (options.isSelectableEmpty)
-    Item({ mod: options.mod, ...items['empty'] })
+    Item({ ...items['empty'] })
 
   // create items
   if (options.items)

@@ -32,7 +32,7 @@ export const Counter = options => {
     parent: counter,
   })
   input.SetPoint('CENTER')
-  const i = CreateFrame('EditBox', `${options.name}-editbox`, input)
+  const i = CreateFrame('EditBox', `${input.UID}-editbox`, input)
   i.SetAllPoints(input)
   i.SetNumeric()
   i.SetNumber(count)
@@ -42,7 +42,7 @@ export const Counter = options => {
   i.ClearFocus()
   i.SetScript('OnTextChanged', () => {
   })
-  input.Inner(i)
+  input.Inner(i as any)
   counter.EnableMouse(true)
   counter.SetScript('OnMouseDown', () => {
     i.SetFocus()
@@ -101,7 +101,6 @@ export const Counter = options => {
     options.onCancel(count, counter)
   })
   const plus = Button({
-    mod: options.mod,
     parent: input,
     text: '+',
     width: 30,
@@ -114,7 +113,6 @@ export const Counter = options => {
     },
   })
   const minus = Button({
-    mod: options.mod,
     parent: input,
     text: '-',
     width: 30,

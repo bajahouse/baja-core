@@ -38,7 +38,7 @@ export const Numeric = (options: NumericOptions) => {
     if (options.onChange)
       options.onChange(number, input)
   })
-  inner.Inner(e)
+  inner.Inner(e as any)
   input.EnableMouse(true)
   input.SetScript('OnMouseDown', () => {
     e.SetFocus()

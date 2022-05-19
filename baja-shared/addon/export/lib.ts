@@ -14,36 +14,37 @@ export class Store {
   }
 
   constructor (onInit: () => void) {
-    const app = Get()
+    onInit()
+    // const app = Get()
 
-    Events.ChatInfo.OnChatMsgAddon(UIParent, (prefix, text) => {
-      if (prefix !== 'store-get')
-        return
-      if (!text)
-        return
+    // Events.ChatInfo.OnChatMsgAddon(UIParent, (prefix, text) => {
+    //   if (prefix !== 'store-get')
+    //     return
+    //   if (!text)
+    //     return
 
-      const [primitive, type, storeKey, ...storeValue] = text.split(' ')
+    //   const [primitive, type, storeKey, ...storeValue] = text.split(' ')
 
-      const n = Number(primitive)
-      this.state[(type === '1') ? ACCOUNT : CHARACTER][storeKey] = (n === 0)
-        ? Number(storeValue[0])
-        : (n === 2)
-        ? ((storeValue[0] === '1') ? true : false)
-        : (n === 3)
-        ? null
-        : storeValue.join(' ')
-    })
+    //   const n = Number(primitive)
+    //   this.state[(type === '1') ? ACCOUNT : CHARACTER][storeKey] = (n === 0)
+    //     ? Number(storeValue[0])
+    //     : (n === 2)
+    //     ? ((storeValue[0] === '1') ? true : false)
+    //     : (n === 3)
+    //     ? null
+    //     : storeValue.join(' ')
+    // })
 
-    Events.ChatInfo.OnChatMsgAddon(UIParent, prefix => {
-      if (prefix !== 'store-init-success')
-        return
+    // Events.ChatInfo.OnChatMsgAddon(UIParent, prefix => {
+    //   if (prefix !== 'store-init-success')
+    //     return
 
-      this.IsLoaded = true
+    //   this.IsLoaded = true
 
-      onInit()
-    })
+    //   onInit()
+    // })
 
-    SendAddonMessage('store-init', ' ', 'WHISPER', app.player.name)
+    // SendAddonMessage('store-init', ' ', 'WHISPER', app.player.name)
   }
 
   public Set (storeType: StoreType, storeKey: string, storeValue: StoreValue) {
@@ -121,17 +122,19 @@ export type AddonFn = ($: Container) => SmartFrame | void
 export type AddonDefinition = [string, AddonFn]
 
 export function Addon (name: string, fn: AddonFn) {
-  const container = _G['__main__'] as Container
+  if (!_G['__app__'])
+    _G['__app__'] = new Container()
+  const container = _G['__app__'] as Container
   container.add([name, fn])
 }
 
 export function Get () {
-  return _G['__main__'] as Container
+  return _G['__app__'] as Container
 }
 
 export class Container {
   protected isStarted: boolean = false
-  protected queue: (AddonDefinition)[]
+  protected queue: (AddonDefinition)[] = []
 
   public player: PlayerInfo
   public store: Store
@@ -264,10 +267,10 @@ export interface CheckButtonOptions extends FrameOptions { type: 'CheckButton' }
 
 export interface FrameProps {
   // props
-  Parent: SmartFrame
   UID: string
   Index: number
-  Inner: <F extends WoWAPI.UIObject = SmartFrame>(newInner?: F) => SmartFrame
+  Inner: <F extends WoWAPI.Frame = SmartFrame>(newInner?: F) => F
+  Parent: <F extends WoWAPI.Frame = SmartFrame>(newParent?: F) => F
   // delete
   IsDeleted: boolean
   Delete: () => void
@@ -367,11 +370,11 @@ export function $ (options: FrameOptions = {}) {
   frame.Delete = () => {
     CleanFrame(frame)
   }
-  let inner: SmartFrame = frame
+  let inner: any = frame
   frame.Inner = <F extends WoWAPI.UIObject = SmartFrame>(newInner?: F) => {
     if (newInner)
-      inner = newInner as any
-    return inner as SmartFrame
+      inner = newInner
+    return inner as F
   }
   // FIXME: public  - frame.Reflow (calls frame.Draw on all children that have it)
   // FIXME: private - frame.Draw
@@ -472,16 +475,26 @@ export function $ (options: FrameOptions = {}) {
     frame.SetBackdropColor(0, 0, 0, frame.GetAlpha())
   }
   if (options.parent) {
-    frame.SetParent(options.parent.Inner())
-    frame.Parent = options.parent.Inner()
+    if (options.parent.Inner) {
+      frame.SetParent(options.parent.Inner())
+    } else {
+      frame.SetParent(options.parent)
+    }
   } else {
     frame.SetParent(UIParent)
-    frame.Parent = UIParent as any
   }
-  if (options.pctWidth && frame.Parent.GetWidth)
-    frame.SetWidth(frame.Parent.GetWidth() * options.pctWidth)
-  if (options.pctHeight && frame.Parent.GetHeight)
-    frame.SetHeight(frame.Parent.GetHeight() * options.pctHeight)
+  frame.Parent = <T>(newParent) => {
+    if (newParent) {
+      frame.SetParent(newParent)
+      return newParent
+    }
+    return frame.GetParent() as any as T
+  }
+  const parent = frame.Parent()
+  if (options.pctWidth && parent.GetWidth)
+    frame.SetWidth(parent.GetWidth() * options.pctWidth)
+  if (options.pctHeight && parent.GetHeight)
+    frame.SetHeight(parent.GetHeight() * options.pctHeight)
   if (options.width)
     frame.SetWidth(options.width)
   if (options.height)
