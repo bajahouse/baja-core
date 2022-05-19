@@ -304,9 +304,6 @@ export type Button = WoWAPI.AdvancedFrame<WoWAPI.Button, FrameProps>
 export type CheckButton = WoWAPI.AdvancedFrame<WoWAPI.CheckButton, FrameProps>
 export type SmartFrame = WoWAPI.AdvancedFrame<WoWAPI.Frame, FrameProps>
 
-export const FRAME_LIST_SELECTOR = 'frame-list'
-export const FRAME_MAP_SELECTOR = 'frame-map'
-
 export function CleanFrame (f: WoWAPI.Frame) {
   f.SetAlpha(1)
   f.SetSize(0, 0)
@@ -322,19 +319,10 @@ export function CleanFrame (f: WoWAPI.Frame) {
   ;(f as SmartFrame).IsDeleted = true
 }
 
-export function GetFrameList (): SmartFrame[] {
-  if (!_G[FRAME_LIST_SELECTOR])
-    _G[FRAME_LIST_SELECTOR] = []
-  return _G[FRAME_LIST_SELECTOR] as SmartFrame[]
-}
+const FRAME_LIST_SELECTOR = 'frame-list'
+const FRAME_MAP_SELECTOR = 'frame-map'
 
-export function GetFrameMap (): object {
-  if (!_G[FRAME_MAP_SELECTOR])
-    _G[FRAME_MAP_SELECTOR] = {}
-  return _G[FRAME_MAP_SELECTOR] as object
-}
-
-export let current_frame_index = 0
+let current_frame_index = 0
 
 export function $ (options?: CheckButtonOptions): CheckButton
 export function $ (options?: ModelOptions): Model
@@ -351,7 +339,7 @@ export function $ (options: FrameOptions = {}) {
   if (!list)
     _G[FRAME_LIST_SELECTOR] = list = []
   if (!map)
-    _G[FRAME_MAP_SELECTOR] = map = []
+    _G[FRAME_MAP_SELECTOR] = map = {}
   const uid = options.uid || `${Random()}`
   if (options.uid) {
     const s: SmartFrame = map[uid]
@@ -540,5 +528,5 @@ export function $ (options: FrameOptions = {}) {
   return frame
 }
 
-if (_G['__app__'])
+if (!_G['__app__'])
   _G['__app__'] = new Container()

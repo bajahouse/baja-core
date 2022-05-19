@@ -3,9 +3,9 @@ import { $, Addon } from './export/lib'
 Addon('hello-world', app => {
   const frame = $()
   console.log(app.player.chrRace)
-  const x = app.addons['hello-world']
-  if (x)
-    x.EnableMouse(true)
+  const foo = app.addons['foo']
+  if (foo)
+    foo.EnableMouse(true)
   return frame
 })
 
