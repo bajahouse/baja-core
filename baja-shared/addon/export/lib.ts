@@ -1,3 +1,180 @@
+// store
+const ACCOUNT = 'ACCOUNT'
+const CHARACTER = 'CHARACTER'
+
+export type StoreType = typeof ACCOUNT | typeof CHARACTER
+export type StoreValue = string | number | boolean | null
+
+export class Store {
+  public IsLoaded = false
+
+  protected state: any = {
+    [ACCOUNT]: {},
+    [CHARACTER]: {},
+  }
+
+  constructor (onInit: () => void) {
+    const app = Get()
+
+    Events.ChatInfo.OnChatMsgAddon(UIParent, (prefix, text) => {
+      if (prefix !== 'store-get')
+        return
+      if (!text)
+        return
+
+      const [primitive, type, storeKey, ...storeValue] = text.split(' ')
+
+      const n = Number(primitive)
+      this.state[(type === '1') ? 'ACCOUNT' : 'CHARACTER'][storeKey] = (n === 0)
+        ? Number(storeValue[0])
+        : (n === 2)
+        ? ((storeValue[0] === '1') ? true : false)
+        : (n === 3)
+        ? null
+        : storeValue.join(' ')
+    })
+
+    Events.ChatInfo.OnChatMsgAddon(UIParent, prefix => {
+      if (prefix !== 'store-init-success')
+        return
+
+      this.IsLoaded = true
+
+      onInit()
+    })
+
+    SendAddonMessage('store-init', ' ', 'WHISPER', app.player.name)
+  }
+
+  public Set (storeType: StoreType, storeKey: string, storeValue: StoreValue) {
+    const app = Get()
+    const primitive = typeof storeValue === 'number'
+      ? 0 // number
+      : typeof storeValue === 'string'
+      ? 1 // string
+      : typeof storeValue === 'boolean'
+      ? 2 // boolean
+      : 3 // null
+    this.state[storeType][storeKey] = storeValue
+    const t = (storeType === 'ACCOUNT') ? 1 : 0
+    const v = (primitive === 2)
+      ? (storeValue ? '1' : '0')
+      : storeValue
+    SendAddonMessage('store-set', `${primitive} ${t} ${storeKey} ${v}`, 'WHISPER', app.player.name)
+  }
+
+  public Get (type: StoreType, storeKey: string, defaultValue?: StoreValue) {
+    let value = this.state[type][storeKey]
+
+    if (!value && defaultValue) {
+      this.Set(type, storeKey, defaultValue)
+      value = defaultValue
+    }
+
+    return value
+  }
+}
+
+// app
+export type CharacterInfoRace =
+  | 'HUMAN'
+  | 'DWARF'
+  | 'NIGHTELF'
+  | 'ORC'
+  | 'UNDEAD'
+  | 'BLOODELF'
+  | 'GNOME'
+  | 'TAUREN'
+  | 'DRAENEI'
+  | 'TROLL'
+
+  export type CharacterInfoClass =
+  | 'WARRIOR'
+  | 'ROGUE'
+  | 'MAGE'
+  | 'PRIEST'
+  | 'SHAMAN'
+  | 'PALADIN'
+  | 'DRUID'
+  | 'WARLOCK'
+  | 'HUNTER'
+
+export interface PlayerInfo {
+  name: string
+  chrRace: CharacterInfoRace
+  chrClass: CharacterInfoClass
+  level: number
+}
+
+export type AddonFn = ($: Container) => SmartFrame | void
+export type AddonDefinition = [string, AddonFn]
+
+export function Addon (name: string, fn: AddonFn) {
+  const container = _G['__main__'] as Container
+  container.add([name, fn])
+}
+
+export function Get () {
+  return _G['__main__'] as Container
+}
+
+export class Container {
+  protected isStarted: boolean = false
+  protected queue: (AddonDefinition)[]
+
+  public player: PlayerInfo
+  public store: Store
+  public addons: { [key: string]: SmartFrame | void } = {}
+
+  constructor () {
+    UIParent.SetScript('OnUpdate', () => {
+      if (!this.isStarted) {
+        this.start()
+      } else {
+        UIParent.SetScript('OnUpdate', () => {})
+      }
+    })
+  }
+
+  public add (creator: AddonDefinition) {
+    if (!this.isStarted) {
+      this.queue.push(creator)
+    } else {
+      this._add(creator)
+    }
+  }
+
+  protected _add ([name, creator]: AddonDefinition) {
+    this.addons[name] = creator(this)
+  }
+
+  protected start () {
+    if (this.player)
+      return
+
+    const player = UnitGUID('player')
+
+    if (player) {
+      const info = GetPlayerInfoByGUID(player)
+
+      if (info[0]) {
+        this.player = {
+          name: info[5].toLowerCase(),
+          chrRace: info[2].toUpperCase() as CharacterInfoRace,
+          chrClass: info[0].toUpperCase() as CharacterInfoClass,
+          level: UnitLevel('player'),
+        }
+
+        _G['__app__'] = this
+
+        this.isStarted = true
+
+        this.store = new Store(() => this.queue.forEach(creator => this._add(creator)))
+      }
+    }
+  }
+}
+
 export function ConvertHex (hex: string) {
   let c = hex as any
   return [0, 0, 0]
@@ -47,24 +224,11 @@ export function Random (min: number = 1000000, max: number = 8999999) {
   return Math.floor(Math.random() * max) + min
 }
 
-export abstract class Addon {
-  constructor () {
-    if (_G[FRAME_LIST_SELECTOR] === null)
-      _G[FRAME_LIST_SELECTOR] = []
-    if (_G[FRAME_MAP_SELECTOR] === null)
-      _G[FRAME_MAP_SELECTOR] = []
-    this.init()
-  }
-
-  protected abstract init (): void
-}
-
 export type RGB = [number, number, number]
 
 export type BackdropPreset = 'tooltip' | 'tutorial' | 'border' | 'noborder' | 'dialogue'
 
 export interface FrameOptions {
-  mod?: string
   uid?: string
   type?: WoWAPI.FrameType | 'CheckButton'
   parent?: SmartFrame
@@ -101,7 +265,6 @@ export interface FrameProps {
   // props
   Parent: SmartFrame
   UID: string
-  Mod: string
   Index: number
   Inner: <F extends WoWAPI.UIObject = SmartFrame>(newInner?: F) => SmartFrame
   // delete
@@ -189,17 +352,14 @@ export function $ (options: FrameOptions = {}) {
     _G[FRAME_LIST_SELECTOR] = list = []
   if (!map)
     _G[FRAME_MAP_SELECTOR] = map = []
-  const mod = options.mod || (options.parent && options.parent.Mod) || 'global'
   const uid = options.uid || `${Random()}`
-  if (!map[mod])
-    map[mod] = {}
   if (options.uid) {
-    const s: SmartFrame = map[mod][uid]
+    const s: SmartFrame = map[uid]
     if (s)
       if (s.IsDeleted) {
         frame = s
       } else {
-        throw `Attempting to re-assign undeleted frame ${mod}::${uid}. Frame must be deleted before re-assigning.`
+        throw `Attempting to re-assign undeleted frame ${uid}. Frame must be deleted before re-assigning.`
       }
   } else {
     for (let f of list) {
@@ -208,11 +368,11 @@ export function $ (options: FrameOptions = {}) {
     }
   }
   if (!frame) {
-    frame = CreateFrame((options.type as WoWAPI.FrameType) || 'Frame', `${mod}::${uid}`, UIParent, options.template) as any
+    frame = CreateFrame((options.type as WoWAPI.FrameType) || 'Frame', `${uid}`, UIParent, options.template) as any
     frame.Index = current_frame_index++
     list.push(frame)
     if (options.uid)
-      map[mod][options.uid] = frame
+      map[options.uid] = frame
   }
   frame.IsDeleted = false
   frame.Delete = () => {
@@ -227,7 +387,6 @@ export function $ (options: FrameOptions = {}) {
   // FIXME: public  - frame.Reflow (calls frame.Draw on all children that have it)
   // FIXME: private - frame.Draw
   frame.UID = uid
-  frame.Mod = mod
   if (options.hidden) {
     frame.Hide()
   } else {
@@ -381,3 +540,5 @@ export function $ (options: FrameOptions = {}) {
   return frame
 }
 
+if (_G['__app__'])
+  _G['__app__'] = new Container()
