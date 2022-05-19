@@ -25,7 +25,7 @@ export class Store {
       const [primitive, type, storeKey, ...storeValue] = text.split(' ')
 
       const n = Number(primitive)
-      this.state[(type === '1') ? 'ACCOUNT' : 'CHARACTER'][storeKey] = (n === 0)
+      this.state[(type === '1') ? ACCOUNT : CHARACTER][storeKey] = (n === 0)
         ? Number(storeValue[0])
         : (n === 2)
         ? ((storeValue[0] === '1') ? true : false)
@@ -106,6 +106,17 @@ export interface PlayerInfo {
   level: number
 }
 
+export function GetPlayerInfo (): PlayerInfo {
+  const info = GetPlayerInfoByGUID(UnitGUID('player'))
+  if (info && info[0])
+    return {
+      name: info[5].toLowerCase(),
+      chrRace: info[2].toUpperCase() as CharacterInfoRace,
+      chrClass: info[0].toUpperCase() as CharacterInfoClass,
+      level: UnitLevel('player'),
+    }
+}
+
 export type AddonFn = ($: Container) => SmartFrame | void
 export type AddonDefinition = [string, AddonFn]
 
@@ -152,23 +163,13 @@ export class Container {
     if (this.player)
       return
 
-    const player = UnitGUID('player')
+    if (UnitGUID('player')) {
+      const info = GetPlayerInfo()
 
-    if (player) {
-      const info = GetPlayerInfoByGUID(player)
-
-      if (info[0]) {
-        this.player = {
-          name: info[5].toLowerCase(),
-          chrRace: info[2].toUpperCase() as CharacterInfoRace,
-          chrClass: info[0].toUpperCase() as CharacterInfoClass,
-          level: UnitLevel('player'),
-        }
-
+      if (info) {
         _G['__app__'] = this
 
         this.isStarted = true
-
         this.store = new Store(() => this.queue.forEach(creator => this._add(creator)))
       }
     }
