@@ -4263,6 +4263,8 @@ declare namespace WoWAPI {
  */
 declare function AutoEquipCursorItem(): void;
 
+declare function UnitHasRelicSlot(unitType: WoWAPI.UnitId):boolean
+
 /**
  * Clears the in-game cursor, returning the object held to its original position (equivalent to right-clicking while holding something on the cursor).
  * @see https://wow.gamepedia.com/API_ClearCursor

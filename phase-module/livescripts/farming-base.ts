@@ -20,7 +20,6 @@ export function baseFarm(events: TSEvents) {
                     let player = owner.ToPlayer()
                     PlayerFarmCrops.get(player).forEach((x)=>{
                         x.canGrow(player)
-                        console.log('attempt')
                     })
                 })
             }
