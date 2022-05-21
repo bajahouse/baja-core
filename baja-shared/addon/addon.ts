@@ -12,7 +12,7 @@ Addon('hello-world', app => {
 })
 
 // TODO:
-// - [ ] pass addon name to all child frames
+// - [ ] pass addon name to all child frames (prefix in map)
 // - [ ] position: 'ALL', WoWAPI.Point | { self: 'BOTTOMLEFT', parent: 'TOPLEFT', x: 0, y: 0 }
 // - [ ] z: [strata, level]
 // - [ ] reflow: z, sizing, scaling, isDeleted (recursively reflow all children)
