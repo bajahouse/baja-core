@@ -1,4 +1,4 @@
-import { $, Addon, Movable } from './baja/lib'
+import { $, Addon, Movable, SlashCommand } from './baja/lib'
 import { Grid } from './baja/frames/grid'
 import { Scroll } from './baja/frames/scroll'
 
@@ -9,6 +9,7 @@ Addon('spell-picker', () => {
     height: 500,
     backdrop: 'tooltip',
     point: 'CENTER',
+    hidden: true,
   })
 
   Movable(picker, 'RightButton')
@@ -34,4 +35,8 @@ Addon('spell-picker', () => {
   })
 
   grid.Attach(foo)
+
+  SlashCommand('SPELLPICKER', ['sp', 'spellpicker'], () => {
+    picker.ToggleShown()
+  })
 })
