@@ -48,7 +48,6 @@ function createOrDelete () {
   }
 }
 
-
 Addon('spell-picker', () => {
   SlashCommand(
     'SPELLPICKER',
