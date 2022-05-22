@@ -3,7 +3,7 @@ import { Grid } from './baja/frames/grid'
 import { Scroll } from './baja/frames/scroll'
 import { Button } from './baja/frames/button'
 
-function SpellPicker () {
+Addon('spell-picker', () => {
   const frame = $({
     width: 350,
     height: 350,
@@ -41,6 +41,4 @@ function SpellPicker () {
     ['/sp', '/spellpicker'],
     () => frame.ToggleShown(),
   )
-}
-
-Addon('spell-picker', () => SpellPicker())
+})
