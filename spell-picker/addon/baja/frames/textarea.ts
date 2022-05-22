@@ -9,7 +9,7 @@ export interface TextareaOptions extends FrameOptions {
   max?: number
 }
 
-export const Textarea = options => {
+export const Textarea = (options: TextareaOptions) => {
   let text = options.initial || ''
   const a = $({
     ...options,

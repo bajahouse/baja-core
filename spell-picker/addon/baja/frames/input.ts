@@ -8,7 +8,7 @@ export interface InputOptions extends FrameOptions {
   // FIXME: min/max
 }
 
-export const Input = options => {
+export const Input = (options: InputOptions) => {
   let text = options.initial || ''
   const input = $({
     ...options,
@@ -16,7 +16,7 @@ export const Input = options => {
     backdrop: 'tooltip',
   })
 
-  const width = options.width || options.parent.inner.GetWidth()
+  const width = options.width || options.parent.Inner().GetWidth()
 
   input.SetWidth(width)
 
@@ -26,7 +26,7 @@ export const Input = options => {
     parent: input,
   })
   inner.SetPoint('CENTER')
-  const e = CreateFrame('EditBox', `${options.name}-editbox`, inner)
+  const e = CreateFrame('EditBox', `${input.UID}-editbox`, inner)
   e.SetAllPoints(inner)
   e.SetText(text)
   e.SetPoint('CENTER')
