@@ -3,23 +3,22 @@ import { Grid } from './baja/frames/grid'
 import { Scroll } from './baja/frames/scroll'
 import { Button } from './baja/frames/button'
 
-let picker: SmartFrame
-
-function build () {
-  picker = $({
+function SpellPicker () {
+  const frame = $({
     width: 350,
     height: 350,
     backdrop: 'tooltip',
     point: 'CENTER',
+    hidden: true,
   })
 
-  Movable(picker, 'RightButton')
+  Movable(frame, 'RightButton')
 
   const scroll = Scroll({
     scrollHeight: 1500,
     pctWidth: 0.9,
     pctHeight: 0.9,
-    parent: picker,
+    parent: frame,
   })
 
   const grid = Grid({
@@ -36,22 +35,12 @@ function build () {
   })
 
   grid.Attach(spell)
-}
 
-function createOrDelete () {
-  if (!picker)
-    return build()
-  if (picker.IsDeleted) {
-    build()
-  } else {
-    picker.Delete()
-  }
-}
-
-Addon('spell-picker', () => {
   SlashCommand(
     'SPELLPICKER',
     ['/sp', '/spellpicker'],
-    () => createOrDelete(),
+    () => frame.ToggleShown(),
   )
-})
+}
+
+Addon('spell-picker', () => SpellPicker())
