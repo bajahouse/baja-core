@@ -1,12 +1,13 @@
 import { $, Addon, Movable, SlashCommand } from './baja/lib'
 import { Grid } from './baja/frames/grid'
 import { Scroll } from './baja/frames/scroll'
+import { Button } from './baja/frames/button'
 
 Addon('spell-picker', () => {
   const picker = $({
     uid: 'spell-picker',
-    width: 500,
-    height: 500,
+    width: 350,
+    height: 350,
     backdrop: 'tooltip',
     point: 'CENTER',
     hidden: true,
@@ -16,8 +17,8 @@ Addon('spell-picker', () => {
 
   const scroll = Scroll({
     scrollHeight: 1500,
-    width: 450,
-    height: 450,
+    pctWidth: 0.9,
+    pctHeight: 0.9,
     parent: picker,
   })
 
@@ -27,14 +28,14 @@ Addon('spell-picker', () => {
     parent: scroll,
   })
 
-  const foo = $({
-    backdrop: 'tooltip',
+  const spell = Button({
+    text: '',
     color: [1, 0, 0],
-    width: 50,
     height: 50,
+    width: 50,
   })
 
-  grid.Attach(foo)
+  grid.Attach(spell)
 
   SlashCommand(
     'SPELLPICKER',
