@@ -70,7 +70,7 @@ export class Store {
     const v = (primitive === 2)
       ? (storeValue ? '1' : '0')
       : storeValue
-    SendAddonMessage('store-set', `${primitive} ${t} ${storeKey} ${v}`, 'WHISPER', GetPlayerInfo().name)
+    SendAddonMessage('store-set', `${primitive} ${t} ${storeKey} ${v}`, 'WHISPER', app.player.name)
   }
 
   public Get (type: StoreType, storeKey: string, defaultValue?: StoreValue) {
@@ -127,7 +127,7 @@ export function GetPlayerInfo (): PlayerInfo {
     }
 }
 
-export type AddonFn = () => SmartFrame | void
+export type AddonFn = ($: Container) => SmartFrame | void
 export type AddonDefinition = [string, AddonFn]
 
 export function Addon (name: string, fn: AddonFn) {
@@ -145,6 +145,7 @@ export class Container {
   protected isStarted: boolean = false
   protected queue: (AddonDefinition)[] = []
 
+  public player: PlayerInfo
   public store: Store
   public addons: { [key: string]: SmartFrame | void } = {}
 
@@ -167,11 +168,11 @@ export class Container {
   }
 
   protected _add ([name, creator]: AddonDefinition) {
-    this.addons[name] = creator()
+    this.addons[name] = creator(this)
   }
 
   protected start () {
-    if (this.isStarted)
+    if (this.player)
       return
 
     if (UnitGUID('player')) {
