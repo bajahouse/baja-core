@@ -1,16 +1,16 @@
-import { $, Addon, Movable, SlashCommand } from './baja/lib'
+import { $, Addon, Movable, SlashCommand, SmartFrame } from './baja/lib'
 import { Grid } from './baja/frames/grid'
 import { Scroll } from './baja/frames/scroll'
 import { Button } from './baja/frames/button'
 
-Addon('spell-picker', () => {
-  const picker = $({
-    uid: 'spell-picker',
+let picker: SmartFrame
+
+function build () {
+  picker = $({
     width: 350,
     height: 350,
     backdrop: 'tooltip',
     point: 'CENTER',
-    hidden: true,
   })
 
   Movable(picker, 'RightButton')
@@ -36,10 +36,23 @@ Addon('spell-picker', () => {
   })
 
   grid.Attach(spell)
+}
 
+function createOrDelete () {
+  if (!picker)
+    return build()
+  if (picker.IsDeleted) {
+    build()
+  } else {
+    picker.Delete()
+  }
+}
+
+
+Addon('spell-picker', () => {
   SlashCommand(
     'SPELLPICKER',
     ['/sp', '/spellpicker'],
-    () => picker.ToggleShown(),
+    () => createOrDelete(),
   )
 })
