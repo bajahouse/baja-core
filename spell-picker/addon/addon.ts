@@ -38,7 +38,7 @@ Addon('spell-picker', () => {
 
   SlashCommand(
     'SPELLPICKER',
-    ['sp', 'spellpicker'],
+    ['/sp', '/spellpicker'],
     () => picker.ToggleShown(),
   )
 })
