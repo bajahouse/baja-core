@@ -24,21 +24,23 @@ const texturePath = 'Emoji\\'
 
 std.Events.patch('emoji-creation', async () => {
     let emojiPath = path.join('modules', 'baja-core/emoji-module', 'assets') + '/' + texturePath
-    const dir = await fs.promises.opendir(emojiPath)
-    for await (const dirent of dir) {
-        if (dirent.name.endsWith('.blp')) {
-            let fileName = dirent.name.split('.')[0]
-            createM2andSkin(fileName)
-            let newSpell = std.Spells.create(MODNAME, fileName, baseSpell.ID);
-            newSpell.Tags.add(MODNAME, 'emoji');
-            newSpell.Name.enGB.set('Emoji: ' + (fileName.replace('_', ' ').replace('-', ' ')))
-                .Icon.setFullPath(texturePath + fileName)
-                .Visual.getRefCopy()
-                .PrecastKit.set(0)
-                .CastKit.set(0)
-                .ImpactKit.getRefCopy().HeadEffect.getRefCopy()
-                .Filename.set(texturePath + fileName + '.mdx')
-                .Name.set(fileName)
+    if (fs.existsSync(emojiPath)) {
+        const dir = await fs.promises.opendir(emojiPath)
+        for await (const dirent of dir) {
+            if (dirent.name.endsWith('.blp')) {
+                let fileName = dirent.name.split('.')[0]
+                createM2andSkin(fileName)
+                let newSpell = std.Spells.create(MODNAME, fileName, baseSpell.ID);
+                newSpell.Tags.add(MODNAME, 'emoji');
+                newSpell.Name.enGB.set('Emoji: ' + (fileName.replace('_', ' ').replace('-', ' ')))
+                    .Icon.setFullPath(texturePath + fileName)
+                    .Visual.getRefCopy()
+                    .PrecastKit.set(0)
+                    .CastKit.set(0)
+                    .ImpactKit.getRefCopy().HeadEffect.getRefCopy()
+                    .Filename.set(texturePath + fileName + '.mdx')
+                    .Name.set(fileName)
+            }
         }
     }
 })
@@ -48,9 +50,9 @@ function createM2andSkin(textureName: string) {
     const texture = tpath + '.blp';
     const writeM2 = Buffer.from((firstM2Part + texture.length.toString(16) + secondM2Part + convertToHex(texture) + '00'), "hex")
 
-    fs.writeFile(path.join('modules', 'baja-core/phase-module', 'assets') + '/' + tpath + '.M2', writeM2, () => { });
+    fs.writeFile(path.join('modules', 'baja-core/emoji-module', 'assets') + '/' + tpath + '.M2', writeM2, () => { });
     const writeSkin = Buffer.from(skinPart, "hex")
-    fs.writeFile(path.join('modules', 'baja-core/phase-module', 'assets') + '/' + tpath + '00.skin', writeSkin, () => { });
+    fs.writeFile(path.join('modules', 'baja-core/emoji-module', 'assets') + '/' + tpath + '00.skin', writeSkin, () => { });
 }
 
 function convertToHex(str: string) {
