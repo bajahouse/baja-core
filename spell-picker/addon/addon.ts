@@ -1,4 +1,4 @@
-import { $, Addon, Movable, SlashCommand, SmartFrame } from './baja/lib'
+import { $, Addon, Movable, SlashCommand } from './baja/lib'
 import { Grid } from './baja/frames/grid'
 import { Scroll } from './baja/frames/scroll'
 import { Button } from './baja/frames/button'
