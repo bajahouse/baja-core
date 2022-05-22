@@ -11,17 +11,13 @@
 // FIXME: move to TSWoW
 export type SlashCmdHandler = (msg: string, frame: WoWAPI.Frame) => void
 
-function SlashCommand (mod: string, cmdList: string[], handler: SlashCmdHandler) {
+function SlashCommand (name: string, cmdList: string[], handler: SlashCmdHandler) {
   for (let i = 0; i <= (cmdList.length - 1); i++) {
     const cmd = cmdList[i]
-    _G['SlashCmdList'][mod] = handler
-    _G[`SLASH_${mod}${i + 1}`] = `${cmd}`
+    _G['SlashCmdList'][name] = handler
+    _G[`SLASH_${name}${i + 1}`] = `${cmd}`
   }
 }
-
-SlashCommand('HELLO', ['/hw', '/helloworld'], () => {
-  console.log('hello world')
-})
 
 // store
 const ACCOUNT = 'ACCOUNT'
