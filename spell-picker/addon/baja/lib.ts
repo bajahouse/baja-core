@@ -7,6 +7,18 @@
 // - [ ] grid reflow
 // - [ ] delete -> reflow(isDeleted)
 
+// slash commands
+// FIXME: move to TSWoW
+export type SlashCmdHandler = (msg: string, frame: WoWAPI.Frame) => void
+
+function SlashCommand (name: string, cmdList: string[], handler: SlashCmdHandler) {
+  for (let i = 0; i <= (cmdList.length - 1); i++) {
+    const cmd = cmdList[i]
+    _G['SlashCmdList'][name] = handler
+    _G[`SLASH_${name}${i + 1}`] = `${cmd}`
+  }
+}
+
 // store
 const ACCOUNT = 'ACCOUNT'
 const CHARACTER = 'CHARACTER'
