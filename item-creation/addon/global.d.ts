@@ -3193,8 +3193,6 @@ declare function GetCritChance(): number;
  */
 declare function GetDodgeChance(): number;
 
-
-
 /**
  * Returns the player's expertise percentage for main hand, offhand and ranged attacks
  * - **arg1**: Expertise percentage for swings with your main hand weapon
@@ -4265,6 +4263,9 @@ declare namespace WoWAPI {
  */
 declare function AutoEquipCursorItem(): void;
 
+/**
+ * Check to see if chosen unit utilizes a relic slot
+ */
 declare function UnitHasRelicSlot(unitType: WoWAPI.UnitId):boolean
 
 /**
