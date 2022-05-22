@@ -1,4 +1,4 @@
-import { DEFAULT_BACKDROP } from './../lib'
+import { DEFAULT_BACKDROP } from '../lib'
 import { $, SmartFrame, FrameOptions } from '../lib'
 import { List } from './list'
 

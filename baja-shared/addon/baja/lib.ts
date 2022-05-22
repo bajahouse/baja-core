@@ -11,17 +11,13 @@
 // FIXME: move to TSWoW
 export type SlashCmdHandler = (msg: string, frame: WoWAPI.Frame) => void
 
-function SlashCommand (mod: string, cmdList: string[], handler: SlashCmdHandler) {
+export function SlashCommand (name: string, cmdList: string[], handler: SlashCmdHandler) {
   for (let i = 0; i <= (cmdList.length - 1); i++) {
     const cmd = cmdList[i]
-    _G['SlashCmdList'][mod] = handler
-    _G[`SLASH_${mod}${i + 1}`] = `${cmd}`
+    _G['SlashCmdList'][name] = handler
+    _G[`SLASH_${name}${i + 1}`] = `${cmd}`
   }
 }
-
-SlashCommand('HELLO', ['/hw', '/helloworld'], () => {
-  console.log('hello world')
-})
 
 // store
 const ACCOUNT = 'ACCOUNT'
@@ -298,6 +294,8 @@ export interface FrameProps {
   // delete
   IsDeleted: boolean
   Delete: () => void
+  // helpers
+  ToggleShown: () => void
   // type cast
   ToUIObject: () => WoWAPI.UIObject
   ToSmartFrame: () => SmartFrame,
@@ -402,6 +400,13 @@ export function $ (options: FrameOptions = {}) {
   }
   // FIXME: public  - frame.Reflow (calls frame.Draw on all children that have it)
   // FIXME: private - frame.Draw
+  frame.ToggleShown = () => {
+    if (frame.IsShown()) {
+      frame.Hide()
+    } else {
+      frame.Show()
+    }
+  }
   frame.UID = uid
   if (options.hidden) {
     frame.Hide()
