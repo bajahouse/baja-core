@@ -36,7 +36,9 @@ Addon('spell-picker', () => {
 
   grid.Attach(foo)
 
-  SlashCommand('SPELLPICKER', ['sp', 'spellpicker'], () => {
-    picker.ToggleShown()
-  })
+  SlashCommand(
+    'SPELLPICKER',
+    ['sp', 'spellpicker'],
+    () => picker.ToggleShown(),
+  )
 })
