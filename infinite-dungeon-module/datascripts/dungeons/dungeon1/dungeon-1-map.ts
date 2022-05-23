@@ -10,7 +10,7 @@ export let dungMap = std.Maps.create(MODNAME, 'dungeon-1')
     .CorpseMap.set(baseMap.ID)
     .CorpsePos.set({ x: 900, y: 150 })
     .MinimapIconScale.set(1)
-    .Directory.set('UlduarRaid')
+    .Directory.set('dungeonone')
 
 std.SQL.instance_template.add(dungMap.ID).parent.set(baseMap.ID).script.set('')
 std.DBC.MapDifficulty.add(1001)

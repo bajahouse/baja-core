@@ -5,7 +5,7 @@ export let baseMap = std.Maps.create(MODNAME, 'basemap')
     .Type.PLAIN.set()
     .Name.enGB.set('Starting Map')
     .MinimapIconScale.set(1)
-    .Directory.set('stormwind')
+    .Directory.set('dungeonbasemap')
 
 std.DBC.MapDifficulty.add(1000)
     .MapID.set(baseMap.ID)
