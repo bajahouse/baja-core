@@ -58,15 +58,15 @@ mobOne.InlineScripts.OnJustEnteredCombat(creature=>{
     function getrandomInt(max: uint32): uint32 {
         return Math.floor(Math.random() * max);
     }
-    creature.AddNamedTimer("combatloop", 5000, -1, (owner,timer) => {
+    creature.AddNamedTimer("combatloop", 5000, TimerLoops.INDEFINITE, (owner,timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
         let spells: TSArray<uint32> = <TSArray<uint32>>[
-            GetID("Spell", MODNAME, "dungeonmob01spell01-spell"),
-            GetID("Spell", MODNAME, "dungeonmob01spell02-spell"),
-            GetID("Spell", MODNAME, "dungeonmob01spell03-spell"),
-            GetID("Spell", MODNAME, "dungeonmob01spell04-spell"),
-            GetID("Spell", MODNAME, "dungeonmob01spell05-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob01spell01-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob01spell02-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob01spell03-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob01spell04-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob01spell05-spell"),
         ];
         let spellChoice = getrandomInt(3);
         self.CastSpell(target,spells[spellChoice],false)
@@ -119,14 +119,14 @@ mobTwo.InlineScripts.OnJustEnteredCombat(creature=>{
     function getrandomInt(max: uint32): uint32 {
         return Math.floor(Math.random() * max);
     }
-    creature.AddNamedTimer("combatloop", 5000, -1, (owner,timer) => {
+    creature.AddNamedTimer("combatloop", 5000, TimerLoops.INDEFINITE, (owner,timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
         let spells: TSArray<uint32> = <TSArray<uint32>>[
-            GetID("Spell", MODNAME, "dungeonmob02spell01-spell"),
-            GetID("Spell", MODNAME, "dungeonmob02spell02-spell"),
-            GetID("Spell", MODNAME, "dungeonmob02spell03-spell"),
-            GetID("Spell", MODNAME, "dungeonmob02spell04-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob02spell01-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob02spell02-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob02spell03-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob02spell04-spell"),
         ];
         let spellChoice = getrandomInt(3);
         self.CastSpell(target,spells[spellChoice],false)
@@ -170,14 +170,14 @@ mobThree.InlineScripts.OnJustEnteredCombat(creature=>{
     function getrandomInt(max: uint32): uint32 {
         return Math.floor(Math.random() * max);
     }
-    creature.AddNamedTimer("combatloop", 5000, -1, (owner,timer) => {
+    creature.AddNamedTimer("combatloop", 5000, TimerLoops.INDEFINITE, (owner,timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
         let spells: TSArray<uint32> = <TSArray<uint32>>[
-            GetID("Spell", MODNAME, "dungeonmob03spell01-spell"),
-            GetID("Spell", MODNAME, "dungeonmob03spell02-spell"),
-            GetID("Spell", MODNAME, "dungeonmob03spell03-spell"),
-            GetID("Spell", MODNAME, "dungeonmob03spell04-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob03spell01-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob03spell02-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob03spell03-spell"),
+            GetID("Spell", 'infinite-dungeon-mod', "dungeonmob03spell04-spell"),
         ];
         let spellChoice = getrandomInt(3);
         self.CastSpell(target,spells[spellChoice],false)

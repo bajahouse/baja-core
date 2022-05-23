@@ -61,17 +61,17 @@ dungeonMiniBoss1.InlineScripts.OnJustEnteredCombat((creature, target) => {
         }
     }
     //start of combat
-    creature.CastSpell(target,GetID("Spell", MODNAME, "minibossburdenofknowledge-spell"),true);
+    creature.CastSpell(target,GetID("Spell", 'infinite-dungeon-mod', "minibossburdenofknowledge-spell"),true);
     //start of timers
-    creature.AddNamedTimer("event1", 3000, -1, (owner, timer) => {
+    creature.AddNamedTimer("event1", 3000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", MODNAME, "minibosstouchofdeath-spell"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "minibosstouchofdeath-spell"),self,target,false);
     });
-    creature.AddNamedTimer("event2", 13000, -1, (owner, timer) => {
+    creature.AddNamedTimer("event2", 13000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", MODNAME, "minibosssummonspell-spell"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "minibosssummonspell-spell"),self,target,false);
     });
 });
 
