@@ -1,7 +1,12 @@
 import { std } from "wow/wotlk";
 import { MODNAME } from "../modname";
 
-export let baseMap = std.Maps.create(MODNAME, 'basemap').Type.PLAIN.set().Name.enGB.set('basemap')
+export let baseMap = std.Maps.create(MODNAME, 'basemap')
+    .Type.PLAIN.set()
+    .Name.enGB.set('Starting Map')
+    .MinimapIconScale.set(1)
+    .Directory.set('stormwind')
+
 std.DBC.MapDifficulty.add(1000)
     .MapID.set(baseMap.ID)
     .Difficulty.set(0)
@@ -16,3 +21,4 @@ std.SQL.game_tele
     .position_z.set(31.1351)
     .map.set(baseMap.ID)
     .name.set("dungeonStartArea");
+    

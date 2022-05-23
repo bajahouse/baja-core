@@ -2,7 +2,15 @@ import { std } from "wow/wotlk";
 import { MODNAME } from "../../modname";
 import { baseMap } from "../base-map";
 
-export let dungMap = std.Maps.create(MODNAME, 'dungeon-1').Type.DUNGEON.set(MODNAME, 'dungeon-1').MaxPlayers.set(5).Flags.set(13).CorpseMap.set(baseMap.ID).CorpsePos.set({ x: 900, y: 150 }).Name.enGB.set('dungeon')
+export let dungMap = std.Maps.create(MODNAME, 'dungeon-1')
+    .Name.enGB.set('Dungeon 1')
+    .Type.DUNGEON.set(MODNAME, 'dungeon-1')
+    .MaxPlayers.set(5)
+    .Flags.set(13)
+    .CorpseMap.set(baseMap.ID)
+    .CorpsePos.set({ x: 900, y: 150 })
+    .MinimapIconScale.set(1)
+    .Directory.set('UlduarRaid')
 
 std.SQL.instance_template.add(dungMap.ID).parent.set(baseMap.ID).script.set('')
 std.DBC.MapDifficulty.add(1001)
