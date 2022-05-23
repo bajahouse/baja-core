@@ -36,7 +36,7 @@ function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, le
     const itemLevel: uint32 = ((level * 2) * qualMult) + 1
 
     temp.SetItemLevel(itemLevel);
-    temp.SetRequiredLevel(level)
+    temp.SetRequiredLevel(level<=80?level:80)
     temp.SetQuality(GetRandQuality())
 
     temp.SetClass(itemInfo[0])
