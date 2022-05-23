@@ -11,4 +11,3 @@ CREATE TABLE \`dungeon_spells\`  (
   \`spellDesc\` varchar(1000) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 `)
-
