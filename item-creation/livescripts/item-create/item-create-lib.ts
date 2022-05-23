@@ -24,9 +24,9 @@ export function createItemRandom(player: TSPlayer) {
     player.AddItem(temp.GetEntry(), 1)
 }
 
-export function createItemWithChoices(player: TSPlayer, i1: uint32, i2: uint32, level: uint32, statType: uint32): TSItem {
+export function createItemWithChoices(player: TSPlayer, itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): TSItem {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
-    temp = modifyItemProperties(temp, itemClassInfo[i1][i2], level, statType)
+    temp = modifyItemProperties(temp, itemClassInfo[itemType][itemSubType], level, statType)
     player.SendItemQueryPacket(temp)
     return player.AddItem(temp.GetEntry(), 1)
 }
