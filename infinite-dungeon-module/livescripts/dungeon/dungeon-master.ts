@@ -1,5 +1,5 @@
 import { spellChoiceID, spellChoice, spellChoices } from "../../shared/Messages"
-
+export const startingMapID = GetID("Map","infinite-dungeon-mod","basemap")
 const classSpells: TSArray<TSArray<TSArray<uint32>>> = <TSArray<TSArray<TSArray<uint32>>>>[
     <TSArray<TSArray<uint32>>>[],//none
     <TSArray<TSArray<uint32>>>[],
@@ -130,14 +130,14 @@ export function rewardGroup(player: TSPlayer) {
             group[i].AddItem(rewardID, rewCount)
             group[i].SetUInt('prestige', 0)
             group[i].RemoveItemByEntry(insideID, 999999)
-            group[i].Teleport(725, -8750.45, -74.64, 31, 0)
+            group[i].Teleport(startingMapID, -8750.45, -74.64, 31, 0)
         }
     } else {
         let curPrestige: uint32 = player.GetUInt('prestige', 0)
         player.AddItem(rewardID, (curPrestige * curPrestige) + curPrestige )
         player.SetUInt('prestige', 0)
         player.RemoveItemByEntry(insideID, 999999)
-        player.Teleport(725, -8750.45, -74.64, 31, 0)
+        player.Teleport(startingMapID, -8750.45, -74.64, 31, 0)
     }
 }
 
