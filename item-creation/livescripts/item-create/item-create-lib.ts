@@ -17,11 +17,11 @@ export function itemCreationSetup(events: TSEvents) {
     setupDisplayIDDict()
 }
 
-export function createItemRandom(player: TSPlayer) {
+export function createItemRandom(player: TSPlayer): TSItem {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
     temp = modifyItemProperties(temp, chooseItemType(), player.GetLevel(), getRandNumber(3))
     player.SendItemQueryPacket(temp)
-    player.AddItem(temp.GetEntry(), 1)
+    return player.AddItem(temp.GetEntry(), 1)
 }
 
 export function createItemWithChoices(player: TSPlayer, itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): TSItem {
@@ -29,6 +29,18 @@ export function createItemWithChoices(player: TSPlayer, itemType: uint32, itemSu
     temp = modifyItemProperties(temp, itemClassInfo[itemType][itemSubType], level, statType)
     player.SendItemQueryPacket(temp)
     return player.AddItem(temp.GetEntry(), 1)
+}
+
+export function returnItemRandom(player: TSUnit): uint32 {
+    let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
+    temp = modifyItemProperties(temp, chooseItemType(), player.GetLevel(), getRandNumber(3))
+    return temp.GetEntry()
+}
+
+export function returnItemWithChoices(itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): uint32 {
+    let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
+    temp = modifyItemProperties(temp, itemClassInfo[itemType][itemSubType], level, statType)
+    return temp.GetEntry()
 }
 
 function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, level: uint32, statType: uint32): TSItemTemplate {
