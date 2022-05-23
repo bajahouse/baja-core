@@ -31,12 +31,12 @@ export function createItemWithChoices(player: TSPlayer, i1: uint32, i2: uint32, 
     return player.AddItem(temp.GetEntry(), 1)
 }
 
-function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, playerLevel: uint32, statType: uint32): TSItemTemplate {
+function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, level: uint32, statType: uint32): TSItemTemplate {
     const qualMult = qualityMultiplier[temp.GetQuality()]
-    const itemLevel: uint32 = ((playerLevel * 2) * qualMult) + 1
+    const itemLevel: uint32 = ((level * 2) * qualMult) + 1
 
     temp.SetItemLevel(itemLevel);
-    temp.SetRequiredLevel(playerLevel)
+    temp.SetRequiredLevel(level)
     temp.SetQuality(GetRandQuality())
 
     temp.SetClass(itemInfo[0])
