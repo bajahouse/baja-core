@@ -93,27 +93,27 @@ dungeonBoss1.InlineScripts.OnJustEnteredCombat((creature, target) => {
         }
     }
     //start of combat
-    creature.CastSpell(target,GetID("Spell", "minecraft-mod", "boss1flameshock1-spell2"),true);
+    creature.CastSpell(target,GetID("Spell", MODNAME, "boss1flameshock1-spell2"),true);
     //start of timers
     creature.AddNamedTimer("event1", 3000, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss1lightningbolt1-spell"),self,target,false);
+        attemptCast(GetID("Spell", MODNAME, "boss1lightningbolt1-spell"),self,target,false);
     });
     creature.AddNamedTimer("event2", 5500, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss1flameshock1-spell2"),self,target,false);
+        attemptCast(GetID("Spell", MODNAME, "boss1flameshock1-spell2"),self,target,false);
     });
     creature.AddNamedTimer("event3", 14000, 1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss1chainlightning1-spell"),self,target,false);
+        attemptCast(GetID("Spell", MODNAME, "boss1chainlightning1-spell"),self,target,false);
     });
     creature.AddNamedTimer("event4", 20000, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss1healingwave1-spell"),self,target,false);
+        attemptCast(GetID("Spell", MODNAME, "boss1healingwave1-spell"),self,target,false);
     });
 });
 
@@ -192,7 +192,7 @@ ShamanGuard1.InlineScripts.OnJustEnteredCombat((creature, target) => {
     creature.AddNamedTimer("event1", 5000, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "guardchainheal1-spell"),self,self,false);
+        attemptCast(GetID("Spell", MODNAME, "guardchainheal1-spell"),self,self,false);
     });
 });
 ShamanGuard1.InlineScripts.OnDeath((creature, killer) => {
@@ -279,39 +279,39 @@ dungeonBoss2.InlineScripts.OnJustEnteredCombat((creature, target) => {
         }
     }
     //start of combat
-    creature.CastSpell(target,GetID("Spell", "minecraft-mod", "boss2charge1-spell"),true);
+    creature.CastSpell(target,GetID("Spell", MODNAME, "boss2charge1-spell"),true);
     //start of timers
     creature.AddNamedTimer("event1", 5000, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss2mortal1-spell"),self,target,false);
+        attemptCast(GetID("Spell", MODNAME, "boss2mortal1-spell"),self,target,false);
     });
     creature.AddNamedTimer("event2", 14000, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
         attemptCast(
-            GetID("Spell", "minecraft-mod", "boss2destructiveslam1-spell"),self,target,false);
+            GetID("Spell", MODNAME, "boss2destructiveslam1-spell"),self,target,false);
     });
     creature.AddNamedTimer("event3", 15000, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss2charge1-spell"),self,target,false);
+        attemptCast(GetID("Spell", MODNAME, "boss2charge1-spell"),self,target,false);
     });
     creature.AddNamedTimer("event3.1", 16000, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss2bladestorm1-spell"),self,target,true);
+        attemptCast(GetID("Spell", MODNAME, "boss2bladestorm1-spell"),self,target,true);
     });
 
     creature.AddNamedTimer("event4", 20000, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss2summon1-spell"),self,target,false);
+        attemptCast(GetID("Spell", MODNAME, "boss2summon1-spell"),self,target,false);
     });
     creature.AddNamedTimer("event5", 60000, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss2laststand1-spell"),self,target,false);
+        attemptCast(GetID("Spell", MODNAME, "boss2laststand1-spell"),self,target,false);
     });
 });
 
@@ -401,7 +401,7 @@ GronglingEgg.InlineScripts.OnJustEnteredCombat((creature, target) => {
     creature.AddNamedTimer("event1", 1000, 1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", "minecraft-mod", "hasteauraegg-spell"),self,target,false);
+        attemptCast(GetID("Spell", MODNAME, "hasteauraegg-spell"),self,target,false);
     });
 });
 GronglingEgg.InlineScripts.OnDeath((creature, killer) => {
@@ -489,16 +489,16 @@ dungeonBoss3.InlineScripts.OnJustEnteredCombat((creature, target) => {
     function getrandomInt(max: uint32): uint32 {
         return Math.floor(Math.random() * max);
     }
-    attemptCast(GetID("Spell", "minecraft-mod", "boss3potentodor1-spell"),creature,creature,false);
+    attemptCast(GetID("Spell", MODNAME, "boss3potentodor1-spell"),creature,creature,false);
     creature.AddNamedTimer("combatLoop", 5000, -1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
         let spells: TSArray<uint32> = <TSArray<uint32>>[
-            GetID("Spell", "minecraft-mod", "boss3acidwretch1-spell"),
-            GetID("Spell", "minecraft-mod", "boss3venompool1-spell"),
-            GetID("Spell", "minecraft-mod", "boss3meltarmor1-spell"),
-            GetID("Spell", "minecraft-mod", "boss3rumble1-spell"),
-            GetID("Spell", "minecraft-mod", "boss3acridity1-spell"),
+            GetID("Spell", MODNAME, "boss3acidwretch1-spell"),
+            GetID("Spell", MODNAME, "boss3venompool1-spell"),
+            GetID("Spell", MODNAME, "boss3meltarmor1-spell"),
+            GetID("Spell", MODNAME, "boss3rumble1-spell"),
+            GetID("Spell", MODNAME, "boss3acridity1-spell"),
         ];
         let spellMax = 0;
         if (self.HealthAbovePct(90)) {
@@ -726,20 +726,20 @@ dungeonBoss5.InlineScripts.OnJustEnteredCombat((creature, target) => {
         }
     }
     //start of combat
-    creature.CastSpell(target,GetID("Spell", "minecraft-mod", "boss5energize1-spell"),true);
+    creature.CastSpell(target,GetID("Spell", MODNAME, "boss5energize1-spell"),true);
     //start of timers
     creature.AddNamedTimer("event1", 7000, -1, (owner, timer) => {
         let self = owner.ToUnit();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss5energize1-spell"),owner.ToCreature(),self.GetVictim(),false);
+        attemptCast(GetID("Spell", MODNAME, "boss5energize1-spell"),owner.ToCreature(),self.GetVictim(),false);
     });
     creature.AddNamedTimer("event2", 12000, -1, (owner, timer) => {
         let self = owner.ToUnit();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss5fulmination1-spell"),self,self.GetVictim(),false);
+        attemptCast(GetID("Spell", MODNAME, "boss5fulmination1-spell"),self,self.GetVictim(),false);
     });
     creature.AddNamedTimer("event3", 15000, -1, (owner, timer) => {
         let self = owner.ToUnit();
         if (
-            attemptCast(GetID("Spell", "minecraft-mod", "boss5magnetize1-spell"),self,self.GetVictim(),false)
+            attemptCast(GetID("Spell", MODNAME, "boss5magnetize1-spell"),self,self.GetVictim(),false)
         ) {
             self.SetBool("didCastMagnetize", true);
         }
@@ -747,13 +747,13 @@ dungeonBoss5.InlineScripts.OnJustEnteredCombat((creature, target) => {
     creature.AddNamedTimer("event3.1", 16000, -1, (owner, timer) => {
         let self = owner.ToUnit();
         if (self.GetBool("didCastMagnetize", false)) {
-            attemptCast(GetID("Spell", "minecraft-mod", "boss5nuke1-spell"),self,self.GetVictim(),true);
+            attemptCast(GetID("Spell", MODNAME, "boss5nuke1-spell"),self,self.GetVictim(),true);
         }
         self.SetBool("didCastMagnetize", false);
     });
     creature.AddNamedTimer("event4", 38000, -1, (owner, timer) => {
         let self = owner.ToUnit();
-        attemptCast(GetID("Spell", "minecraft-mod", "boss5execution1-spell"),self,self.GetVictim(),true);
+        attemptCast(GetID("Spell", MODNAME, "boss5execution1-spell"),self,self.GetVictim(),true);
     });
 });
 

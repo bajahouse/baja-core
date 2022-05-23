@@ -44,7 +44,7 @@ const miniMobSpawnCoords: TSArray<TSArray<TSDictionary<string, float>>> = [
     ]
 ]
 const miniMobIDs: TSArray<uint32> = [
-    GetID("creature_template", "minecraft-mod", "dungeonminimob1"),
+    GetID("creature_template", 'infinite-dungeon-mod', "dungeonminimob1"),
 ]
 
 const mobSpawnCoords: TSArray<TSArray<TSDictionary<string, float>>> = [
@@ -272,9 +272,9 @@ const mobSpawnCoords: TSArray<TSArray<TSDictionary<string, float>>> = [
 ]
 
 const mobIDs: TSArray<uint32> = [
-    GetID("creature_template", "minecraft-mod", "dungeonmob1"),
-    GetID("creature_template", "minecraft-mod", "dungeonmob2"),
-    GetID("creature_template", "minecraft-mod", "dungeonmob3"),
+    GetID("creature_template", 'infinite-dungeon-mod', "dungeonmob1"),
+    GetID("creature_template", 'infinite-dungeon-mod', "dungeonmob2"),
+    GetID("creature_template", 'infinite-dungeon-mod', "dungeonmob3"),
 ]
 
 const miniBossSpawnCoords: TSArray<TSArray<TSDictionary<string, float>>> = [
@@ -294,7 +294,7 @@ const miniBossSpawnCoords: TSArray<TSArray<TSDictionary<string, float>>> = [
     ]
 ]
 const miniBossIDs: TSArray<uint32> = [
-    GetID("creature_template", "minecraft-mod", "dungeonminiboss1"),
+    GetID("creature_template", 'infinite-dungeon-mod', "dungeonminiboss1"),
 ]
 
 const bossSpawnCoords: TSArray<TSArray<TSDictionary<string, float>>> = [
@@ -308,10 +308,10 @@ const bossSpawnCoords: TSArray<TSArray<TSDictionary<string, float>>> = [
 
 ]
 const bossIDs: TSArray<uint32> = [
-    GetID("creature_template", "minecraft-mod", "dungeonboss1"),
-    GetID("creature_template", "minecraft-mod", "dungeonboss2"),
-    GetID("creature_template", "minecraft-mod", "dungeonboss3"),
-    GetID("creature_template", "minecraft-mod", "dungeonboss5"),
+    GetID("creature_template", 'infinite-dungeon-mod', "dungeonboss1"),
+    GetID("creature_template", 'infinite-dungeon-mod', "dungeonboss2"),
+    GetID("creature_template", 'infinite-dungeon-mod', "dungeonboss3"),
+    GetID("creature_template", 'infinite-dungeon-mod', "dungeonboss5"),
 ]
 
 const vaseSpawnCoords: TSArray<TSArray<TSDictionary<string, float>>> = [
@@ -334,20 +334,20 @@ const vendorSpawnCoords: TSArray<TSDictionary<string, float>> = [
     CreateDictionary<string, float>({m:726,x:905.107117,y:153.253296,z:412.887848,o:0.845007}),
 ]
 
-const rewardCurrencyID: uint32 = GetID("item_template", "minecraft-mod", "dungeon-end-currency")
-const insideCurrencyID: uint32 = GetID("item_template", "minecraft-mod", "dungeon-inside-currency")
+const rewardCurrencyID: uint32 = GetID("item_template", 'infinite-dungeon-mod', "dungeon-end-currency")
+const insideCurrencyID: uint32 = GetID("item_template", 'infinite-dungeon-mod', "dungeon-inside-currency")
 const prestigeMult = 24//this is 1 lower than real value, due to dieSides. 9 is 10% hp+damage+haste per prestige
 
 export function dungeon1(events: TSEvents) {
 
-    events.GameObjectID.OnGossipHello(GetID("gameobject_template", "minecraft-mod", "dungeonstartobj"), (obj, player, cancel) => {
+    events.GameObjectID.OnGossipHello(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonstartobj"), (obj, player, cancel) => {
         player.GossipClearMenu()
         player.GossipMenuAddItem(0, 'Off I Go', obj.GetGUIDLow(), 0, false, '', 0)
         player.GossipMenuAddItem(0, 'Not yet', obj.GetGUIDLow(), 1, false, '', 0)
         player.GossipSendMenu(5, obj, 1)
     })
 
-    events.GameObjectID.OnGossipSelect(GetID("gameobject_template", "minecraft-mod", "dungeonstartobj"), (obj, player, menuID, sel, cancel) => {
+    events.GameObjectID.OnGossipSelect(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonstartobj"), (obj, player, menuID, sel, cancel) => {
         if (sel == 0) {
             player.Teleport(726, 910, 157, 414, 0)
             player.GossipComplete()
@@ -374,12 +374,12 @@ export function dungeon1(events: TSEvents) {
         setupBossDeath(events, bossIDs[i])
         setupBossPull(events,bossIDs[i])
     }
-    events.CreatureID.OnDeath(GetID("creature_template", "minecraft-mod", "dungeon-vase"),(creature,killer)=>{
+    events.CreatureID.OnDeath(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vase"),(creature,killer)=>{
         checkPlayerGiveReward(killer,getRandomInt(1)+1)
         creature.DespawnOrUnsummon(5000)
     })
     //make a bossMinions loop for any spawned by spell creatures
-    events.GameObjectID.OnGossipSelect(GetID("gameobject_template", "minecraft-mod", "dungeonendobj"), (obj, player, menuID, sel, cancel) => {
+    events.GameObjectID.OnGossipSelect(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), (obj, player, menuID, sel, cancel) => {
         if (sel == 0) {
             let mapChoice = getRandomInt(mobSpawnCoords.length)
             resetGroup(player, playerSpawnCoords[mapChoice], miniMobSpawnCoords[mapChoice], miniMobIDs,mobSpawnCoords[mapChoice], mobIDs, miniBossSpawnCoords[mapChoice], miniBossIDs, bossSpawnCoords[mapChoice], bossIDs, vendorSpawnCoords[mapChoice], chestSpawnCoords[mapChoice],vaseSpawnCoords[mapChoice])
@@ -413,7 +413,7 @@ export function dungeon1(events: TSEvents) {
             player.AddItem(rewardCurrencyID, rewCount)
         }
         player.RemoveItemByEntry(insideCurrencyID,999999)
-        player.RemoveItemByEntry(GetID("item_template","minecraft-mod","dungeonchoice-item"),999999)
+        player.RemoveItemByEntry(GetID("item_template",'infinite-dungeon-mod',"dungeonchoice-item"),999999)
         player.SetUInt('prestige', 0)
         map.SetUInt('prestige', 0)
     })
@@ -448,7 +448,7 @@ function setupMiniMobDeath(events: TSEvents, mobID: number) {
     events.CreatureID.OnDeath(mobID, (creature, killer) => {
         checkPlayerGiveReward(killer,getRandomInt(1)+1)
         if (getRandomInt(100) >= 99) {
-            creature.SpawnCreature(GetID("creature_template", "minecraft-mod", "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
+            creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
         }
         creature.DespawnOrUnsummon(3000)
     })
@@ -458,7 +458,7 @@ function setupMobDeath(events: TSEvents, mobID: number) {
     events.CreatureID.OnDeath(mobID, (creature, killer) => {
         checkPlayerGiveReward(killer,getRandomInt(5)+1)
         if (getRandomInt(100) >= 97) {
-            creature.SpawnCreature(GetID("creature_template", "minecraft-mod", "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
+            creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
         }
         creature.DespawnOrUnsummon(3000)
     })
@@ -468,7 +468,7 @@ function setupMiniBossDeath(events: TSEvents, mobID: number) {
     events.CreatureID.OnDeath(mobID, (creature, killer) => {
         checkPlayerGiveReward(killer,getRandomInt(20)+1)
         if (getRandomInt(100) >= 50) {
-            creature.SpawnCreature(GetID("creature_template", "minecraft-mod", "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
+            creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
         }
         creature.DespawnOrUnsummon(3000)
     })
@@ -477,7 +477,7 @@ function setupMiniBossDeath(events: TSEvents, mobID: number) {
 function setupBossDeath(events: TSEvents, mobID: number) {
     events.CreatureID.OnDeath(mobID, (creature, killer) => {
         checkPlayerGiveReward(killer,getRandomInt(20)+30)
-        creature.SpawnCreature(GetID("creature_template", "minecraft-mod", "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
+        creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
         creature.DespawnOrUnsummon(3000)
     })
 }

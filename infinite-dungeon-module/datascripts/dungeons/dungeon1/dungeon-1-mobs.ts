@@ -62,11 +62,11 @@ mobOne.InlineScripts.OnJustEnteredCombat(creature=>{
         let self = owner.ToCreature();
         let target = self.GetVictim();
         let spells: TSArray<uint32> = <TSArray<uint32>>[
-            GetID("Spell", "minecraft-mod", "dungeonmob01spell01-spell"),
-            GetID("Spell", "minecraft-mod", "dungeonmob01spell02-spell"),
-            GetID("Spell", "minecraft-mod", "dungeonmob01spell03-spell"),
-            GetID("Spell", "minecraft-mod", "dungeonmob01spell04-spell"),
-            GetID("Spell", "minecraft-mod", "dungeonmob01spell05-spell"),
+            GetID("Spell", MODNAME, "dungeonmob01spell01-spell"),
+            GetID("Spell", MODNAME, "dungeonmob01spell02-spell"),
+            GetID("Spell", MODNAME, "dungeonmob01spell03-spell"),
+            GetID("Spell", MODNAME, "dungeonmob01spell04-spell"),
+            GetID("Spell", MODNAME, "dungeonmob01spell05-spell"),
         ];
         let spellChoice = getrandomInt(3);
         self.CastSpell(target,spells[spellChoice],false)
@@ -123,10 +123,10 @@ mobTwo.InlineScripts.OnJustEnteredCombat(creature=>{
         let self = owner.ToCreature();
         let target = self.GetVictim();
         let spells: TSArray<uint32> = <TSArray<uint32>>[
-            GetID("Spell", "minecraft-mod", "dungeonmob02spell01-spell"),
-            GetID("Spell", "minecraft-mod", "dungeonmob02spell02-spell"),
-            GetID("Spell", "minecraft-mod", "dungeonmob02spell03-spell"),
-            GetID("Spell", "minecraft-mod", "dungeonmob02spell04-spell"),
+            GetID("Spell", MODNAME, "dungeonmob02spell01-spell"),
+            GetID("Spell", MODNAME, "dungeonmob02spell02-spell"),
+            GetID("Spell", MODNAME, "dungeonmob02spell03-spell"),
+            GetID("Spell", MODNAME, "dungeonmob02spell04-spell"),
         ];
         let spellChoice = getrandomInt(3);
         self.CastSpell(target,spells[spellChoice],false)
@@ -174,10 +174,10 @@ mobThree.InlineScripts.OnJustEnteredCombat(creature=>{
         let self = owner.ToCreature();
         let target = self.GetVictim();
         let spells: TSArray<uint32> = <TSArray<uint32>>[
-            GetID("Spell", "minecraft-mod", "dungeonmob03spell01-spell"),
-            GetID("Spell", "minecraft-mod", "dungeonmob03spell02-spell"),
-            GetID("Spell", "minecraft-mod", "dungeonmob03spell03-spell"),
-            GetID("Spell", "minecraft-mod", "dungeonmob03spell04-spell"),
+            GetID("Spell", MODNAME, "dungeonmob03spell01-spell"),
+            GetID("Spell", MODNAME, "dungeonmob03spell02-spell"),
+            GetID("Spell", MODNAME, "dungeonmob03spell03-spell"),
+            GetID("Spell", MODNAME, "dungeonmob03spell04-spell"),
         ];
         let spellChoice = getrandomInt(3);
         self.CastSpell(target,spells[spellChoice],false)

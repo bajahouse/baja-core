@@ -1666,7 +1666,7 @@ addSpellTodungeonScript(EverlastingFlames,9,4,0)
 
 
 
-
+//really should not do desc but o well
 export function addSpellTodungeonScript(spell:Spell, classID:number, rarity:number, type:number){
     let eff0 = spell.Effects.get(0)
     let eff1 = spell.Effects.get(1)

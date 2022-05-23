@@ -3193,6 +3193,8 @@ declare function GetCritChance(): number;
  */
 declare function GetDodgeChance(): number;
 
+
+
 /**
  * Returns the player's expertise percentage for main hand, offhand and ranged attacks
  * - **arg1**: Expertise percentage for swings with your main hand weapon
@@ -4262,6 +4264,8 @@ declare namespace WoWAPI {
  * @see https://wow.gamepedia.com/API_AutoEquipCursorItem
  */
 declare function AutoEquipCursorItem(): void;
+
+declare function UnitHasRelicSlot(unitType: WoWAPI.UnitId):boolean
 
 /**
  * Clears the in-game cursor, returning the object held to its original position (equivalent to right-clicking while holding something on the cursor).

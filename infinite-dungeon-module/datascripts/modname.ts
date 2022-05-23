@@ -1,1 +1,1 @@
-export const MODNAME = "minecraft-mod";
+export const MODNAME = "infinite-dungeon-mod";

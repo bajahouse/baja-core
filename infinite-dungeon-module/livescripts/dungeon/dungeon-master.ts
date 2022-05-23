@@ -30,10 +30,10 @@ const classSpellDescriptions: TSArray<TSArray<string>> = <TSArray<TSArray<string
 ]
 
 const tormentAndBlessingSpells: TSArray<TSArray<uint32>> = <TSArray<TSArray<uint32>>>[
-    <TSArray<uint32>>[GetID("Spell", "minecraft-mod", "increasedhealth1-spell"), 0],
+    <TSArray<uint32>>[GetID("Spell", 'infinite-dungeon-mod', "increasedhealth1-spell"), 0],
 ]
 
-export const prestigeSpell: uint32 = GetID("Spell", "minecraft-mod", "mapprestige-spell")
+export const prestigeSpell: uint32 = GetID("Spell", 'infinite-dungeon-mod', "mapprestige-spell")
 //end of config
 const spellIDToType: TSDictionary<uint32, uint32> = CreateDictionary<uint32, uint32>({
     1: 1
@@ -52,7 +52,7 @@ class dungeonBuffs {
 
 export function dungeonBuffSystem(events: TSEvents) {
     setupTables()
-    events.CreatureID.OnCreate(GetID("creature_template", "minecraft-mod", "dungeon-orb"), (creature, cancel) => {
+    events.CreatureID.OnCreate(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), (creature, cancel) => {
         creature.GetCollisions().Add(ModID(), "hungergames-collision", 2, 500, 0, (self,collided,cancel,entry) => {
             if (collided.IsPlayer()) {
                 let player = collided.ToPlayer()
@@ -80,12 +80,12 @@ export function dungeonBuffSystem(events: TSEvents) {
         })
     })
 
-    events.GameObjectID.OnGossipHello(GetID("gameobject_template", "minecraft-mod", "dungeon-chest"), (obj, player, cancel) => {
-        player.SpawnCreature(GetID("creature_template", "minecraft-mod", "dungeon-orb"), obj.GetX(), obj.GetY(), obj.GetZ(), obj.GetO(), 8, 0)
+    events.GameObjectID.OnGossipHello(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeon-chest"), (obj, player, cancel) => {
+        player.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), obj.GetX(), obj.GetY(), obj.GetZ(), obj.GetO(), 8, 0)
         obj.Despawn()
     })
 
-    events.GameObjectID.OnGossipHello(GetID("gameobject_template", "minecraft-mod", "dungeonendobj"), (obj, player, cancel) => {
+    events.GameObjectID.OnGossipHello(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), (obj, player, cancel) => {
         player.GossipClearMenu()
         player.GossipMenuAddItem(0, 'Go again', obj.GetGUIDLow(), 0, false, '', 0)
         player.GossipMenuAddItem(0, 'Escape', obj.GetGUIDLow(), 1, false, '', 0)
@@ -119,8 +119,8 @@ export function dungeonBuffSystem(events: TSEvents) {
 
 export function rewardGroup(player: TSPlayer) {
     despawnMap(player)
-    let rewardID: uint32 = player.GetMap().GetUInt('rewardID', GetID("item_template", "minecraft-mod", "dungeon-end-currency"))
-    let insideID: uint32 = player.GetMap().GetUInt('dropID', GetID("item_template", "minecraft-mod", "dungeon-inside-currency"))
+    let rewardID: uint32 = player.GetMap().GetUInt('rewardID', GetID("item_template", 'infinite-dungeon-mod', "dungeon-end-currency"))
+    let insideID: uint32 = player.GetMap().GetUInt('dropID', GetID("item_template", 'infinite-dungeon-mod', "dungeon-inside-currency"))
     if (player.IsInGroup()) {
         let group = player.GetGroup().GetMembers()
         for (let i = 0; i < group.length; i++) {
@@ -189,14 +189,14 @@ function despawnMap(player: TSPlayer) {
 }
 
 export function spawnMap(map: TSMap, miniMobSpawnCoords: TSArray<TSDictionary<string, float>>, miniMobIDs: TSArray<uint32>, mobSpawnCoords: TSArray<TSDictionary<string, float>>, mobIDs: TSArray<uint32>, miniBossSpawnCoords: TSArray<TSDictionary<string, float>>, miniBossIDs: TSArray<uint32>, bossSpawnCoords: TSArray<TSDictionary<string, float>>, bossIDs: TSArray<uint32>, vendorSpawnCoords: TSDictionary<string, float>, chestSpawnCoords: TSArray<TSDictionary<string, float>>, vaseSpawnCoords: TSArray<TSDictionary<string, float>>,) {
-    let c = map.SpawnCreature(GetID("creature_template", "minecraft-mod", "dungeon-vendor"), vendorSpawnCoords['x'], vendorSpawnCoords['y'], vendorSpawnCoords['z'], vendorSpawnCoords['o'], 180000)
+    let c = map.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vendor"), vendorSpawnCoords['x'], vendorSpawnCoords['y'], vendorSpawnCoords['z'], vendorSpawnCoords['o'], 180000)
     //chests
     for (let i = 0; i < chestSpawnCoords.length; i++) {
-        c.SummonGameObject(GetID("gameobject_template", "minecraft-mod", "dungeon-chest"), chestSpawnCoords[i]['x'], chestSpawnCoords[i]['y'], chestSpawnCoords[i]['z'], chestSpawnCoords[i]['o'], 0)
+        c.SummonGameObject(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeon-chest"), chestSpawnCoords[i]['x'], chestSpawnCoords[i]['y'], chestSpawnCoords[i]['z'], chestSpawnCoords[i]['o'], 0)
     }
     //vases
     for (let i = 0; i < vaseSpawnCoords.length; i++) {
-        map.SpawnCreature(GetID("creature_template", "minecraft-mod", "dungeon-vase"), vaseSpawnCoords[i]['x'], vaseSpawnCoords[i]['y'], vaseSpawnCoords[i]['z'], vaseSpawnCoords[i]['o'], 0)
+        map.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vase"), vaseSpawnCoords[i]['x'], vaseSpawnCoords[i]['y'], vaseSpawnCoords[i]['z'], vaseSpawnCoords[i]['o'], 0)
             .SetScale(Math.random() / 4 + 0.15)
     }
     //minimobs
@@ -506,7 +506,7 @@ function setupTables() {
 export function setupLastBossCheck(events: TSEvents, bossID: number) {
     events.CreatureID.OnDeath(bossID, (creature, killer) => {
         if (creature.GetUInt('lastBoss', 0) == 1) {
-            killer.SummonGameObject(GetID("gameobject_template", "minecraft-mod", "dungeonendobj"), creature.GetX(), creature.GetY(), creature.GetZ()+1, creature.GetO(), 0)
+            killer.SummonGameObject(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), creature.GetX(), creature.GetY(), creature.GetZ()+1, creature.GetO(), 0)
         }
     })
 }

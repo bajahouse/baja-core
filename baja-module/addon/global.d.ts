@@ -3193,6 +3193,8 @@ declare function GetCritChance(): number;
  */
 declare function GetDodgeChance(): number;
 
+
+
 /**
  * Returns the player's expertise percentage for main hand, offhand and ranged attacks
  * - **arg1**: Expertise percentage for swings with your main hand weapon
