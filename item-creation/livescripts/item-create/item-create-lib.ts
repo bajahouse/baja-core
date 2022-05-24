@@ -17,26 +17,38 @@ export function itemCreationSetup(events: TSEvents) {
     setupDisplayIDDict()
 }
 
-export function createItemRandom(player: TSPlayer) {
+export function createItemRandom(player: TSPlayer): TSItem {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
     temp = modifyItemProperties(temp, chooseItemType(), player.GetLevel(), getRandNumber(3))
-    player.SendItemQueryPacket(temp)
-    player.AddItem(temp.GetEntry(), 1)
-}
-
-export function createItemWithChoices(player: TSPlayer, i1: uint32, i2: uint32, level: uint32, statType: uint32): TSItem {
-    let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
-    temp = modifyItemProperties(temp, itemClassInfo[i1][i2], level, statType)
     player.SendItemQueryPacket(temp)
     return player.AddItem(temp.GetEntry(), 1)
 }
 
-function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, playerLevel: uint32, statType: uint32): TSItemTemplate {
+export function createItemWithChoices(player: TSPlayer, itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): TSItem {
+    let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
+    temp = modifyItemProperties(temp, itemClassInfo[itemType][itemSubType], level, statType)
+    player.SendItemQueryPacket(temp)
+    return player.AddItem(temp.GetEntry(), 1)
+}
+
+export function returnItemRandom(player: TSUnit): uint32 {
+    let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
+    temp = modifyItemProperties(temp, chooseItemType(), player.GetLevel(), getRandNumber(3))
+    return temp.GetEntry()
+}
+
+export function returnItemWithChoices(itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): uint32 {
+    let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
+    temp = modifyItemProperties(temp, itemClassInfo[itemType][itemSubType], level, statType)
+    return temp.GetEntry()
+}
+
+function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, level: uint32, statType: uint32): TSItemTemplate {
     const qualMult = qualityMultiplier[temp.GetQuality()]
-    const itemLevel: uint32 = ((playerLevel * 2) * qualMult) + 1
+    const itemLevel: uint32 = ((level * 2) * qualMult) + 1
 
     temp.SetItemLevel(itemLevel);
-    temp.SetRequiredLevel(playerLevel)
+    temp.SetRequiredLevel(level<=80?level:80)
     temp.SetQuality(GetRandQuality())
 
     temp.SetClass(itemInfo[0])
@@ -150,20 +162,20 @@ function getDisplayID(itemInfoArr: TSArray<float>, quality: uint32): uint32 {
 function getName(itemInfoArr: TSArray<float>, quality: uint32): string {
     let name = ""
     //base name
-    let q = QueryCharacters('SELECT name FROM custom_item_template_names WHERE nametype = 2 AND class = ' + itemInfoArr[0] + ' AND subclass = ' + itemInfoArr[1] + ' AND invtype = ' + itemInfoArr[2] + ' ORDER BY RAND() LIMIT 1')
+    let q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 2 AND class = ' + itemInfoArr[0] + ' AND subclass = ' + itemInfoArr[1] + ' AND invtype = ' + itemInfoArr[2] + ' ORDER BY RAND() LIMIT 1')
     while (q.GetRow()) {
         name = q.GetString(0)
     }
 
     if (quality > 2) {//prefix
-        let q = QueryCharacters('SELECT name FROM custom_item_template_names WHERE nametype = 1 ORDER BY RAND() LIMIT 1')
+        let q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 1 ORDER BY RAND() LIMIT 1')
         while (q.GetRow()) {
             name = q.GetString(0) + " " + name
         }
     }
 
     if (quality == 4 || quality == 5) {//suffix
-        q = QueryCharacters('SELECT name FROM custom_item_template_names WHERE  nametype = 3 ORDER BY RAND() LIMIT 1')
+        q = QueryWorld('SELECT name FROM custom_item_template_names WHERE  nametype = 3 ORDER BY RAND() LIMIT 1')
         while (q.GetRow()) {
             name += " " + q.GetString(0)
         }
@@ -183,7 +195,7 @@ function setupStartingID() {
 
 function setupDisplayIDDict() {
     //quality->class->invType->subclass->[displayIDs]
-    let q = QueryCharacters('SELECT * FROM custom_item_template_displays')
+    let q = QueryWorld('SELECT * FROM custom_item_template_displays')
     while (q.GetRow()) {
         displayDict[q.GetUInt32(0)][q.GetUInt32(1)][q.GetUInt32(3)][q.GetUInt32(2)].push(q.GetUInt32(4))
     }

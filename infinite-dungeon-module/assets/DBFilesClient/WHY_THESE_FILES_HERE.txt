@@ -1,0 +1,5 @@
+These files are written here so you can set your noggit project directory to your modules 'assets'.
+
+They are updated any time datascripts build, so you can safely leave them here and ignore them.
+
+Symlinks are also safe, so don't worry.
