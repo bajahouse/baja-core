@@ -26,7 +26,6 @@ export const Counter = options => {
   counter.SetWidth(width - 15)
 
   const input = Input({
-    mod: options.mod,
     width: counter.GetWidth() - 16,
     height: counter.GetHeight(),
     parent: counter,
