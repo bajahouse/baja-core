@@ -162,20 +162,20 @@ function getDisplayID(itemInfoArr: TSArray<float>, quality: uint32): uint32 {
 function getName(itemInfoArr: TSArray<float>, quality: uint32): string {
     let name = ""
     //base name
-    let q = QueryCharacters('SELECT name FROM custom_item_template_names WHERE nametype = 2 AND class = ' + itemInfoArr[0] + ' AND subclass = ' + itemInfoArr[1] + ' AND invtype = ' + itemInfoArr[2] + ' ORDER BY RAND() LIMIT 1')
+    let q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 2 AND class = ' + itemInfoArr[0] + ' AND subclass = ' + itemInfoArr[1] + ' AND invtype = ' + itemInfoArr[2] + ' ORDER BY RAND() LIMIT 1')
     while (q.GetRow()) {
         name = q.GetString(0)
     }
 
     if (quality > 2) {//prefix
-        let q = QueryCharacters('SELECT name FROM custom_item_template_names WHERE nametype = 1 ORDER BY RAND() LIMIT 1')
+        let q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 1 ORDER BY RAND() LIMIT 1')
         while (q.GetRow()) {
             name = q.GetString(0) + " " + name
         }
     }
 
     if (quality == 4 || quality == 5) {//suffix
-        q = QueryCharacters('SELECT name FROM custom_item_template_names WHERE  nametype = 3 ORDER BY RAND() LIMIT 1')
+        q = QueryWorld('SELECT name FROM custom_item_template_names WHERE  nametype = 3 ORDER BY RAND() LIMIT 1')
         while (q.GetRow()) {
             name += " " + q.GetString(0)
         }
@@ -195,7 +195,7 @@ function setupStartingID() {
 
 function setupDisplayIDDict() {
     //quality->class->invType->subclass->[displayIDs]
-    let q = QueryCharacters('SELECT * FROM custom_item_template_displays')
+    let q = QueryWorld('SELECT * FROM custom_item_template_displays')
     while (q.GetRow()) {
         displayDict[q.GetUInt32(0)][q.GetUInt32(1)][q.GetUInt32(3)][q.GetUInt32(2)].push(q.GetUInt32(4))
     }
