@@ -90,7 +90,15 @@ export const itemClassInfo: TSArray<TSArray<TSArray<float>>> = [//class,subclass
         [4, 0, 23, 4, 3, 0.4],//offhand tome
         [4, 6, 14, 1, 6, 0.4],//shield
     ]
-];
+]
+
+export const armorScalar = [
+    0,//unused
+    1,//cloth
+    2,//leather
+    4,//mail
+    8,//plate unused
+]
 
 export const qualityMultiplier = [
     0.5,//no quality 0
