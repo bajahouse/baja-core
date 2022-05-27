@@ -25,7 +25,7 @@ export const spellsList = [
     ],
     [
         [0 /*Paladin*/],
-        [3127, 9116, 107, 635, 465, 20271], // Parry, Block, Shield, Holy Light(1), Devotion Aura(1), Seal of Righteousness, Judgement of Light
+        [3127, 9116, 107, 635, 465, 20271, 21084], // Parry, Block, Shield, Holy Light(1), Devotion Aura(1), Seal of Righteousness, Judgement of Light
         [35395], // Crusader Strike
         [639, 53408], // Holy Light(2), Judgement of Wisdom
         [853], // Hammer of Justice (1)
@@ -48,7 +48,7 @@ export const spellsList = [
     ],
     [
         [0 /*Hunter*/],
-        [3127, 8737, 1978, 3044, 982, 1515, 883, 136, 6691, 5011, 264, 266], // Parry, Mail, Serpent Sting (1),  Arcane Shot (1),  Revive Pet, Tame Beast, Call Pet, Feed Pet, Mend Pet, crossbows, bows, guns
+        [3127, 8737, 1978, 3044, 982, 1515, 883, 136, 136, 5011, 264, 266], // Parry, Mail, Serpent Sting (1),  Arcane Shot (1),  Revive Pet, Tame Beast, Call Pet, Feed Pet, Mend Pet, crossbows, bows, guns
         [136, 13795, 674], // Immolation Trap (1)
         [34026, 13549, 56641, 14281], // Kill Command,  Serpent Sting (2),  Steady Shot (1),  Arcane Shot (2)
         [3111, 781, 5116], // Mend Pet (2),  Disengage,  Concussive Shot,
@@ -62,7 +62,7 @@ export const spellsList = [
         [13543, 13553], // Mend Pet (6),  Serpent Sting (6),
         [14286, 1543], // Arcane Shot (7), Flare
         [13544, 27022, 19263], // Mend Pet (7),  Volley (4), Deterrence
-        [13809, 14290, 13554, 14287], // Frost Trap,  Multi Shot (1-4), Serpent Sting (7),  Arcane Shot (8)
+        [13809, 2643, 13554, 14287], // Frost Trap,  Multi Shot (1), Serpent Sting (7),  Arcane Shot (8)
         [27046, 58431, 61005], // Mend Pet (8),  Volley (5), Kill Shot (2)
         [13555, 49051, 27019], // Serpent Sting (8), Steady Shot (3),  Arcane Shot (9)
         [48989, 49047, 25295], // Mend Pet (9),  Multi Shot (5-7), Serpent Sting (9),
@@ -94,14 +94,14 @@ export const spellsList = [
     ],
     [
         [0 /*Priest*/],
-        [17, 139, 589, 8092, 2944], // Power Word Shield (1), Renew (1),  Shadow Word Pain (1), Mind Blast (1),  Devouring Plague (1)
-        [2061, 14914], // Flash Heal (1),  Holy Fire (1)
+        [17, 139, 589, 8092, 2944, 1243, 585], // Power Word Shield (1), Renew (1),  Shadow Word Pain (1), Mind Blast (1),  Devouring Plague (1), Power Word Fortitude(1), Smite (1)
+        [2061, 14914, 2060, 2050, 591], // Flash Heal (1),  Holy Fire (1), Greater Heal (1), Lesser Heal (1), Smite (2)
         [598, 8122], // Smite (3), Psychic Scream (1)
-        [600, 6075, 992], // Power Word Shield (3), Renew (3),  Shadow Word Pain (4)
+        [600, 6075, 992, 19236], // Power Word Shield (3), Renew (3),  Shadow Word Pain (4), Desperate Prayer(1)
         [15237, 1004, 8104, 15473], // Holy Nova, Smite (5),  Mind Blast (4), Shadowform
         [3747, 15264, 32379], // Power Word Shield (4), Holy Fire (4),  Shadow Word Death (1)
         [19238, 19279], // Desperate Prayer (2),  Devouring Plague (5)
-        [15431, 48171], // Holy Nova (2), Resurrection (7)
+        [15431, 2006, 34861], // Holy Nova (2), Resurrection (1), Circle of Healing (1)
         [596, 25367], // Prayer of Healing (1), Shadow Word Pain (9)
         [10963, 10947, 48157], // Greater Heal (2),  Mind Blast (9), Shadow Word Death (3)
         [10898, 27800], // Power Word Shield (7), Holy Nova (5)
@@ -111,7 +111,7 @@ export const spellsList = [
         [10900, 27801], // Power Word Shield (9), Holy Nova (6)
         [34863, 48045], // Circle of Healing (2), Mind Sear
         [25364, 48158], // Smite (10),  Shadow Word Death (4)
-        [25218, 48113], // Power Word Shield (12),  Prayer of Mending (3)
+        [25218, 33076], // Power Word Shield (12),  Prayer of Mending (1)
         [34866, 48068], // Circle of Healing (5), Renew (14)
         [48066, 64843], // Power Word Shield (14),  Divine Hymn
     ],
@@ -141,39 +141,39 @@ export const spellsList = [
     [
         [0 /*Shaman*/],
         [8042, 8050, 8056, 403, 331, 8737], // Earth Shock (1),  Flame Shock (1),  Frost Shock (1),  Lightning Bolt (1), Healing Wave (1), Mail
-        [915, 324, 8024, 8033, 10399], // Lightning Bolt (4), Lightning shield, Flametongue Weapon (1), Frostbrand Weapon (1),  Rockbiter Weapon (4)
-        [943, 8058, 52127, 674], // Lightning Bolt (5), Frost Shock (2),  Water Shield
-        [8046, 8053, 10466, 913], // Earth Shock (4),  Flame Shock (3),  Lesser Healing Wave (4),  Healing Wave (4)
-        [66843, 6364, 8075, 8512, 5675], // Call of Ancestors,  Searing Totem (1),  Strength of Earth (1),  Windfury Totem (1), Mana Spring Totem
-        [421, 10622, 51991], // Chain Lightning (1),  Chain Heal (2), Earthliving Weapon (3)
+        [915, 324, 8024, 8033, 8017], // Lightning Bolt (4), Lightning shield, Flametongue Weapon (1), Frostbrand Weapon (1),  Rockbiter Weapon (1)
+        [943, 8058, 52127, 674, 8232], // Lightning Bolt (5), Frost Shock (2),  Water Shield, WIndfury Weapon (1)
+        [8046, 8053, 8004, 913], // Earth Shock (4),  Flame Shock (3),  Lesser Healing Wave (1),  Healing Wave (4)
+        [66843, 3599, 8075, 8512, 5675], // Call of Ancestors,  Searing Totem (1),  Strength of Earth (1),  Windfury Totem (1), Mana Spring Totem
+        [421, 1064, 51730], // Chain Lightning (1),  Chain Heal (1), Earthliving Weapon (1)
         [10431, 16342], // Lightning Shield (6), Flametongue Weapon (6)
         [15208, 10395], // Lightning Bolt (10),  Healing Wave (8)
-        [2860, 25567], // Chain Lightning (3),  Healing Stream Totem (6)
+        [2860, 5394], // Chain Lightning (3),  Healing Stream Totem (1)
         [51505, 16355, 10413], // Lava Burst, Frostbrand Weapon (4),  Earth Shock (6)
         [2645, 20608, 49276, 25422], // Ghost Wolf, Reincarnation,  Lesser Healing Wave (9),  Chain Heal (4)
         [10473, 58704, 58643, 58744], // Frost Shock (4),  Searing Totem (10), Strength of Earth (8),  Mana Spring Totem (8)
         [2894, 58785], // Fire Elemental Totem, Flametongue Weapon (8)
         [25449, 49233, 25396], // Lightning Bolt (12),  Flame Shock (9),  Healing Wave (12)
-        [58796, 49277], // Frostbrand Weapon (9),  Ancestral Spirit (7)
-        [49271, 61300, 55459], // Chain Lightning (8),  Riptide (3),  Chain Heal (7)
+        [58796, 2008], // Frostbrand Weapon (9),  Ancestral Spirit (1)
+        [49271, 61295, 55459], // Chain Lightning (8),  Riptide (1),  Chain Heal (7)
         [49238, 49236], // Lightning Bolt (14),  Frost Shock (7)
         [60043, 49231], // Lava Burst (2), Earth Shock (10)
-        [59158, 49284, 49273], // Thunderstorm (3), Earth Shield, Healing Wave 14
+        [51490, 974, 49273], // Thunderstorm (1), Earth Shield (1), Healing Wave 14
         [51514, 58804], // Hex,  Windfury Weapon (8)
     ],
     [
         [0 /*Mage*/],
-        [5504, 587, 2136, 116], // Conjure Water (1), Conjure Food (1), Fire Blast (1), Frostbolt (1)
-        [1463, 122], // Mana Shield, Frost Nova (1)
-        [1953, 10], // Blink (1), Blizzard (1)
+        [5504, 587, 2136, 116, 133], // Conjure Water (1), Conjure Food (1), Fire Blast (1), Frostbolt (1), Fireball (1)
+        [1463, 122, 5143], // Mana Shield, Frost Nova (1), Arcane Missles (1)
+        [1953, 10, 31661], // Blink (1), Blizzard (1), Dragon's Breath (1)
         [2139, 1449], // Counterspell,  Arcane Explosion (1)
         [118, 8401, 8407], // Polymorph (1), Fireball (6), Frostbolt (6)
         [6127, 6129], // Conjure Water (4), Conjure Food (4)
-        [10157, 8427], // Arcane Intelligence (5),  Blizzard (3)
+        [1459, 8427], // Arcane Intelligence (1),  Blizzard (3)
         [30451, 27075, 8438], // Arcane Blast (1),  Arcane Missiles (9),  Arcane Explosion (3)
         [12051], // Evocation
         [66, 120], // Invisibility,  Cone of Cold (1)
-        [27131], // Mana Shield (7)
+        [27131, 44425], // Mana Shield (7), Arcane Barrage (1)
         [10201], // Arcane Explosion (5)
         [10150, 8492, 10181], // Fireball (10), Cone of Cold (2), Frostbolt (10)
         [10161, 10187], // Cone of Cold (5) Blizzard (6)
@@ -182,14 +182,14 @@ export const spellsList = [
         [42897, 42931], // Arcane Blast (4),  Cone of Cold (8)
         [44780, 55342], // Arcane Barrage (2),  Mirror Image,
         [42833, 42940, 42842], // Fireball (16), Blizzard (9), Frostbolt (16)
-        [58659, 44781, 47610, 42950], // Ritual of Refreshment, Arcane Barrage (3), Frostfire Bolt (2), Dragon's Breath (6)
+        [43987, 44781, 44614, 42950], // Ritual of Refreshment, Arcane Barrage (3), Frostfire Bolt (1), Dragon's Breath (6)
     ],
     [
         [0 /*Warlock*/],
-        [172, 688, 348], // Corruption (1),  Imp,  Immolate (1)
+        [172, 688, 348, 980,603, 686], // Corruption (1),  Imp,  Immolate (1), CUrse of Agony (1), Curse of Doom (1), Shadow Bolt (1)
         [5782, 6201, 1120], // Drain Soul(1), Fear (1),  Healthstone
         [1454, 1014, 689], // Life Tap (1),  Curse of Agony, Drain Life (1)
-        [5740, 705], // Rain of Fire,  Shadowbolt (3)
+        [5740, 705, 17877,30283],  // Rain of Fire,  Shadowbolt (3), Shadow Burn(1), Shadowfury (1)
         [7648, 1490, 18868], // Corruption (4),  Curse of Elements (1),  Shadowburn
         [11687, 11665], // Life Tap (4),  Immolate (5)
         [6217, 29722], // Curse of Agony (3),  Incinerate (1)
@@ -210,8 +210,8 @@ export const spellsList = [
     [[0] /*Empty Slot*/],
     [
         [0 /*Druid*/],
-        [8921, 774, 8936], // Moonfire (1),  Rejuvenation (1), Regrowth (1)
-        [339, 5178, 2921, 5229, 768, 1082], // Entangling Roots (1),  Wrath (3),  Starfire (1), Enrage, Cat Form, Claw
+        [8921, 774, 8936, 5176, 5185], // Moonfire (1),  Rejuvenation (1), Regrowth (1), Wrath (1), Healing Touch (1)
+        [339, 5178, 2912, 5229, 768, 1082], // Entangling Roots (1),  Wrath (3),  Starfire (1), Enrage, Cat Form, Claw
         [770, 8925, 674], // Faerie Fire, Moonfire (3)
         [5211, 6808, 5487, 779, 1079, 6795, 33876, 33878], // Bash,  Maul, Bear Form,  Swipe (Bear), Rip (1),  Growl,  Mangle (1)
         [16914, 6780], // Hurricane (1), Wrath (6),
@@ -219,7 +219,7 @@ export const spellsList = [
         [5215, 1822, 5217, 5221, 1850, 48438, 33763], // Prowl, Rake (1), Tigers Fury (1),  Shred (1),  Dash (1), Wild Growth
         [9912, 9835, 2090], // Wrath (8), Moonfire (10),  Rejuvenation (4)
         [5201, 9745, 8992, 9493], // Claw (3),  Maul (5), Shred (3),  Rip (3)
-        [27012, 9750, 50763, 33983, 1824], // Hurricane (4), Regrowth (6), Revive (7), Rake (3), Mangle (3)
+        [27012, 9750, 50769, 33983, 1824], // Hurricane (4), Regrowth (6), Revive (7), Rake (3), Mangle (3)
         [26986, 6787, 62078, 33987], // Starfire (8),  Ravage (2), Swipe Cat Mangle(3)
         [9005, 9634, 22827], // Pounce,  Dire Bear Form, Ferocious Bite (2)
         [20719, 9904, 26997, 9840], // Feline Grace,  Rake (4), Swipe Bear (6), Rejuvenation (9)
@@ -229,6 +229,6 @@ export const spellsList = [
         [48461, 48574, 48443], // Wrath (12),  Rake (7), Regrowth (12)
         [48465, 50464], // Starfire (10), Nourish (1)
         [53308, 49800], // Entangling Roots (8),  Rip (9)
-        [48568, 48572, 48579, 53251, 48477, 48447], // Lacerate (3),  Shred (9),  Ravage (7), Wild Growth (3),  Rebirth (7),  Tranquility (7)
+        [48568, 48572, 48579, 53251, 20484, 48447], // Lacerate (3),  Shred (9),  Ravage (7), Wild Growth (3),  Rebirth (7),  Tranquility (7)
     ],
 ];
