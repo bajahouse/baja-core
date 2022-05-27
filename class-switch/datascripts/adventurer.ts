@@ -18,3 +18,22 @@ ADVENTURER.UI.Description.set("After the War Against the Nightmare, the inhabita
 
 ADVENTURER.Stats.ParryCap.set(100)
 ADVENTURER.Stats.DodgeCap.set(100)
+
+std.SkillLines.forEach((line)=>{
+    if(line.Category.get() == 7)
+    {
+        line.RaceClassInfos.forEach((v,i)=>{
+            v.ClassMask.add(ADVENTURER.Mask)
+            v.RaceMask.clearAll()
+            v.RaceMask.flip()
+        })
+    }
+})
+
+std.DBC.SkillLineAbility.queryAll({RaceMask:0}).forEach(v=>{
+    if(v.ClassMask.get() != 0)
+    {
+        v.ClassMask.mark(ADVENTURER.ID -1)
+        v.RaceMask.markAll([0,1,2,3,4,5,6,7,8,9])
+    }
+})
