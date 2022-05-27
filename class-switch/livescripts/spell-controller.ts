@@ -42,10 +42,11 @@ export function spellController(events: TSEvents) {
 }
 
 function swapChosenClass(player: TSPlayer, newClassChoice: uint32) {
-    if (newClassChoice > 11 || newClassChoice <= 0 || newClassChoice == 6 || newClassChoice == 11)
+    if (newClassChoice > 11 || newClassChoice <= 0 || newClassChoice == 6 || newClassChoice == 10)
         return
     if (player.IsInCombat())
         return
+
     controlSpells(player, PlayerClassInfo.get(player).currentClassID, false)
     PlayerClassInfo.get(player).currentClassID = newClassChoice
     PlayerClassInfo.get(player).Save()
@@ -55,15 +56,20 @@ function swapChosenClass(player: TSPlayer, newClassChoice: uint32) {
 function controlSpells(player: TSPlayer, chosenClass: uint32, learn: bool) {
     let curLevel = player.GetLevel();
     let curClassSpells = spellsList[chosenClass];
-    for (let j = 1; j < curClassSpells.length; j++) {
-        let spells = curClassSpells[j];
-        for (let i = 0; i < spells.length; i++) {
-            if (learn) {
+    if (learn) {
+        for (let j = 1; j < curClassSpells.length; j++) {
+            let spells = curClassSpells[j];
+            for (let i = 0; i < spells.length; i++) {
                 if (j <= curLevel && !player.HasSpell(spells[i])) {
                     player.LearnSpell(spells[i]);
                 }
-            } else {
-                player.RemoveSpell(spells[i], false, false)
+            }
+        }
+    } else {
+        for (let j = curClassSpells.length - 1; j > 0; j--) {
+            let spells = curClassSpells[j];
+            for (let i = 0; i < spells.length; i++) {
+                player.RemoveSpell(spells[i],false,false);
             }
         }
     }
