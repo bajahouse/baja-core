@@ -42,7 +42,7 @@ export function spellController(events: TSEvents) {
 }
 
 function swapChosenClass(player: TSPlayer, newClassChoice: uint32) {
-    if (newClassChoice > 11 || newClassChoice <= 0 || newClassChoice == 6 || newClassChoice == 10)
+    if (newClassChoice > 11 || newClassChoice <= 0 || newClassChoice == 6 || newClassChoice == 10 || PlayerClassInfo.get(player).currentClassID == newClassChoice)
         return
     if (player.IsInCombat())
         return

@@ -151,7 +151,7 @@ export const spellsList = [
         [2860, 5394], // Chain Lightning (3),  Healing Stream Totem (1)
         [51505, 16355, 10413], // Lava Burst, Frostbrand Weapon (4),  Earth Shock (6)
         [2645, 20608, 49276, 25422], // Ghost Wolf, Reincarnation,  Lesser Healing Wave (9),  Chain Heal (4)
-        [10473, 58704, 58643, 58744], // Frost Shock (4),  Searing Totem (10), Strength of Earth (8),  Mana Spring Totem (8)
+        [10473, 58704, 58643], // Frost Shock (4),  Searing Totem (10), Strength of Earth (8)
         [2894, 58785], // Fire Elemental Totem, Flametongue Weapon (8)
         [25449, 49233, 25396], // Lightning Bolt (12),  Flame Shock (9),  Healing Wave (12)
         [58796, 2008], // Frostbrand Weapon (9),  Ancestral Spirit (1)
