@@ -4,7 +4,7 @@ export function rageGeneration(events: TSEvents) {
     events.Unit.OnMeleeDamageLate((info, damage, type, index) => {
         if (info.GetAttacker().GetClass() == adventererID) {
             let attacker = info.GetAttacker()
-            let addRage;
+            let addRage = 0;
             let rageconversion = ((0.0091107836 * attacker.GetLevel() * attacker.GetLevel()) + 3.225598133 * attacker.GetLevel()) + 4.2652911;
             if (attacker.GetLevel() > 70)
                 rageconversion += 13.27 * (attacker.GetLevel() - 70);
