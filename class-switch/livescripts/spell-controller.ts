@@ -17,14 +17,17 @@ export class PlayerClassInfo extends DBEntry {
         return player.GetObject('PlayerClassInfo', LoadDBEntry(new PlayerClassInfo(player.GetGUID())))
     }
 }
+
 const adventurerClassID = GetIDTagUnique('class-switcher', 'adventurer-class')
+const classAuras: TSArray<uint32> = GetIDTag('class-switcher', 'class-auras')
+
 export function spellController(events: TSEvents) {
     events.Player.OnLogin((player, first) => {
         if (player.GetClass() == adventurerClassID) {
             if (first) {
                 controlSpells(player, PlayerClassInfo.get(player).currentClassID, true)
             }
-            //applyClassAura(player,PlayerClassInfo.get(player).currentClassID)
+            player.AddAura(classAuras[PlayerClassInfo.get(player).currentClassID - 1], player)
         }
     })
     events.Player.OnLevelChanged((player, oldLevel) => {
@@ -32,10 +35,10 @@ export function spellController(events: TSEvents) {
             controlSpells(player, PlayerClassInfo.get(player).currentClassID, true)
     })
 
-    events.CustomPacketID.OnReceive(classSwapID,(opcide,packet,player)=>{
+    events.CustomPacketID.OnReceive(classSwapID, (opcode, packet, player) => {
         let pkt = new classSwap(1)
         pkt.read(packet)
-        if (player.GetClass() == adventurerClassID) 
+        if (player.GetClass() == adventurerClassID)
             swapChosenClass(player, pkt.classID)
     })
 }
@@ -56,6 +59,10 @@ function controlSpells(player: TSPlayer, chosenClass: uint32, learn: bool) {
     let curLevel = player.GetLevel();
     let curClassSpells = spellsList[chosenClass];
     if (learn) {
+        if (chosenClass == 11)
+            player.AddAura(classAuras[9], player)
+        else
+            player.AddAura(classAuras[chosenClass - 1], player)
         for (let j = 1; j < curClassSpells.length; j++) {
             let spells = curClassSpells[j];
             for (let i = 0; i < spells.length; i++) {
@@ -65,10 +72,19 @@ function controlSpells(player: TSPlayer, chosenClass: uint32, learn: bool) {
             }
         }
     } else {
+        if (chosenClass == 11) {
+            if (player.HasAura(classAuras[9]))
+                player.RemoveAura(classAuras[9])
+        }
+        else {
+            if (player.HasAura(classAuras[chosenClass - 1]))
+                player.RemoveAura(classAuras[chosenClass - 1])
+        }
+
         for (let j = curClassSpells.length - 1; j > 0; j--) {
             let spells = curClassSpells[j];
             for (let i = 0; i < spells.length; i++) {
-                player.RemoveSpell(spells[i],false,false);
+                player.RemoveSpell(spells[i], false, false);
             }
         }
     }
