@@ -1,3 +1,4 @@
+import { classSwap, classSwapID } from "../shared/Messages";
 import { spellsList } from "./spells";
 
 @CharactersTable
@@ -31,13 +32,11 @@ export function spellController(events: TSEvents) {
             controlSpells(player, PlayerClassInfo.get(player).currentClassID, true)
     })
 
-    events.Player.OnCommand((player, command, found) => {
-        let split = command.get().split(" ")
-
-        if (split[0] == "classswap" && player.GetClass() == adventurerClassID) {
-            found.set(true)
-            swapChosenClass(player, ToUInt32(split[1]))
-        }
+    events.CustomPacketID.OnReceive(classSwapID,(opcide,packet,player)=>{
+        let pkt = new classSwap(1)
+        pkt.read(packet)
+        if (player.GetClass() == adventurerClassID) 
+            swapChosenClass(player, pkt.classID)
     })
 }
 
