@@ -1,4 +1,4 @@
-import { classSwap, classSwapID, unlockClassInfo } from "../shared/Messages";
+import { classSwap, classSwapID, maxClassID, unlockClassInfo } from "../shared/Messages";
 import { spellsList } from "./spells";
 
 @CharactersTable
@@ -8,9 +8,9 @@ export class PlayerClassInfo extends DBEntry {
     @DBField
     currentClassID: uint32 = 1;
     @DBField
-    unlockedClasses: string = '0,1,0,0,0,0,0,0,0,0,0,0'
+    unlockedString: string = '0,1,0,0,0,0,0,0,0,0,0,0'//update for new class
 
-    unlockedArray: TSArray<uint32> = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    unlockedArray: TSArray<uint32> = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]//should match above
 
     constructor(player: uint64) {
         super();
@@ -22,7 +22,7 @@ export class PlayerClassInfo extends DBEntry {
     }
 
     updateUnlockArray() {
-        this.unlockedClasses.split(',').forEach((v, i) => {
+        this.unlockedString.split(',').forEach((v, i) => {
             this.unlockedArray[i] = v == '1' ? 1 : 0
         })
     }
@@ -31,9 +31,9 @@ export class PlayerClassInfo extends DBEntry {
         this.unlockedArray[classID] = 1
         new unlockClassInfo(this.currentClassID, this.unlockedArray).write().SendToPlayer(player)
 
-        let a: TSArray<string> = this.unlockedClasses.split(",");
+        let a: TSArray<string> = this.unlockedString.split(",");
         a[classID] = '1';
-        this.unlockedClasses = a.join(",")
+        this.unlockedString = a.join(",")
         this.Save()
     }
 }
@@ -70,7 +70,7 @@ export function spellController(events: TSEvents) {
 }
 
 function swapChosenClass(player: TSPlayer, newClassChoice: uint32) {
-    if (newClassChoice > 11 || newClassChoice <= 0 || newClassChoice == 6 || newClassChoice == 10 || PlayerClassInfo.get(player).currentClassID == newClassChoice)
+    if (newClassChoice > maxClassID || newClassChoice <= 0 || newClassChoice == 6 || newClassChoice == 10 || PlayerClassInfo.get(player).currentClassID == newClassChoice)
         return
     if (player.IsInCombat())
         return
@@ -87,8 +87,8 @@ function controlSpells(player: TSPlayer, chosenClass: uint32, learn: bool) {
     let curLevel = player.GetLevel();
     let curClassSpells = spellsList[chosenClass];
     if (learn) {
-        if (chosenClass == 11)
-            player.AddAura(classAuras[9], player)
+        if (chosenClass >= 11)
+            player.AddAura(classAuras[chosenClass-2], player)
         else
             player.AddAura(classAuras[chosenClass - 1], player)
         for (let j = 1; j < curClassSpells.length; j++) {
@@ -100,9 +100,9 @@ function controlSpells(player: TSPlayer, chosenClass: uint32, learn: bool) {
             }
         }
     } else {
-        if (chosenClass == 11) {
-            if (player.HasAura(classAuras[9]))
-                player.RemoveAura(classAuras[9])
+        if (chosenClass >= 11) {
+            if (player.HasAura(classAuras[chosenClass-2]))
+                player.RemoveAura(classAuras[chosenClass-2])
         }
         else {
             if (player.HasAura(classAuras[chosenClass - 1]))

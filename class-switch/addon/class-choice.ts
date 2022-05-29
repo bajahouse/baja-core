@@ -1,9 +1,9 @@
-import { classSwap, unlockClassInfo, unlockClassInfoID } from "../shared/Messages"
+import { classSwap, maxClassID, unlockClassInfo, unlockClassInfoID } from "../shared/Messages"
 
 let unlocked = []
 let curClassID = 1
 
-let names = [
+let names = [//update with new class
     "Warrior",
     "Paladin",
     "Hunter",
@@ -16,7 +16,7 @@ let names = [
     "Druid",
 ]
 
-let textures = [
+let textures = [//update with new class
     "inv_sword_27",
     "inv_hammer_01",
     "inv_weapon_bow_07",
@@ -80,7 +80,7 @@ export function ClassSelector() {
             mframe.Hide()
         } else {
             shown = true
-            if (curClassID == 11)
+            if (curClassID >= 11)
                 curClassTexture.SetTexture('Interface\\Icons\\' + textures[curClassID - 2])
             else
                 curClassTexture.SetTexture('Interface\\Icons\\' + textures[curClassID - 1])
@@ -102,7 +102,7 @@ export function ClassSelector() {
     })
 
     function createButtons() {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < maxClassID-1; i++) {
             let button = CreateFrame("Button", 'class' + i, mframe)
             button.SetPoint("CENTER", mframe, "CENTER", -120 + (i % 5) * 60, 60 + -65 * (Math.floor(i / 5) + 1))
             button.SetSize(50, 50)
@@ -152,7 +152,7 @@ export function ClassSelector() {
                 let pkt = new classSwap(button.GetID())
                 pkt.write().Send()
                 curClassID = button.GetID()
-                if (button.GetID() == 11)
+                if (button.GetID() >= 11)
                     curClassTexture.SetTexture('Interface\\Icons\\' + textures[button.GetID() - 2])
                 else
                     curClassTexture.SetTexture('Interface\\Icons\\' + textures[button.GetID() - 1])
