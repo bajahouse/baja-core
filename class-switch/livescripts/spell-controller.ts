@@ -1,4 +1,4 @@
-import { classSwap, classSwapID } from "../shared/Messages";
+import { classSwap, classSwapID, unlockClassInfo } from "../shared/Messages";
 import { spellsList } from "./spells";
 
 @CharactersTable
@@ -7,6 +7,10 @@ export class PlayerClassInfo extends DBEntry {
     player: uint64 = 0
     @DBField
     currentClassID: uint32 = 1;
+    @DBField
+    unlockedClasses: string = '0,1,0,0,0,0,0,0,0,0,0,0'
+
+    unlockedArray: TSArray<uint32> = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     constructor(player: uint64) {
         super();
@@ -15,6 +19,22 @@ export class PlayerClassInfo extends DBEntry {
 
     static get(player: TSPlayer): PlayerClassInfo {
         return player.GetObject('PlayerClassInfo', LoadDBEntry(new PlayerClassInfo(player.GetGUID())))
+    }
+
+    updateUnlockArray() {
+        this.unlockedClasses.split(',').forEach((v, i) => {
+            this.unlockedArray[i] = v == '1' ? 1 : 0
+        })
+    }
+
+    unlockClass(classID: uint32, player: TSPlayer) {
+        this.unlockedArray[classID] = 1
+        new unlockClassInfo(this.currentClassID, this.unlockedArray).write().SendToPlayer(player)
+
+        let a: TSArray<string> = this.unlockedClasses.split(",");
+        a[classID] = '1';
+        this.unlockedClasses = a.join(",")
+        this.Save()
     }
 }
 
@@ -26,7 +46,9 @@ export function spellController(events: TSEvents) {
         if (player.GetClass() == adventurerClassID) {
             if (first) {
                 controlSpells(player, PlayerClassInfo.get(player).currentClassID, true)
+                PlayerClassInfo.get(player).unlockClass(2, player)
             }
+            PlayerClassInfo.get(player).updateUnlockArray()
             player.AddAura(classAuras[PlayerClassInfo.get(player).currentClassID - 1], player)
         }
     })
@@ -39,7 +61,11 @@ export function spellController(events: TSEvents) {
         let pkt = new classSwap(1)
         pkt.read(packet)
         if (player.GetClass() == adventurerClassID)
-            swapChosenClass(player, pkt.classID)
+            if (pkt.classID == 50) {
+                new unlockClassInfo(PlayerClassInfo.get(player).currentClassID, PlayerClassInfo.get(player).unlockedArray).write().SendToPlayer(player)
+            } else {
+                swapChosenClass(player, pkt.classID)
+            }
     })
 }
 
@@ -47,6 +73,8 @@ function swapChosenClass(player: TSPlayer, newClassChoice: uint32) {
     if (newClassChoice > 11 || newClassChoice <= 0 || newClassChoice == 6 || newClassChoice == 10 || PlayerClassInfo.get(player).currentClassID == newClassChoice)
         return
     if (player.IsInCombat())
+        return
+    if (!PlayerClassInfo.get(player).unlockedArray[newClassChoice])
         return
 
     controlSpells(player, PlayerClassInfo.get(player).currentClassID, false)
