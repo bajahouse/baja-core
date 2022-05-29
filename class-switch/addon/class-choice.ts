@@ -29,6 +29,8 @@ let textures = [//update with new class
     "inv_misc_monsterclaw_04",
 ]
 
+const iconLocation = 'Interface\\Icons\\'
+
 export function ClassSelector() {
     let pkt = new classSwap(50)
     pkt.write().Send()
@@ -62,8 +64,6 @@ export function ClassSelector() {
     currentClass.SetPoint("TOP", mframe, "TOP", 0, -25)
     currentClass.SetSize(64, 64)
     let curClassTexture = currentClass.CreateTexture("tex1", "BACKGROUND")
-
-    //curClassTexture.SetTexture("Interface\\Icons\\Ability_Creature_Cursed_04")
     curClassTexture.SetAllPoints(currentClass)
     curClassTexture.SetPoint("CENTER", 0, 0)
 
@@ -71,7 +71,7 @@ export function ClassSelector() {
     showBtn.SetSize(22, 22)
     showBtn.SetPoint("TOPRIGHT", -140, -45)
     let showTex = showBtn.CreateTexture("", "BACKGROUND")
-    showTex.SetTexture("Interface\\BUTTONS\\UI-GroupLoot-Dice-Up.blp")
+    showTex.SetTexture(iconLocation + "UI-GroupLoot-Dice-Up.blp")
     showTex.SetAllPoints(showBtn)
     showBtn.HookScript("OnClick", (frame, evName, btnDown) => {
         if (shown) {
@@ -81,9 +81,9 @@ export function ClassSelector() {
         } else {
             shown = true
             if (curClassID >= 11)
-                curClassTexture.SetTexture('Interface\\Icons\\' + textures[curClassID - 2])
+                curClassTexture.SetTexture(iconLocation + textures[curClassID - 2])
             else
-                curClassTexture.SetTexture('Interface\\Icons\\' + textures[curClassID - 1])
+                curClassTexture.SetTexture(iconLocation + textures[curClassID - 1])
             createButtons()
             mframe.Show()
         }
@@ -116,7 +116,7 @@ export function ClassSelector() {
             })
             button.SetBackdropColor(0, 0, 0, 1)
             let tex = button.CreateTexture("tex1", "BACKGROUND")
-            tex.SetTexture('Interface\\Icons\\' + textures[i])
+            tex.SetTexture(iconLocation + textures[i])
             tex.SetAllPoints(button)
             tex.SetPoint("CENTER", 0, 0)
             let text1 = button.CreateFontString("", "OVERLAY", "GameFontNormal")
@@ -153,9 +153,9 @@ export function ClassSelector() {
                 pkt.write().Send()
                 curClassID = button.GetID()
                 if (button.GetID() >= 11)
-                    curClassTexture.SetTexture('Interface\\Icons\\' + textures[button.GetID() - 2])
+                    curClassTexture.SetTexture(iconLocation + textures[button.GetID() - 2])
                 else
-                    curClassTexture.SetTexture('Interface\\Icons\\' + textures[button.GetID() - 1])
+                    curClassTexture.SetTexture(iconLocation + textures[button.GetID() - 1])
             })
             allButtons.push(button)
         }
