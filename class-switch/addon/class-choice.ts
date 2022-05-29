@@ -144,6 +144,7 @@ export function ClassSelector() {
             // button.HookScript("OnLeave", () => {
             //     GameTooltip.Hide()
             // })
+
             button.HookScript("OnClick", () => {
                 let pkt = new classSwap(button.GetID())
                 pkt.write().Send()
@@ -156,7 +157,6 @@ export function ClassSelector() {
             allButtons.push(button)
         }
     }
-
 
     function clearButtons() {
         for (let i = 0; i < allButtons.length; i++) {
