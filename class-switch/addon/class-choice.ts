@@ -38,7 +38,7 @@ export function ClassSelector() {
     let allButtons = []
     let shown = false
     let mframe = CreateFrame("Frame", "ClassSelector", UIParent)
-    mframe.SetSize(350, 256)
+    mframe.SetSize(350, 146 + (Math.floor(names.length / 5) * 55))
     mframe.SetPoint("CENTER", -100, 0)
     mframe.EnableMouse(true)
     mframe.RegisterForDrag("LeftButton")
@@ -71,7 +71,7 @@ export function ClassSelector() {
     showBtn.SetSize(22, 22)
     showBtn.SetPoint("TOPRIGHT", -140, -45)
     let showTex = showBtn.CreateTexture("", "BACKGROUND")
-    showTex.SetTexture(iconLocation + "UI-GroupLoot-Dice-Up.blp")
+    showTex.SetTexture("Interface\\Buttons\\UI-GroupLoot-Dice-Up.blp")
     showTex.SetAllPoints(showBtn)
     showBtn.HookScript("OnClick", (frame, evName, btnDown) => {
         if (shown) {
@@ -102,9 +102,9 @@ export function ClassSelector() {
     })
 
     function createButtons() {
-        for (let i = 0; i < maxClassID-1; i++) {
+        for (let i = 0; i < maxClassID - 1; i++) {
             let button = CreateFrame("Button", 'class' + i, mframe)
-            button.SetPoint("CENTER", mframe, "CENTER", -120 + (i % 5) * 60, 60 + -65 * (Math.floor(i / 5) + 1))
+            button.SetPoint("TOP", mframe, "TOP", -120 + (i % 5) * 60, -50 + -65 * (Math.floor(i / 5) + 1))
             button.SetSize(50, 50)
             button.SetBackdrop({
                 bgFile: "Interface/TutorialFrame/TutorialFrameBackground",
@@ -115,7 +115,7 @@ export function ClassSelector() {
                 insets: { left: 4, right: 4, top: 4, bottom: 4 },
             })
             button.SetBackdropColor(0, 0, 0, 1)
-            let tex = button.CreateTexture("tex1", "BACKGROUND")
+            let tex = button.CreateTexture("tex1", "OVERLAY")
             tex.SetTexture(iconLocation + textures[i])
             tex.SetAllPoints(button)
             tex.SetPoint("CENTER", 0, 0)
@@ -123,20 +123,16 @@ export function ClassSelector() {
             text1.SetPoint("BOTTOM", 0, -10)
             text1.SetText(names[i])
 
-            if (i == 9) {//druid
-                button.SetID(i + 2)
-                if (unlocked[i + 2] == 0)//disables
-                {
-                    button.Disable()
-                    tex.SetAlpha(0.6)
-                }
-            } else {
-                button.SetID(i + 1)
-                if (unlocked[i + 1] == 0)//disables
-                {
-                    button.Disable()
-                    tex.SetAlpha(0.6)
-                }
+            let fakeID = i + 1
+            if (i >= 9) {//druid
+                fakeID++
+            }
+            button.SetID(fakeID)
+            if (unlocked[fakeID] == 0)//disables
+            {
+                button.Disable()
+                tex.SetAlpha(0.4)
+                text1.SetAlpha(0.4)
             }
 
             // button.HookScript("OnEnter", (self) => {
