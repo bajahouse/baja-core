@@ -1,8 +1,5 @@
 import { classSwap, maxClassID, unlockClassInfo, unlockClassInfoID } from "../shared/Messages"
 
-let unlocked = []
-let curClassID = 1
-
 let names = [//update with new class
     "Warrior",
     "Paladin",
@@ -30,6 +27,9 @@ let textures = [//update with new class
 ]
 
 const iconLocation = 'Interface\\Icons\\'
+//dont touch
+let unlocked = []
+let curClassID = 1
 
 export function ClassSelector() {
     let pkt = new classSwap(50)
