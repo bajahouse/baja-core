@@ -1,5 +1,5 @@
 import { rageGeneration } from "./rage-generation";
-import { spellController } from "./spell-controller";
+import { spellController } from "./class-controller";
 
 
 export function Main(events: TSEvents) {
