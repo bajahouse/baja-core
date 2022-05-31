@@ -94,7 +94,7 @@ function controlSpells(player: TSPlayer, chosenClass: uint32, learn: bool) {
         for (let j = 1; j < curClassSpells.length; j++) {
             let spells = curClassSpells[j];
             for (let i = 0; i < spells.length; i++) {
-                if (j <= curLevel && !player.HasSpell(spells[i])) {
+                if (j <= curLevel) {
                     player.LearnSpell(spells[i]);
                 }
             }
