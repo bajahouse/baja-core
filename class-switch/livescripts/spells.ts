@@ -1,6 +1,5 @@
-export const spellsList = [
-    [[0]], //must be here? I guess?
-    [
+export const spellsList = CreateDictionary<uint32,TSArray<TSArray<float>>>({
+    1:[
         [0 /*Warrior*/],
         [100, 78, 3127, 6673, 750, 674, 9116, 107, 2457], // Charge (1), Heroic Strike (1), Parry, Battle Shout (1), Plate Mail, Dual Wield, Shield, Block, Battle Stance (to ensure its there)
         [772], //  Rend (1)
@@ -23,7 +22,7 @@ export const spellsList = [
         [8205], // Thunderclap(4)
         [11565, 11572, 20660, 12294, 23922], // Heroic Strike(6), Rend(5), Execute(3), Cleave(3), Mortal Strike(1), Shield Slam(1)
     ],
-    [
+    2:[
         [0 /*Paladin*/],
         [3127, 9116, 107, 635, 465, 20271, 21084], // Parry, Block, Shield, Holy Light(1), Devotion Aura(1), Seal of Righteousness, Judgement of Light
         [35395], // Crusader Strike
@@ -46,7 +45,7 @@ export const spellsList = [
         [19941], // Flash of Light(4)
         [20922, 1032, 31884], // Consecration(3), Devotion Aura(5), Avenging Wrath
     ],
-    [
+    3:[
         [0 /*Hunter*/],
         [3127, 8737, 1978, 3044, 982, 1515, 883, 136, 136, 5011, 264, 266], // Parry, Mail, Serpent Sting (1),  Arcane Shot (1),  Revive Pet, Tame Beast, Call Pet, Feed Pet, Mend Pet, crossbows, bows, guns
         [136, 13795, 674], // Immolation Trap (1)
@@ -69,7 +68,7 @@ export const spellsList = [
         [58434, 49044], // Volley (6),  Arcane Shot (10)
         [48990, 49048, 49001, 61006, 49052, 49045], // Mend Pet (10), Multi Shot (8), Serpent Sting (10-12),  Kill Shot (3), Steady Shot (4),  Arcane Shot (11)
     ],
-    [
+    4:[
         [0 /*Rogue*/],
         [1752, 2098, 5171, 703, 1784], // Sinister Strike (1), Eviscerate (1), Slice and Dice (1), Garrote (1),  Stealth
         [8676, 1943, 6760], // Ambush (1),  Rupture (1),  Eviscerate (2)
@@ -92,7 +91,7 @@ export const spellsList = [
         [48667], // Eviscerate (11)
         [48657], // Backstab (12)
     ],
-    [
+    5:[
         [0 /*Priest*/],
         [17, 139, 589, 8092, 2944, 1243, 585], // Power Word Shield (1), Renew (1),  Shadow Word Pain (1), Mind Blast (1),  Devouring Plague (1), Power Word Fortitude(1), Smite (1)
         [2061, 14914, 2060, 2050, 591], // Flash Heal (1),  Holy Fire (1), Greater Heal (1), Lesser Heal (1), Smite (2)
@@ -115,7 +114,7 @@ export const spellsList = [
         [34866, 48068], // Circle of Healing (5), Renew (14)
         [48066, 64843], // Power Word Shield (14),  Divine Hymn
     ],
-    [
+    6:[
         [0 /*Deathknight*/], //starts at level 10
         [0],
         [0],
@@ -138,7 +137,7 @@ export const spellsList = [
         [49938, 49941, 49894, 51424], // Death and Decay (4),  Blood Boil (4),  Death Coil (4), Obliterate (3)
         [49895, 49930, 49921, 51425, 45529, 47568], // Death Coil (5), Blood Strike (6),  Plague Strike (6),  Obliterate (4), Blood Tap,  Empower Rune Weapon
     ],
-    [
+    7:[
         [0 /*Shaman*/],
         [8042, 8050, 8056, 403, 331, 8737], // Earth Shock (1),  Flame Shock (1),  Frost Shock (1),  Lightning Bolt (1), Healing Wave (1), Mail
         [915, 324, 8024, 8033, 8017], // Lightning Bolt (4), Lightning shield, Flametongue Weapon (1), Frostbrand Weapon (1),  Rockbiter Weapon (1)
@@ -161,7 +160,7 @@ export const spellsList = [
         [51490, 974, 49273], // Thunderstorm (1), Earth Shield (1), Healing Wave 14
         [51514, 58804], // Hex,  Windfury Weapon (8)
     ],
-    [
+    8:[
         [0 /*Mage*/],
         [5504, 587, 2136, 116, 133], // Conjure Water (1), Conjure Food (1), Fire Blast (1), Frostbolt (1), Fireball (1)
         [1463, 122, 5143], // Mana Shield, Frost Nova (1), Arcane Missles (1)
@@ -184,7 +183,7 @@ export const spellsList = [
         [42833, 42940, 42842], // Fireball (16), Blizzard (9), Frostbolt (16)
         [43987, 44781, 44614, 42950], // Ritual of Refreshment, Arcane Barrage (3), Frostfire Bolt (1), Dragon's Breath (6)
     ],
-    [
+    9:[
         [0 /*Warlock*/],
         [172, 688, 348, 980,603, 686], // Corruption (1),  Imp,  Immolate (1), CUrse of Agony (1), Curse of Doom (1), Shadow Bolt (1)
         [5782, 6201, 1120], // Drain Soul(1), Fear (1),  Healthstone
@@ -207,8 +206,7 @@ export const spellsList = [
         [47825], //Soul Fire (6)
         [47867], // Curse of Doom
     ],
-    [[0] /*Empty Slot*/],
-    [
+    11:[
         [0 /*Druid*/],
         [8921, 774, 8936, 5176, 5185], // Moonfire (1),  Rejuvenation (1), Regrowth (1), Wrath (1), Healing Touch (1)
         [339, 5178, 2912, 5229, 768, 1082], // Entangling Roots (1),  Wrath (3),  Starfire (1), Enrage, Cat Form, Claw
@@ -231,4 +229,4 @@ export const spellsList = [
         [53308, 49800], // Entangling Roots (8),  Rip (9)
         [48568, 48572, 48579, 53251, 20484, 48447], // Lacerate (3),  Shred (9),  Ravage (7), Wild Growth (3),  Rebirth (7),  Tranquility (7)
     ],
-];
+})
