@@ -30,7 +30,7 @@ std.SkillLines.forEach((line) => {
 })
 
 std.DBC.SkillLineAbility.queryAll({ RaceMask: 0 }).forEach(v => {
-    if (v.ClassMask.get() != 0) {
+    if (v.ClassMask.get() != 0 && v.AcquireMethod.get() == 0) {
         v.ClassMask.mark(ADVENTURER.ID - 1)
         v.RaceMask.markAll([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
     }
