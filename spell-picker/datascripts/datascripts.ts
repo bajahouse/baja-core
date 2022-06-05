@@ -14,10 +14,13 @@ interface AutoLearnOptions {
   DRUID?: AutoLearnClassOptions
 }
 
+type AutoLearnClassSpell = number[]
+interface AutoLearnFactionOptions { [key: string]: AutoLearnClassSpell }
+
 interface AutoLearnClassOptions {
-  ALLIANCE?: { [key: string]: number[] }
-  HORDE?: { [key: string]: number[] }
-  ALL?: { [key: string]: number[] }
+  ALLIANCE?: AutoLearnFactionOptions
+  HORDE?: AutoLearnFactionOptions
+  ALL?: AutoLearnFactionOptions
 }
 
 const WARRIOR_SPELLS = {
