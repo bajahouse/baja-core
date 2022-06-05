@@ -9,7 +9,6 @@ export function Main (events: TSEvents) {
     const list: TSArray<SpellPickerOption> = []
     while (query.GetRow()) {
       const spell_id = query.GetInt32(0)
-      console.log(spell_id)
       const first_spell_id = query.GetInt32(1)
       const classmask = query.GetInt32(2)
       const level = query.GetInt32(3)

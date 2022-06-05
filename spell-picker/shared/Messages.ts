@@ -1,12 +1,12 @@
 export const SPELL_PICKER_OPTIONS_ID = 26
 
 export class SpellPickerOption {
-  public readonly spell_id: uint32
-  public readonly first_spell_id: uint32
-  public readonly classmask: uint32
-  public readonly level: uint32
-  public readonly rank: uint32
-  public readonly faction: uint32
+  public spell_id: uint32
+  public first_spell_id: uint32
+  public classmask: uint32
+  public level: uint32
+  public rank: uint32
+  public faction: uint32
 
   constructor (
     spell_id: uint32,
@@ -26,15 +26,14 @@ export class SpellPickerOption {
 }
 
 export class SpellPickerOptionsMsg {
-  public readonly list: TSArray<SpellPickerOption> = []
+  public list: TSArray<SpellPickerOption> = []
 
   write (spells: TSArray<SpellPickerOption>): TSPacketWrite {
+    const packet = CreateCustomPacket(SPELL_PICKER_OPTIONS_ID, 0)
     const size = spells.length
-    const packet = CreateCustomPacket(SPELL_PICKER_OPTIONS_ID, size)
+    packet.WriteUInt32(size)
     for (let i = 0; i < size; i++) {
       const spell = spells[i]
-      // FIXME: goes in with number...
-      console.log(spell.spell_id)
       packet.WriteUInt32(spell.spell_id)
       packet.WriteUInt32(spell.first_spell_id)
       packet.WriteUInt32(spell.classmask)
@@ -45,16 +44,15 @@ export class SpellPickerOptionsMsg {
     return packet
   }
 
-  read (read: TSPacketRead): void {
-    for (let i = 0; i < read.Size(); i++) {
-      const spell_id = read.ReadUInt32()
-      // FIXME: ...comes out as zero
-      console.log(spell_id)
-      const first_spell_id = read.ReadUInt32()
-      const classmask = read.ReadUInt32()
-      const level = read.ReadUInt32()
-      const rank = read.ReadUInt32()
-      const faction = read.ReadUInt32()
+  read (packet: TSPacketRead): void {
+    const size = packet.ReadUInt32()
+    for (let i = 0; i < size; i++) {
+      const spell_id = packet.ReadUInt32()
+      const first_spell_id = packet.ReadUInt32()
+      const classmask = packet.ReadUInt32()
+      const level = packet.ReadUInt32()
+      const rank = packet.ReadUInt32()
+      const faction = packet.ReadUInt32()
       const option = new SpellPickerOption(
         spell_id,
         first_spell_id,
