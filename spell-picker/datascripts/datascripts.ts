@@ -24,28 +24,32 @@ type ClassKey =
   | typeof WARLOCK
   | typeof DRUID
 
+type AutoLearnSpells = { [key: string]: number[] }
+
 interface AutoLearnOptions {
-  WARRIOR?: AutoLearnClassOptions
-  PALADIN?: AutoLearnClassOptions
-  HUNTER?: AutoLearnClassOptions
-  ROGUE?: AutoLearnClassOptions
-  PRIEST?: AutoLearnClassOptions
-  DEATH_KNIGHT?: AutoLearnClassOptions
-  SHAMAN?: AutoLearnClassOptions
-  MAGE?: AutoLearnClassOptions
-  WARLOCK?: AutoLearnClassOptions
-  DRUID?: AutoLearnClassOptions
+  WARRIOR: AutoLearnClassOptions
+  PALADIN: AutoLearnClassOptions
+  HUNTER: AutoLearnClassOptions
+  ROGUE: AutoLearnClassOptions
+  PRIEST: AutoLearnClassOptions
+  DEATH_KNIGHT: AutoLearnClassOptions
+  SHAMAN: AutoLearnClassOptions
+  MAGE: AutoLearnClassOptions
+  WARLOCK: AutoLearnClassOptions
+  DRUID: AutoLearnClassOptions
 }
 
 interface AutoLearnClassOptions {
-  ALLIANCE?: { [key: string]: number[] }
-  HORDE?: { [key: string]: number[] }
-  ALL?: { [key: string]: number[] }
+  ALLIANCE: AutoLearnSpells
+  HORDE: AutoLearnSpells
+  ALL: AutoLearnSpells
 }
+
+type AutoLearnFaction = 'ALLIANCE' | 'HORDE' | 'ALL'
 
 interface AutoLearnSpell {
   classmask: number
-  faction: 'ALLIANCE' | 'HORDE' | 'ALL'
+  faction: AutoLearnFaction
   primary_spell_id: number
   spell_id: number
   rank: number
@@ -53,15 +57,35 @@ interface AutoLearnSpell {
 }
 
 function AutoLearn (options: AutoLearnOptions) {
-  // const mask = ClassMask[cls]
-  // const data: AutoLearnSpell = {
-  //   classMask: mask,
-  //   faction: 'ALL',
-  //   primary_spell_id: 0,
-  //   spell_id: 0,
-  //   rank: 0,
-  //   level: 0,
-  // }
+  const list: ([AutoLearnFaction, AutoLearnSpells])[] = []
+  for (let k of Object.keys(options)) {
+    const cls = k as ClassKey
+    list.push(['ALLIANCE', options[cls].ALLIANCE])
+    list.push(['HORDE', options[cls].HORDE])
+    list.push(['ALL', options[cls].ALL])
+    const rows = list.map(([faction, spells]) => {
+      const r = []
+      for (let j of Object.keys(spells)) {
+        const ids = spells[j]
+        for (let i = 0; i < ids.length; i++) {
+          const id = ids[i]
+          const trainer = std.SQL.trainer_spell.query({ SpellId: id })
+          const level = trainer ? trainer.ReqLevel.get() : 0
+          r.push({
+            faction,
+            level,
+            classmask: ClassMask[cls],
+            primary_spell_id: ids[0],
+            spell_id: id,
+            rank: i + 1,
+          })
+        }
+      }
+      return r
+    })
+    console.log(rows)
+    // FIXME: push rows to db
+  }
 }
 
 ////////////////////////////////////////////////////////////////
