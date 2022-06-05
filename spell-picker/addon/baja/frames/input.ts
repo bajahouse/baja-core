@@ -1,4 +1,4 @@
-import { $, SmartFrame, FrameOptions } from '../lib'
+import { Frame, SmartFrame, FrameOptions } from '../lib'
 
 export interface InputOptions extends FrameOptions {
   initial?: string
@@ -10,7 +10,7 @@ export interface InputOptions extends FrameOptions {
 
 export const Input = (options: InputOptions) => {
   let text = options.initial || ''
-  const input = $({
+  const input = Frame({
     ...options,
     height: options.height || 30,
     backdrop: 'tooltip',
@@ -20,7 +20,7 @@ export const Input = (options: InputOptions) => {
 
   input.SetWidth(width)
 
-  const inner = $({
+  const inner = Frame({
     width: input.GetWidth() - 16,
     height: input.GetHeight(),
     parent: input,

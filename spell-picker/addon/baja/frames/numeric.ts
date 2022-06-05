@@ -1,4 +1,4 @@
-import { $, SmartFrame, FrameOptions } from '../lib'
+import { Frame, SmartFrame, FrameOptions } from '../lib'
 
 export interface NumericOptions extends FrameOptions {
   initial?: number
@@ -10,7 +10,7 @@ export interface NumericOptions extends FrameOptions {
 
 export const Numeric = (options: NumericOptions) => {
   let number = options.initial || 0
-  const input = $({
+  const input = Frame({
     ...options,
     height: options.height || 30,
     backdrop: 'tooltip',
@@ -20,7 +20,7 @@ export const Numeric = (options: NumericOptions) => {
 
   input.SetWidth(width)
 
-  const inner = $({
+  const inner = Frame({
     width: input.GetWidth() - 16,
     height: input.GetHeight(),
     parent: input,

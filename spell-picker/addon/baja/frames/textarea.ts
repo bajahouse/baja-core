@@ -1,5 +1,5 @@
 import { Scroll } from './scroll'
-import { $, SmartFrame, FrameOptions } from '../lib'
+import { Frame, SmartFrame, FrameOptions } from '../lib'
 
 export interface TextareaOptions extends FrameOptions {
   initial?: string
@@ -11,14 +11,14 @@ export interface TextareaOptions extends FrameOptions {
 
 export const Textarea = (options: TextareaOptions) => {
   let text = options.initial || ''
-  const a = $({
+  const a = Frame({
     ...options,
     backdrop: 'tooltip',
     width: options.parent.Inner().GetWidth(),
     height: options.parent.Inner().GetHeight(),
     point: 'TOPLEFT',
   })
-  const b = $({
+  const b = Frame({
     parent: a,
     point: 'CENTER',
     width: options.parent.Inner().GetWidth() - 20,
