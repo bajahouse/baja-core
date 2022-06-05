@@ -1,4 +1,5 @@
-export const SPELL_OPTION_ID = 26
+export const SPELL_OPTIONS_ID = 26
+export const SPELL_END_ID = 27
 
 export class SpellOption {
   classmask: uint32
@@ -23,26 +24,43 @@ export class SpellOption {
     this.rank = rank
     this.level = level
   }
+}
+
+export class SpellOptions {
+  options: TSArray<SpellOption> = []
 
   read (read: TSPacketRead): void {
-    this.classmask = read.ReadUInt32()
-    this.faction = read.ReadUInt32()
-    this.first_spell_id = read.ReadUInt32()
-    this.spell_id = read.ReadUInt32()
-    this.rank = read.ReadUInt32()
-    this.level = read.ReadUInt32()
+    for (let i = 0; i < read.Size(); i++) {
+      const option = new SpellOption(
+        read.ReadUInt32(),
+        read.ReadUInt32(),
+        read.ReadUInt32(),
+        read.ReadUInt32(),
+        read.ReadUInt32(),
+        read.ReadUInt32(),
+      )
+      this.options.push(option)
+    }
   }
 
-  write (): TSPacketWrite {
-    let packet = CreateCustomPacket(SPELL_OPTION_ID, 0)
+  write (spells: TSArray<SpellOption>): TSPacketWrite {
+    const packet = CreateCustomPacket(SPELL_OPTIONS_ID, 0)
 
-    packet.WriteUInt32(this.classmask)
-    packet.WriteUInt32(this.faction)
-    packet.WriteUInt32(this.first_spell_id)
-    packet.WriteUInt32(this.spell_id)
-    packet.WriteUInt32(this.rank)
-    packet.WriteUInt32(this.level)
+    for (let i = 0; i < spells.length; i++) {
+      const spell = spells[i]
+      packet.WriteUInt32(spell.classmask)
+      packet.WriteUInt32(spell.faction)
+      packet.WriteUInt32(spell.first_spell_id)
+      packet.WriteUInt32(spell.spell_id)
+      packet.WriteUInt32(spell.rank)
+      packet.WriteUInt32(spell.level)
+    }
 
     return packet
   }
+
+  end (): TSPacketWrite {
+    return CreateCustomPacket(SPELL_END_ID, 0)
+  }
 }
+
