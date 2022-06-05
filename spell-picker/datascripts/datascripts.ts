@@ -108,7 +108,7 @@ function SpellPicker (options: SpellPickerOptions) {
   `)
 
   rows.forEach(row => std.SQL.Databases.world_dest.writeEarly(`
-    INSERT INTO __spell_picker VALUES (
+    INSERT INTO \`__spell_picker\` VALUES (
       ${row.spell_id},
       ${row.first_spell_id},
       ${row.classmask},
