@@ -48,7 +48,6 @@ interface SpellPickerClassOptions {
 type SpellPickerFaction = 'ALLIANCE' | 'HORDE' | 'ALL'
 
 interface SpellPickerRow {
-  name: string
   classmask: number
   faction: SpellPickerFaction
   first_spell_id: number

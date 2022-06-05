@@ -2,6 +2,7 @@ import { Addon, Frame, Movable, MakeSlashCommand } from './baja/lib'
 import { Grid } from './baja/frames/grid'
 import { Scroll } from './baja/frames/scroll'
 import { Button } from './baja/frames/button'
+import { SpellOption } from '../shared/Messages'
 
 Addon('spell-picker', () => {
   const frame = Frame({
