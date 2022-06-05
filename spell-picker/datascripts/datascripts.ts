@@ -71,13 +71,14 @@ function AutoLearn (options: AutoLearnOptions) {
           const id = ids[i]
           const trainer = std.SQL.trainer_spell.query({ SpellId: id })
           const level = trainer ? trainer.ReqLevel.get() : 0
+          const rank = (ids.length > 1) ? (i + 1) : 0
           r.push({
             faction,
             level,
+            rank,
             classmask: ClassMask[cls],
             primary_spell_id: ids[0],
             spell_id: id,
-            rank: i + 1,
           })
         }
       }
