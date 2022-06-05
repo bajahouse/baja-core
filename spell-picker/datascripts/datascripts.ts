@@ -15,12 +15,11 @@ interface AutoLearnOptions {
 }
 
 type AutoLearnClassSpell = number[]
-interface AutoLearnFactionOptions { [key: string]: AutoLearnClassSpell }
 
 interface AutoLearnClassOptions {
-  ALLIANCE?: AutoLearnFactionOptions
-  HORDE?: AutoLearnFactionOptions
-  ALL?: AutoLearnFactionOptions
+  ALLIANCE?: { [key: string]: AutoLearnClassSpell }
+  HORDE?: { [key: string]: AutoLearnClassSpell }
+  ALL?: { [key: string]: AutoLearnClassSpell }
 }
 
 const WARRIOR_SPELLS = {
