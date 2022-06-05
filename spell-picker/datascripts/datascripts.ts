@@ -50,7 +50,7 @@ type AutoLearnFaction = 'ALLIANCE' | 'HORDE' | 'ALL'
 interface AutoLearnSpell {
   classmask: number
   faction: AutoLearnFaction
-  primary_spell_id: number
+  first_spell_id: number
   spell_id: number
   rank: number
   level: number
@@ -63,7 +63,7 @@ function AutoLearn (options: AutoLearnOptions) {
     list.push(['ALLIANCE', options[cls].ALLIANCE])
     list.push(['HORDE', options[cls].HORDE])
     list.push(['ALL', options[cls].ALL])
-    const rows = list.map(([faction, spells]) => {
+    const rows: AutoLearnSpell[] = ([] as any).concat(...list.map(([faction, spells]) => {
       const r = []
       for (let j of Object.keys(spells)) {
         const ids = spells[j]
@@ -77,13 +77,13 @@ function AutoLearn (options: AutoLearnOptions) {
             level,
             rank,
             classmask: ClassMask[cls],
-            primary_spell_id: ids[0],
+            first_spell_id: ids[0],
             spell_id: id,
           })
         }
       }
       return r
-    })
+    }))
     console.log(rows)
     // FIXME: push rows to db
   }
