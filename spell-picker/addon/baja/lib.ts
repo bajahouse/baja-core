@@ -1,13 +1,16 @@
 // mod
 let _mod = ''
 
-// slash commands
-export type SlashCmdHandler = (msg: string, frame: WoWAPI.Frame) => void
-export function MakeSlashCommand (cmdList: string[], handler: SlashCmdHandler) {
-  for (let i = 0; i <= (cmdList.length - 1); i++) {
-    const cmd = cmdList[i]
-    _G['SlashCmdList'][_mod] = handler
-    _G[`SLASH_${_mod}${i + 1}`] = `${cmd}`
+// slash commands 
+declare type SlashCmdHandler = (msg: string, frame: WoWAPI.Frame) => void
+declare const SlashCmdList: { [msg:string]: SlashCmdHandler }
+
+export function MakeSlashCommand (commands: string[], handler: SlashCmdHandler) {
+  for (let i = 0; i <= (commands.length - 1); i++) {
+    const name = _mod.toUpperCase().replace('-', '_')
+    const cmd = commands[i]
+    SlashCmdList[name] = handler
+    _G[`SLASH_${name}${i + 1}`] = `${cmd}`
   }
 }
 
