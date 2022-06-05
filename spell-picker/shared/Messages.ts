@@ -33,7 +33,7 @@ export class SpellPickerOptionsMsg {
     const packet = CreateCustomPacket(SPELL_PICKER_OPTIONS_ID, size)
     for (let i = 0; i < size; i++) {
       const spell = spells[i]
-    // FIXME: goes in with number...
+      // FIXME: goes in with number...
       console.log(spell.spell_id)
       packet.WriteUInt32(spell.spell_id)
       packet.WriteUInt32(spell.first_spell_id)
