@@ -2,9 +2,22 @@ import { Addon, Frame, Movable, MakeSlashCommand } from './baja/lib'
 import { Grid } from './baja/frames/grid'
 import { Scroll } from './baja/frames/scroll'
 import { Button } from './baja/frames/button'
-import { SpellOptions } from '../shared/Messages'
+import { SpellPickerOptionsMsg, SPELL_PICKER_OPTIONS_ID } from '../shared/Messages'
 
 Addon('spell-picker', () => {
+  OnCustomPacket(SPELL_PICKER_OPTIONS_ID, packet => {
+    const msg = new SpellPickerOptionsMsg()
+    msg.read(packet)
+    msg.list.forEach(o => {
+      // console.log(`spell_id:${o.spell_id}`)
+      // console.log(`first_spell_id:${o.first_spell_id}`)
+      // console.log(`classmask:${o.classmask}`)
+      // console.log(`level:${o.level}`)
+      // console.log(`rank:${o.rank}`)
+      // console.log(`faction:${o.faction}`)
+    })
+  })
+
   const frame = Frame({
     width: 350,
     height: 350,

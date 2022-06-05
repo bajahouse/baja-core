@@ -94,20 +94,20 @@ function SpellPicker (options: SpellPickerOptions) {
   }))
 
   std.SQL.Databases.world_dest.writeEarly(`
-    DROP TABLE IF EXISTS \`__spell_picker\`;
-    CREATE TABLE \`__spell_picker\` (
-      \`spell_id\` MEDIUMINT NOT NULL,
-      \`first_spell_id\` MEDIUMINT NOT NULL,
-      \`classmask\` SMALLINT NOT NULL,
-      \`level\` TINYINT NOT NULL,
-      \`rank\` TINYINT NOT NULL,
-      \`faction\` TINYINT NOT NULL,
+    DROP TABLE IF EXISTS \`spellpicker\`;
+    CREATE TABLE \`spellpicker\` (
+      \`spell_id\` INT NOT NULL,
+      \`first_spell_id\` INT NOT NULL,
+      \`classmask\` INT NOT NULL,
+      \`level\` INT NOT NULL,
+      \`rank\` INT NOT NULL,
+      \`faction\` INT NOT NULL,
       PRIMARY KEY(\`spell_id\`)
     );
   `)
 
   rows.forEach(row => std.SQL.Databases.world_dest.writeEarly(`
-    INSERT INTO \`__spell_picker\` VALUES (
+    INSERT INTO \`spellpicker\` VALUES (
       ${row.spell_id},
       ${row.first_spell_id},
       ${row.classmask},
