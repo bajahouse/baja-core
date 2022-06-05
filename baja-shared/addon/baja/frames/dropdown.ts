@@ -1,5 +1,5 @@
 import { DEFAULT_BACKDROP } from '../lib'
-import { $, SmartFrame, FrameOptions } from '../lib'
+import { Frame, SmartFrame, FrameOptions } from '../lib'
 import { List } from './list'
 
 const AUTOHIDE_TIMER = 1
@@ -48,7 +48,7 @@ export const Dropdown = (options: DropdownOptions) => {
   const autohide = {}
   let timer = 0
 
-  const a = $({
+  const a = Frame({
     backdrop: 'tooltip',
     ...options,
   })
@@ -78,12 +78,12 @@ export const Dropdown = (options: DropdownOptions) => {
   })
 
   // menu
-  const p = $({ parent: a, backdrop: 'tooltip' })
+  const p = Frame({ parent: a, backdrop: 'tooltip' })
   p.SetPoint('TOP', a, 'BOTTOM', 0, 0)
   p.SetSize(options.width || 200, 3)
   p.SetBackdropColor(0, 0, 0, 1)
 
-  const menu = $({ parent: p, backdrop: 'tooltip' })
+  const menu = Frame({ parent: p, backdrop: 'tooltip' })
   menu.SetSize(options.width || 200, 0)
   menu.SetPoint('TOP', p, 'BOTTOM', 0, 0)
   menu.SetBackdropColor(0, 0, 0, 1)
@@ -182,7 +182,7 @@ export const Dropdown = (options: DropdownOptions) => {
   text.SetText(options.emptyText || 'select')
 
   // list
-  const listwrap = $({ parent: menu })
+  const listwrap = Frame({ parent: menu })
   const list = List({ itemHeight: 30, parent: listwrap })
 
   listwrap.SetSize(options.width || 200, 0)
@@ -202,7 +202,7 @@ export const Dropdown = (options: DropdownOptions) => {
 
   // item
   const Item = (options: DropdownItemOptions) => {
-    const w = $()
+    const w = Frame()
     // FIXME: build ExtendedText frame
     const t = w.CreateFontString(`${options.id}-wrapper-text`)
 
@@ -350,7 +350,7 @@ export const Dropdown = (options: DropdownOptions) => {
   }
 
   // checkmark
-  const checkmark = $({ parent: menu })
+  const checkmark = Frame({ parent: menu })
   checkmark.SetSize(12, 12)
   checkmark.Hide()
 
