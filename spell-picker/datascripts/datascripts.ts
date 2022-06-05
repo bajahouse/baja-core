@@ -24,74 +24,104 @@ type ClassKey =
   | typeof WARLOCK
   | typeof DRUID
 
-type AutoLearnSpells = { [key: string]: number[] }
+type SpellPickerSpells = { [key: string]: number[] }
 
-interface AutoLearnOptions {
-  WARRIOR: AutoLearnClassOptions
-  PALADIN: AutoLearnClassOptions
-  HUNTER: AutoLearnClassOptions
-  ROGUE: AutoLearnClassOptions
-  PRIEST: AutoLearnClassOptions
-  DEATH_KNIGHT: AutoLearnClassOptions
-  SHAMAN: AutoLearnClassOptions
-  MAGE: AutoLearnClassOptions
-  WARLOCK: AutoLearnClassOptions
-  DRUID: AutoLearnClassOptions
+interface SpellPickerOptions {
+  WARRIOR: SpellPickerClassOptions
+  PALADIN: SpellPickerClassOptions
+  HUNTER: SpellPickerClassOptions
+  ROGUE: SpellPickerClassOptions
+  PRIEST: SpellPickerClassOptions
+  DEATH_KNIGHT: SpellPickerClassOptions
+  SHAMAN: SpellPickerClassOptions
+  MAGE: SpellPickerClassOptions
+  WARLOCK: SpellPickerClassOptions
+  DRUID: SpellPickerClassOptions
 }
 
-interface AutoLearnClassOptions {
-  ALLIANCE: AutoLearnSpells
-  HORDE: AutoLearnSpells
-  ALL: AutoLearnSpells
+interface SpellPickerClassOptions {
+  ALLIANCE: SpellPickerSpells
+  HORDE: SpellPickerSpells
+  ALL: SpellPickerSpells
 }
 
-type AutoLearnFaction = 'ALLIANCE' | 'HORDE' | 'ALL'
+type SpellPickerFaction = 'ALLIANCE' | 'HORDE' | 'ALL'
 
-interface AutoLearnSpell {
+interface SpellPickerRow {
+  name: string
   classmask: number
-  faction: AutoLearnFaction
+  faction: SpellPickerFaction
   first_spell_id: number
   spell_id: number
   rank: number
   level: number
 }
 
-function AutoLearn (options: AutoLearnOptions) {
-  const list: ([AutoLearnFaction, AutoLearnSpells])[] = []
+function SpellPicker (options: SpellPickerOptions) {
+  const list: ([SpellPickerFaction, ClassKey, SpellPickerSpells])[] = []
+
   for (let k of Object.keys(options)) {
     const cls = k as ClassKey
-    list.push(['ALLIANCE', options[cls].ALLIANCE])
-    list.push(['HORDE', options[cls].HORDE])
-    list.push(['ALL', options[cls].ALL])
-    const rows: AutoLearnSpell[] = ([] as any).concat(...list.map(([faction, spells]) => {
-      const r = []
-      for (let j of Object.keys(spells)) {
-        const ids = spells[j]
+    list.push(['ALLIANCE', cls, options[cls].ALLIANCE])
+    list.push(['HORDE', cls, options[cls].HORDE])
+    list.push(['ALL', cls, options[cls].ALL])
+  }
+
+  const rows: SpellPickerRow[] = ([] as any).concat(
+    ...list.map(([faction, cls, spells]) => {
+      const row = []
+      for (let name of Object.keys(spells)) {
+        const ids = spells[name]
         for (let i = 0; i < ids.length; i++) {
           const id = ids[i]
           const trainer = std.SQL.trainer_spell.query({ SpellId: id })
           const level = trainer ? trainer.ReqLevel.get() : 0
           const rank = (ids.length > 1) ? (i + 1) : 0
-          r.push({
-            faction,
+          row.push({
             level,
             rank,
             classmask: ClassMask[cls],
             first_spell_id: ids[0],
             spell_id: id,
+            faction: (faction === 'ALLIANCE')
+              ? 1
+              : (faction === 'HORDE')
+              ? 2
+              : 0,
           })
         }
       }
-      return r
-    }))
-    console.log(rows)
-    // FIXME: push rows to db
-  }
+      return row
+  }))
+
+  std.SQL.Databases.world_dest.writeEarly(`
+    DROP TABLE IF EXISTS \`__spell_picker\`;
+    CREATE TABLE \`__spell_picker_a\` (
+      \`spell_id\` MEDIUMINT NOT NULL,
+      \`first_spell_id\` MEDIUMINT NOT NULL,
+      \`classmask\` SMALLINT NOT NULL,
+      \`level\` TINYINT NOT NULL,
+      \`rank\` TINYINT NOT NULL,
+      \`faction\` TINYINT NOT NULL,
+      PRIMARY KEY(\`spell_id\`)
+    );
+  `)
+
+  rows.forEach(row => std.SQL.Databases.world_dest.writeEarly(`
+    INSERT INTO __spell_picker VALUES (
+      ${row.spell_id},
+      ${row.first_spell_id},
+      ${row.classmask},
+      ${row.level},
+      ${row.rank},
+      ${row.faction}
+    );
+  `))
 }
 
 ////////////////////////////////////////////////////////////////
 
-const WARRIOR_AUTOLEARN = {
+const WARRIOR_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -140,7 +170,7 @@ const WARRIOR_AUTOLEARN = {
   },
 }
 
-const PALADIN_AUTOLEARN = {
+const PALADIN_SPELLS = {
   ALLIANCE: {
     HOLY_VENGEANCE: [31803],
     SEAL_OF_VENGEANCE: [31801],
@@ -204,7 +234,7 @@ const PALADIN_AUTOLEARN = {
   },
 }
 
-const HUNTER_AUTOLEARN = {
+const HUNTER_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -268,7 +298,7 @@ const HUNTER_AUTOLEARN = {
   },
 }
 
-const ROGUE_AUTOLEARN = {
+const ROGUE_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -310,7 +340,7 @@ const ROGUE_AUTOLEARN = {
   },
 }
 
-const PRIEST_AUTOLEARN = {
+const PRIEST_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -368,7 +398,7 @@ const PRIEST_AUTOLEARN = {
   },
 }
 
-const DEATH_KNIGHT_AUTOLEARN = {
+const DEATH_KNIGHT_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -405,7 +435,7 @@ const DEATH_KNIGHT_AUTOLEARN = {
   },
 }
 
-const SHAMAN_AUTOLEARN = {
+const SHAMAN_SPELLS = {
   ALLIANCE: {
     HEROISM: [32182],
   },
@@ -468,7 +498,7 @@ const SHAMAN_AUTOLEARN = {
   },
 }
 
-const MAGE_AUTOLEARN = {
+const MAGE_SPELLS = {
   ALLIANCE: {
     PORTAL_DARNASSUS: [11419],
     PORTAL_EXODAR: [32266],
@@ -548,7 +578,7 @@ const MAGE_AUTOLEARN = {
   },
 }
 
-const WARLOCK_AUTOLEARN = {
+const WARLOCK_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -557,7 +587,7 @@ const WARLOCK_AUTOLEARN = {
     CHAOS_BOLT: [50796, 59170, 59171, 59172],
     CORRUPTION: [172, 6222, 6223, 7648, 11671, 11672, 25311, 27216, 47812, 47813],
     CREATE_HEALTHSTONE: [6201, 6202, 5699, 11729, 11730, 27230, 47871, 47878],
-    CURSE_OF_AGONY: [980, 1014, 8217, 11711, 11712, 11713, 27218, 47863, 27218, 47863, 47864],
+    CURSE_OF_AGONY: [980, 1014, 8217, 11711, 11712, 11713, 27218, 47863, 47864],
     CURSE_OF_DOOM: [603, 30910, 47867],
     CURSE_OF_THE_ELEMENTS: [1490, 11721, 11722, 27228, 47865],
     CURSE_OF_TONGUES: [1714, 11719],
@@ -565,7 +595,7 @@ const WARLOCK_AUTOLEARN = {
     DARK_PACT: [18220, 18937, 18938, 27265, 59092],
     DEATH_COIL: [6789, 17925, 17926, 27223, 47859, 47860],
     DEMON_SKIN: [687, 696],
-    DEMON_ARMOR: [706, 1066, 11733, 11734, 11735, 27260, 47793, 47889],
+    DEMON_ARMOR: [706, 1086, 11733, 11734, 11735, 27260, 47793, 47889],
     DEMONIC_CIRCLE_SUMMON: [48018],
     DEMONIC_CIRCLE_TELEPORT: [48020],
     DETECT_INVISIBILITY: [132],
@@ -587,7 +617,7 @@ const WARLOCK_AUTOLEARN = {
     RITUAL_OF_DOOM: [18540],
     RITUAL_OF_SOULS: [29893, 58887],
     RITUAL_OF_SUMMONING: [698],
-    SEARING_PAIN: [5676, 17919, 17920, 17921, 17922, 17923, 27210, 28699, 47814, 47815],
+    SEARING_PAIN: [5676, 17919, 17920, 17921, 17922, 17923, 27210, 30459, 47814, 47815],
     SEED_OF_CORRUPTION: [27243, 47835, 47836],
     SENSE_DEMONS: [5500],
     SHADOW_BOLT: [686, 695, 705, 1088, 1106, 7641, 11659, 11660, 11661, 25307, 27209, 47808, 47809],
@@ -608,12 +638,12 @@ const WARLOCK_AUTOLEARN = {
   },
 }
 
-const DRUID_AUTOLEARN = {
+const DRUID_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
     ABOLISH_POISON: [2893],
-    AQUATIC_FORM: [2893],
+    AQUATIC_FORM: [1066],
     BARKSKIN: [22812],
     BASH: [5211, 6798, 8983],
     BEAR_FORM: [5487],
@@ -680,17 +710,17 @@ const DRUID_AUTOLEARN = {
   },
 }
 
-const AUTOLEARN = {
-  WARRIOR: WARRIOR_AUTOLEARN,
-  PALADIN: PALADIN_AUTOLEARN,
-  HUNTER: HUNTER_AUTOLEARN,
-  ROGUE: ROGUE_AUTOLEARN,
-  PRIEST: PRIEST_AUTOLEARN,
-  DEATH_KNIGHT: DEATH_KNIGHT_AUTOLEARN,
-  SHAMAN: SHAMAN_AUTOLEARN,
-  MAGE: MAGE_AUTOLEARN,
-  WARLOCK: WARLOCK_AUTOLEARN,
-  DRUID: DRUID_AUTOLEARN,
+const SPELLS = {
+  WARRIOR: WARRIOR_SPELLS,
+  PALADIN: PALADIN_SPELLS,
+  HUNTER: HUNTER_SPELLS,
+  ROGUE: ROGUE_SPELLS,
+  PRIEST: PRIEST_SPELLS,
+  DEATH_KNIGHT: DEATH_KNIGHT_SPELLS,
+  SHAMAN: SHAMAN_SPELLS,
+  MAGE: MAGE_SPELLS,
+  WARLOCK: WARLOCK_SPELLS,
+  DRUID: DRUID_SPELLS,
 }
 
-AutoLearn(AUTOLEARN)
+SpellPicker(SPELLS)
