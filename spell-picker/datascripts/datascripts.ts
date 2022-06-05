@@ -1,6 +1,26 @@
 import { std } from 'wow/wotlk'
+import { ClassMask } from 'wow/wotlk/std/Class/ClassRegistry'
 
-const WARRIOR = {
+interface AutoLearnOptions {
+  WARRIOR?: AutoLearnClassOptions
+  PALADIN?: AutoLearnClassOptions
+  HUNTER?: AutoLearnClassOptions
+  ROGUE?: AutoLearnClassOptions
+  PRIEST?: AutoLearnClassOptions
+  DEATH_KNIGHT?: AutoLearnClassOptions
+  SHAMAN?: AutoLearnClassOptions
+  MAGE?: AutoLearnClassOptions
+  WARLOCK?: AutoLearnClassOptions
+  DRUID?: AutoLearnClassOptions
+}
+
+interface AutoLearnClassOptions {
+  ALLIANCE?: { [key: string]: number[] }
+  HORDE?: { [key: string]: number[] }
+  ALL?: { [key: string]: number[] }
+}
+
+const WARRIOR_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -49,7 +69,7 @@ const WARRIOR = {
   },
 }
 
-const PALADIN = {
+const PALADIN_SPELLS = {
   ALLIANCE: {
     HOLY_VENGEANCE: [31803],
     SEAL_OF_VENGEANCE: [31801],
@@ -113,7 +133,7 @@ const PALADIN = {
   },
 }
 
-const HUNTER = {
+const HUNTER_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -177,7 +197,7 @@ const HUNTER = {
   },
 }
 
-const ROGUE = {
+const ROGUE_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -219,7 +239,7 @@ const ROGUE = {
   },
 }
 
-const PRIEST = {
+const PRIEST_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -277,7 +297,7 @@ const PRIEST = {
   },
 }
 
-const DEATH_KNIGHT = {
+const DEATH_KNIGHT_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -314,7 +334,7 @@ const DEATH_KNIGHT = {
   },
 }
 
-const SHAMAN = {
+const SHAMAN_SPELLS = {
   ALLIANCE: {
     HEROISM: [32182],
   },
@@ -377,7 +397,7 @@ const SHAMAN = {
   },
 }
 
-const MAGE = {
+const MAGE_SPELLS = {
   ALLIANCE: {
     PORTAL_DARNASSUS: [11419],
     PORTAL_EXODAR: [32266],
@@ -457,7 +477,7 @@ const MAGE = {
   },
 }
 
-const WARLOCK = {
+const WARLOCK_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -517,7 +537,7 @@ const WARLOCK = {
   },
 }
 
-const DRUID = {
+const DRUID_SPELLS = {
   ALLIANCE: {},
   HORDE: {},
   ALL: {
@@ -589,50 +609,61 @@ const DRUID = {
   },
 }
 
-const CLASS_SPELLS: { [key: string]: number[] } = {
-  ...WARRIOR.ALL,
-  ...WARRIOR.ALLIANCE,
-  ...WARRIOR.HORDE,
-  ...PALADIN.ALL,
-  ...PALADIN.ALLIANCE,
-  ...PALADIN.HORDE,
-  ...HUNTER.ALL,
-  ...HUNTER.ALLIANCE,
-  ...HUNTER.HORDE,
-  ...ROGUE.ALL,
-  ...ROGUE.ALLIANCE,
-  ...ROGUE.HORDE,
-  ...PRIEST.ALL,
-  ...PRIEST.ALLIANCE,
-  ...PRIEST.HORDE,
-  ...DEATH_KNIGHT.ALL,
-  ...DEATH_KNIGHT.ALLIANCE,
-  ...DEATH_KNIGHT.HORDE,
-  ...SHAMAN.ALL,
-  ...SHAMAN.ALLIANCE,
-  ...SHAMAN.HORDE,
-  ...MAGE.ALL,
-  ...MAGE.ALLIANCE,
-  ...MAGE.HORDE,
-  ...WARLOCK.ALL,
-  ...WARLOCK.ALLIANCE,
-  ...WARLOCK.HORDE,
-  ...DRUID.ALL,
-  ...DRUID.ALLIANCE,
-  ...DRUID.HORDE,
+const CLASS_SPELLS = {
+  WARRIOR: WARRIOR_SPELLS,
+  PALADIN: PALADIN_SPELLS,
+  HUNTER: HUNTER_SPELLS,
+  ROGUE: ROGUE_SPELLS,
+  PRIEST: PRIEST_SPELLS,
+  DEATH_KNIGHT: DEATH_KNIGHT_SPELLS,
+  SHAMAN: SHAMAN_SPELLS,
+  MAGE: MAGE_SPELLS,
+  WARLOCK: WARLOCK_SPELLS,
+  DRUID: DRUID_SPELLS,
 }
 
-let lines = ''
+const WARRIOR = 'WARRIOR'
+const PALADIN = 'PALADIN'
+const HUNTER = 'HUNTER'
+const ROGUE = 'ROGUE'
+const PRIEST = 'PRIEST'
+const DEATH_KNIGHT = 'DEATH_KNIGHT'
+const SHAMAN = 'SHAMAN'
+const MAGE = 'MAGE'
+const WARLOCK = 'WARLOCK'
+const DRUID = 'DRUID'
 
-for (const key of Object.keys(CLASS_SPELLS)) {
-  const list = CLASS_SPELLS[key]
-  lines = lines + `\n${key}`
-  lines = lines + `\n====================`
-  list.forEach(id => {
-    lines = lines + `\n${id}`
-    const spell = std.Spells.load(id)
-    lines = lines + `\n${spell.Name.enGB.get()}`
-  })
-  lines = lines + '\n\n'
-  // fs.writeFileSync('C:/Users/Administrator/Downloads/list.txt', lines)
+type ClassKey =
+  | typeof WARRIOR
+  | typeof PALADIN
+  | typeof HUNTER
+  | typeof ROGUE
+  | typeof PRIEST
+  | typeof DEATH_KNIGHT
+  | typeof SHAMAN
+  | typeof MAGE
+  | typeof WARLOCK
+  | typeof DRUID
+
+interface AutoLearnSpell {
+  classmask: number
+  faction: 'ALLIANCE' | 'HORDE' | 'ALL'
+  primary_spell_id: number
+  spell_id: number
+  rank: number
+  level: number
 }
+
+function AutoLearn (options: AutoLearnOptions) {
+  // const mask = ClassMask[cls]
+  // const data: AutoLearnSpell = {
+  //   classMask: mask,
+  //   faction: 'ALL',
+  //   primary_spell_id: 0,
+  //   spell_id: 0,
+  //   rank: 0,
+  //   level: 0,
+  // }
+}
+
+AutoLearn(CLASS_SPELLS)
