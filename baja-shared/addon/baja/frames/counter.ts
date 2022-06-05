@@ -1,5 +1,5 @@
 import { Input } from './input'
-import { $, SmartFrame, FrameOptions } from '../lib'
+import { Frame, SmartFrame, FrameOptions } from '../lib'
 import { Button } from './button'
 
 export interface CounterOptions extends FrameOptions {
@@ -13,7 +13,7 @@ export interface CounterOptions extends FrameOptions {
 
 export const Counter = options => {
   let count = options.initial || 0
-  const counter = $({
+  const counter = Frame({
     ...options,
     height: options.height || 30,
     backdrop: 'tooltip',

@@ -1,10 +1,13 @@
+// mod
+let _mod = ''
+
 // slash commands
 export type SlashCmdHandler = (msg: string, frame: WoWAPI.Frame) => void
-export function MakeSlashCommand (mod: string, cmdList: string[], handler: SlashCmdHandler) {
+export function MakeSlashCommand (cmdList: string[], handler: SlashCmdHandler) {
   for (let i = 0; i <= (cmdList.length - 1); i++) {
     const cmd = cmdList[i]
-    _G['SlashCmdList'][mod] = handler
-    _G[`SLASH_${mod}${i + 1}`] = `${cmd}`
+    _G['SlashCmdList'][_mod] = handler
+    _G[`SLASH_${_mod}${i + 1}`] = `${cmd}`
   }
 }
 
@@ -131,11 +134,12 @@ export function GetPlayerInfo (): PlayerInfo {
 export type AddonFn = () => SmartFrame | void
 export type AddonDefinition = [string, AddonFn]
 
-export function Addon (name: string, fn: AddonFn) {
+export function Addon (mod: string, fn: AddonFn) {
+  _mod = mod
   if (!_G['__app__'])
     _G['__app__'] = new App()
   const container = _G['__app__'] as App
-  container.add([name, fn])
+  container.add([_mod, fn])
 }
 
 export function Info () {
@@ -394,15 +398,15 @@ const FRAME_MAP_SELECTOR = 'frame-map'
 
 let current_frame_index = 0
 
-export function $ (options?: CheckButtonOptions): CheckButton
-export function $ (options?: ModelOptions): Model
-export function $ (options?: SliderOptions): Slider
-export function $ (options?: StatusBarOptions): StatusBar
-export function $ (options?: SimpleHTMLOptions): SimpleHTML
-export function $ (options?: ScrollFrameOptions): ScrollFrame
-export function $ (options?: ButtonOptions): Button
-export function $ (options?: FrameOptions): SmartFrame
-export function $ (options: FrameOptions = {}) {
+export function Frame (options?: CheckButtonOptions): CheckButton
+export function Frame (options?: ModelOptions): Model
+export function Frame (options?: SliderOptions): Slider
+export function Frame (options?: StatusBarOptions): StatusBar
+export function Frame (options?: SimpleHTMLOptions): SimpleHTML
+export function Frame (options?: ScrollFrameOptions): ScrollFrame
+export function Frame (options?: ButtonOptions): Button
+export function Frame (options?: FrameOptions): SmartFrame
+export function Frame (options: FrameOptions = {}) {
   let frame: SmartFrame
   let list: SmartFrame[] = _G[FRAME_LIST_SELECTOR]
   let map: object = _G[FRAME_MAP_SELECTOR]

@@ -1,4 +1,4 @@
-import { $, SmartFrame, FrameOptions } from '../lib'
+import { Frame, SmartFrame, FrameOptions } from '../lib'
 
 export interface CheckButton extends SmartFrame {
   GetChecked: () => number | null
@@ -16,10 +16,10 @@ export interface CheckboxOptions extends FrameOptions {
 }
 
 export const Checkbox = (options: CheckboxOptions) => {
-  const f = $({ ...options })
+  const f = Frame({ ...options })
   f.SetSize(options.parent.GetWidth(), 24)
 
-  const check = $({
+  const check = Frame({
     ...options,
     type: 'CheckButton',
     template: 'ChatConfigCheckButtonTemplate',

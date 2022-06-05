@@ -1,4 +1,4 @@
-import { $, SmartFrame, FrameOptions } from '../lib'
+import { Frame, SmartFrame, FrameOptions } from '../lib'
 
 export interface ListItemOptions extends FrameOptions {
   id: string,
@@ -14,7 +14,7 @@ export interface ListItemFrame extends SmartFrame {
 }
 
 export const ListItem = (options: ListItemOptions) => {
-  const frame = $({ parent: options.parent }).ToExtendedFrame<ListItemFrame>()
+  const frame = Frame({ parent: options.parent }).ToExtendedFrame<ListItemFrame>()
   let y = options.y || 0
   frame.SetSize(options.width, options.height)
   options.child.SetAllPoints(frame)
@@ -46,7 +46,7 @@ export interface ListFrame extends SmartFrame {
 }
 
 export const List = (options: ListOptions) => {
-  const list = $(options).ToExtendedFrame<ListFrame>()
+  const list = Frame(options).ToExtendedFrame<ListFrame>()
 
   list.SetAllPoints(options.parent.Inner())
 
