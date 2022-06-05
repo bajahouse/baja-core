@@ -1,4 +1,4 @@
-import { $, Addon, Movable, SlashCommand } from './baja/lib'
+import { $, Addon, Movable, MakeSlashCommand } from './baja/lib'
 import { Grid } from './baja/frames/grid'
 import { Scroll } from './baja/frames/scroll'
 import { Button } from './baja/frames/button'
@@ -29,14 +29,14 @@ Addon('spell-picker', () => {
 
   const spell = Button({
     text: '',
-    color: [1, 0, 0],
+    color: [0, 0, 1],
     height: 50,
     width: 50,
   })
 
   grid.Attach(spell)
 
-  SlashCommand(
+  MakeSlashCommand(
     'SPELLPICKER',
     ['/sp', '/spellpicker'],
     () => frame.ToggleShown(),
