@@ -1,5 +1,4 @@
 export const SPELL_OPTIONS_ID = 26
-export const SPELL_END_ID = 27
 
 export class SpellOption {
   classmask: uint32
@@ -57,10 +56,6 @@ export class SpellOptions {
     }
 
     return packet
-  }
-
-  end (): TSPacketWrite {
-    return CreateCustomPacket(SPELL_END_ID, 0)
   }
 }
 
