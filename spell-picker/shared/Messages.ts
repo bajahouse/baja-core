@@ -28,10 +28,27 @@ export class SpellPickerOption {
 export class SpellPickerOptionsMsg {
   public readonly list: TSArray<SpellPickerOption> = []
 
+  write (spells: TSArray<SpellPickerOption>): TSPacketWrite {
+    const size = spells.length
+    const packet = CreateCustomPacket(SPELL_PICKER_OPTIONS_ID, size)
+    for (let i = 0; i < size; i++) {
+      const spell = spells[i]
+    // FIXME: goes in with number...
+      console.log(spell.spell_id)
+      packet.WriteUInt32(spell.spell_id)
+      packet.WriteUInt32(spell.first_spell_id)
+      packet.WriteUInt32(spell.classmask)
+      packet.WriteUInt32(spell.level)
+      packet.WriteUInt32(spell.rank)
+      packet.WriteUInt32(spell.faction)
+    }
+    return packet
+  }
+
   read (read: TSPacketRead): void {
     for (let i = 0; i < read.Size(); i++) {
       const spell_id = read.ReadUInt32()
-      // FIXME: goes in with number...
+      // FIXME: ...comes out as zero
       console.log(spell_id)
       const first_spell_id = read.ReadUInt32()
       const classmask = read.ReadUInt32()
@@ -48,23 +65,6 @@ export class SpellPickerOptionsMsg {
       )
       this.list.push(option)
     }
-  }
-
-  write (spells: TSArray<SpellPickerOption>): TSPacketWrite {
-    const size = spells.length
-    const packet = CreateCustomPacket(SPELL_PICKER_OPTIONS_ID, size)
-    for (let i = 0; i < size; i++) {
-      const spell = spells[i]
-      // FIXME: ...comes out as zero
-      console.log(spell.spell_id)
-      packet.WriteUInt32(spell.spell_id)
-      packet.WriteUInt32(spell.first_spell_id)
-      packet.WriteUInt32(spell.classmask)
-      packet.WriteUInt32(spell.level)
-      packet.WriteUInt32(spell.rank)
-      packet.WriteUInt32(spell.faction)
-    }
-    return packet
   }
 }
 
