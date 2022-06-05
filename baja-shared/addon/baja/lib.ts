@@ -247,7 +247,7 @@ export class App {
   }
 }
 
-export function ConvertHex (hex: string) {
+export function HexToColor (hex: string): Color {
   let c = hex as any
   return [0, 0, 0]
   // if (/^#([a-f0-9]{3}){1,2}$/.test(c)) {
@@ -264,17 +264,15 @@ export function ConvertHex (hex: string) {
   // throw `Cannot convert hex value '${hex}' to RGB`
 }
 
-export function ConvertRGB (normal: RGB) {
+export function RGBToColor (webRGB: Color): Color {
   return [
-    normal[0] / 255,
-    normal[1] / 255,
-    normal[2] / 255,
+    webRGB[0] / 255,
+    webRGB[1] / 255,
+    webRGB[2] / 255,
   ]
 }
 
-export type PersistenceTarget = 'client' | 'server'
-
-export function Movable (frame: SmartFrame, button: WoWAPI.MouseButton, ersist?: PersistenceTarget) {
+export function Movable (frame: SmartFrame, button: WoWAPI.MouseButton, persist?: boolean) {
   frame.EnableMouse(true)
   frame.SetMovable(true)
   frame.RegisterForDrag(button)
@@ -293,10 +291,11 @@ export const DEFAULT_BACKDROP = {
 }
 
 export function Random (min: number = 1000000, max: number = 8999999) {
-  return Math.floor(Math.random() * max) + min
+  return Math.floor(Math.random
+    () * max) + min
 }
 
-export type RGB = [number, number, number]
+export type Color = [number, number, number]
 
 export type BackdropPreset = 'tooltip' | 'tutorial' | 'border' | 'noborder' | 'dialogue'
 
@@ -311,7 +310,7 @@ export interface FrameOptions {
   scale?: number
   backdrop?: BackdropPreset | WoWAPI.Backdrop
   alpha?: number
-  color?: RGB | string
+  color?: Color | string
   width?: number
   height?: number
   pctWidth?: number
@@ -546,7 +545,7 @@ export function Frame (options: FrameOptions = {}) {
   if (typeof options.color === 'object') {
     frame.SetBackdropColor(options.color[0], options.color[1], options.color[2], frame.GetAlpha())
   } else if (typeof options.color === 'string') {
-    const [r, g, b] = ConvertHex(options.color)
+    const [r, g, b] = HexToColor(options.color)
     frame.SetBackdropColor(r, g, b, frame.GetAlpha())
   } else {
     frame.SetBackdropColor(0, 0, 0, frame.GetAlpha())
