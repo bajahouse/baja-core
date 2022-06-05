@@ -1,21 +1,10 @@
-// TODO:
-// - [ ] reimplement store
-// - [ ] pass addon name to all child frames (prefix in map)
-// - [ ] position: 'ALL', WoWAPI.Point | { self: 'BOTTOMLEFT', parent: 'TOPLEFT', x: 0, y: 0 }
-// - [ ] z: [strata, level]
-// - [ ] reflow: z, sizing, scaling, isDeleted (recursively reflow all children)
-// - [ ] grid reflow
-// - [ ] delete -> reflow(isDeleted)
-
 // slash commands
-// FIXME: move to TSWoW
 export type SlashCmdHandler = (msg: string, frame: WoWAPI.Frame) => void
-
-export function SlashCommand (name: string, cmdList: string[], handler: SlashCmdHandler) {
+export function MakeSlashCommand (mod: string, cmdList: string[], handler: SlashCmdHandler) {
   for (let i = 0; i <= (cmdList.length - 1); i++) {
     const cmd = cmdList[i]
-    _G['SlashCmdList'][name] = handler
-    _G[`SLASH_${name}${i + 1}`] = `${cmd}`
+    _G['SlashCmdList'][mod] = handler
+    _G[`SLASH_${mod}${i + 1}`] = `${cmd}`
   }
 }
 
@@ -69,7 +58,7 @@ export class Store {
   }
 
   public Set (storeType: StoreType, storeKey: string, storeValue: StoreValue) {
-    const app = Get()
+    const app = Info()
     const primitive = typeof storeValue === 'number'
       ? 0 // number
       : typeof storeValue === 'string'
@@ -82,7 +71,7 @@ export class Store {
     const v = (primitive === 2)
       ? (storeValue ? '1' : '0')
       : storeValue
-    SendAddonMessage('store-set', `${primitive} ${t} ${storeKey} ${v}`, 'WHISPER', GetPlayerInfo().name)
+    SendAddonMessage('store-set', `${primitive} ${t} ${storeKey} ${v}`, 'WHISPER', app.player.name)
   }
 
   public Get (type: StoreType, storeKey: string, defaultValue?: StoreValue) {
@@ -144,29 +133,81 @@ export type AddonDefinition = [string, AddonFn]
 
 export function Addon (name: string, fn: AddonFn) {
   if (!_G['__app__'])
-    _G['__app__'] = new Container()
-  const container = _G['__app__'] as Container
+    _G['__app__'] = new App()
+  const container = _G['__app__'] as App
   container.add([name, fn])
 }
 
-export function Get () {
-  return _G['__app__'] as Container
+export function Info () {
+  return _G['__app__'] as App
 }
 
-export class Container {
+export interface TimerObject {
+  expiry: number
+  fn: () => void
+}
+
+export interface IntervalObject {
+  interval: number
+  next: number
+  fn: () => void
+}
+
+export function Timer (seconds: number, fn: () => void) {
+  const info = Info()
+  info.timers.push({
+    expiry: GetTime() + seconds,
+    fn,
+  })
+}
+
+export function Interval (seconds: number, fn: () => void) {
+  const info = Info()
+  info.intervals.push({
+    interval: seconds,
+    next: GetTime() + seconds,
+    fn,
+  })
+}
+
+export class App {
   protected isStarted: boolean = false
   protected queue: (AddonDefinition)[] = []
 
+  public player: PlayerInfo
   public store: Store
   public addons: { [key: string]: SmartFrame | void } = {}
+  public timers: TimerObject[] = []
+  public intervals: IntervalObject[] = []
 
   constructor () {
     UIParent.SetScript('OnUpdate', () => {
       if (!this.isStarted) {
         this.start()
       } else {
-        UIParent.SetScript('OnUpdate', () => {})
+        UIParent.SetScript('OnUpdate', () => {
+          this.timers.forEach((t, i) => {
+            if (GetTime() >= t.expiry) {
+              t.fn()
+              this.timers.splice(i, 1)
+            }
+          })
+
+          this.intervals.forEach((o, i) => {
+            const time = GetTime()
+            if (time >= o.next) {
+              o.fn()
+              o.next = time + o.interval
+            }
+          })
+        })
       }
+    })
+
+    UIParent.RegisterEvent('PLAYER_LEVEL_UP')
+    UIParent.SetScript('OnEvent', (_, event) => {
+      if (event === 'PLAYER_LEVEL_UP')
+        Timer(0.1, () => this.player = GetPlayerInfo())
     })
   }
 
@@ -183,7 +224,7 @@ export class Container {
   }
 
   protected start () {
-    if (this.isStarted)
+    if (this.player)
       return
 
     if (UnitGUID('player')) {
@@ -192,8 +233,11 @@ export class Container {
       if (info) {
         _G['__app__'] = this
 
+        this.player = info
         this.isStarted = true
-        this.store = new Store(() => this.queue.forEach(creator => this._add(creator)))
+        this.store = new Store(
+          () => this.queue.forEach(creator => this._add(creator))
+        )
       }
     }
   }
@@ -572,4 +616,13 @@ export function $ (options: FrameOptions = {}) {
 }
 
 if (!_G['__app__'])
-  _G['__app__'] = new Container()
+  _G['__app__'] = new App()
+
+// TODO:
+// - [ ] reimplement store
+// - [ ] pass addon name to all child frames (prefix in map)
+// - [ ] position: 'ALL', WoWAPI.Point | { self: 'BOTTOMLEFT', parent: 'TOPLEFT', x: 0, y: 0 }
+// - [ ] z: [strata, level]
+// - [ ] reflow: z, sizing, scaling, isDeleted (recursively reflow all children)
+// - [ ] grid reflow
+// - [ ] delete -> reflow(isDeleted)
