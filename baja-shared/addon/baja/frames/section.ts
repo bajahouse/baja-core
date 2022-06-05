@@ -1,4 +1,4 @@
-import { Frame, SmartFrame, FrameOptions, RGB, DEFAULT_BACKDROP } from '../lib'
+import { Frame, SmartFrame, FrameOptions, Color, DEFAULT_BACKDROP } from '../lib'
 
 export interface SectionOptions extends FrameOptions {
   name: string
