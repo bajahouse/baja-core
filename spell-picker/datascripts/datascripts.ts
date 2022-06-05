@@ -96,7 +96,7 @@ function SpellPicker (options: SpellPickerOptions) {
 
   std.SQL.Databases.world_dest.writeEarly(`
     DROP TABLE IF EXISTS \`__spell_picker\`;
-    CREATE TABLE \`__spell_picker_a\` (
+    CREATE TABLE \`__spell_picker\` (
       \`spell_id\` MEDIUMINT NOT NULL,
       \`first_spell_id\` MEDIUMINT NOT NULL,
       \`classmask\` SMALLINT NOT NULL,
