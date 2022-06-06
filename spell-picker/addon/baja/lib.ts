@@ -441,6 +441,10 @@ export function Frame (options: FrameOptions = {}) {
   frame.IsDeleted = false
   frame.Delete = () => {
     CleanFrame(frame)
+    if (frame.GetChildren) {
+      const children = frame.GetChildren()
+      children.forEach((child: SmartFrame) => child.Delete ? child.Delete() : null)
+    }
   }
   let inner: any = frame
   frame.Inner = <F extends WoWAPI.UIObject = SmartFrame>(newInner?: F) => {

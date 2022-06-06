@@ -1,12 +1,15 @@
-import { SpellPickerOption, SpellPickerOptionsMsg } from '../shared/Messages'
+import { SpellPickerData, SpellPickerOptionsMsg, SPELL_PICKER_INIT_ID, SPELL_PICKER_RELOAD_ID } from '../shared/Messages'
 
 export function Main (events: TSEvents) {
-  events.Player.OnSay(player => {
+  events.Player.OnLevelChanged(player => {
+    player.SendAddonMessage('reload', `${player.GetLevel()}`, 0, player)
+  })
+  events.CustomPacketID.OnReceive(SPELL_PICKER_INIT_ID, (o, p, player) => {
     const query = QueryWorld(`
       SELECT * FROM spellpicker WHERE classmask = ${player.GetClassMask()};
     `)
     const msg = new SpellPickerOptionsMsg()
-    const list: TSArray<SpellPickerOption> = []
+    const list: TSArray<SpellPickerData> = []
     while (query.GetRow()) {
       const spell_id = query.GetInt32(0)
       const first_spell_id = query.GetInt32(1)
@@ -15,7 +18,7 @@ export function Main (events: TSEvents) {
       const rank = query.GetInt32(4)
       const faction = query.GetInt32(5)
       list.push(
-        new SpellPickerOption(
+        new SpellPickerData(
           spell_id,
           first_spell_id,
           classmask,
@@ -25,7 +28,7 @@ export function Main (events: TSEvents) {
         )
       )
     }
-    const packet = msg.write(list)
+    const packet = msg.Write(list)
     packet.SendToPlayer(player)
   })
 }

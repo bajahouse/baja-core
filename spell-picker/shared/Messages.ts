@@ -1,6 +1,8 @@
-export const SPELL_PICKER_OPTIONS_ID = 26
+export const SPELL_PICKER_INIT_ID = 26
+export const SPELL_PICKER_OPTIONS_ID = 27
+export const SPELL_PICKER_RELOAD_ID = 30
 
-export class SpellPickerOption {
+export class SpellPickerData {
   public spell_id: uint32
   public first_spell_id: uint32
   public classmask: uint32
@@ -26,9 +28,7 @@ export class SpellPickerOption {
 }
 
 export class SpellPickerOptionsMsg {
-  public list: TSArray<SpellPickerOption> = []
-
-  write (spells: TSArray<SpellPickerOption>): TSPacketWrite {
+  Write (spells: TSArray<SpellPickerData>): TSPacketWrite {
     const packet = CreateCustomPacket(SPELL_PICKER_OPTIONS_ID, 0)
     const size = spells.length
     packet.WriteUInt32(size)
@@ -44,7 +44,8 @@ export class SpellPickerOptionsMsg {
     return packet
   }
 
-  read (packet: TSPacketRead): void {
+  Read (packet: TSPacketRead): TSArray<SpellPickerData> {
+    const list: TSArray<SpellPickerData> = []
     const size = packet.ReadUInt32()
     for (let i = 0; i < size; i++) {
       const spell_id = packet.ReadUInt32()
@@ -53,7 +54,7 @@ export class SpellPickerOptionsMsg {
       const level = packet.ReadUInt32()
       const rank = packet.ReadUInt32()
       const faction = packet.ReadUInt32()
-      const option = new SpellPickerOption(
+      const option = new SpellPickerData(
         spell_id,
         first_spell_id,
         classmask,
@@ -61,8 +62,9 @@ export class SpellPickerOptionsMsg {
         rank,
         faction,
       )
-      this.list.push(option)
+      list.push(option)
     }
+    return list
   }
 }
 

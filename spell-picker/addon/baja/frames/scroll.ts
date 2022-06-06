@@ -49,7 +49,7 @@ export const Scroll = (options: ScrollOptions) => {
 
   scrollchild.SetSize(ref.GetWidth(), options.scrollHeight || ref.GetHeight() * 2)
 
-  const moduleoptions = CreateFrame('Frame', 'moduleoptions', scrollchild)
+  const moduleoptions = Frame({ parent: scrollchild })
 
   moduleoptions.SetPoint('TOPLEFT')
   moduleoptions.SetWidth(scrollchild.GetWidth() - SCROLL_WIDTH)

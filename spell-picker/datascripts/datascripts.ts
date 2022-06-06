@@ -73,8 +73,9 @@ function SpellPicker (options: SpellPickerOptions) {
         const ids = spells[name]
         for (let i = 0; i < ids.length; i++) {
           const id = ids[i]
-          const trainer = std.SQL.trainer_spell.query({ SpellId: id })
-          const level = trainer ? trainer.ReqLevel.get() : 0
+          // const trainer = std.SQL.trainer_spell.query({ SpellId: id })
+          // const level = trainer ? trainer.ReqLevel.get() : std.Spells.load(id).Levels.Spell.get()
+          const level = std.Spells.load(id).Levels.Spell.get()
           const rank = (ids.length > 1) ? (i + 1) : 0
           row.push({
             level,
@@ -306,7 +307,6 @@ const ROGUE_SPELLS = {
     BLIND: [2094],
     CHEAP_SHOT: [1833],
     CLOAK_OF_SHADOWS: [31224],
-    COLD_BLOOD: [14177],
     DEADLY_THROW: [26679, 48673, 48674],
     DETECT_TRAPS: [2836],
     DISARM_TRAP: [1842],
@@ -320,21 +320,19 @@ const ROGUE_SPELLS = {
     FEINT: [1966, 6768, 8637, 11303, 25302, 27448, 48658, 48659],
     GARROTE: [703, 8631, 8632, 8633, 11289, 11290, 26839, 26884, 48675, 48676],
     GOUGE: [1776],
-    HONOR_AMONG_THIEVES: [51699],
     KICK: [1766],
     KIDNEY_SHOT: [408, 8643],
     PICK_LOCK: [1804],
     PICK_POCKET: [921],
-    RIPOSTE: [14251],
     RUPTURE: [1943, 8639, 8640, 11273, 11274, 11275, 26867, 48671, 48672],
     SAFE_FALL: [1860],
     SAP: [6770, 2070, 11297, 51724],
     SHIV: [5938],
     SINISTER_STRIKE: [1752, 1757, 1758, 1759, 1760, 8621, 11293, 11294, 26861, 26862, 48637, 48638],
     SLICE_AND_DICE: [5171, 6774],
-    SPRINT: [2983, 6896, 11305],
+    SPRINT: [2983, 8696, 11305],
     STEALTH: [1784],
-    TRICKS_OF_THE_TRADE: [57933, 57934],
+    TRICKS_OF_THE_TRADE: [57934],
     VANISH: [1856, 1857, 26889],
   },
 }
