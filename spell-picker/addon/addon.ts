@@ -124,7 +124,7 @@ class SpellPicker {
       height: 350,
       backdrop: 'tooltip',
       point: 'CENTER',
-      hidden: false,
+      hidden: true,
     })
 
     Movable(this.frame, 'RightButton')
