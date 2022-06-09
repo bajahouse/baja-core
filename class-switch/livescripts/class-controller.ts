@@ -70,9 +70,11 @@ export function spellController(events: TSEvents) {
 }
 
 function swapChosenClass(player: TSPlayer, newClassChoice: uint32) {
-    if (newClassChoice > maxClassID || newClassChoice <= 0 || newClassChoice == 6 || newClassChoice == 10 || PlayerClassInfo.get(player).currentClassID == newClassChoice)
-        return
     if (player.IsInCombat())
+        return
+    if (PlayerClassInfo.get(player).currentClassID == newClassChoice)
+        return
+    if (newClassChoice <= 0 || newClassChoice == 10 || newClassChoice > maxClassID)
         return
     if (!PlayerClassInfo.get(player).unlockedArray[newClassChoice])
         return
@@ -88,7 +90,7 @@ function controlSpells(player: TSPlayer, chosenClass: uint32, learn: bool) {
     let curClassSpells = spellsList[chosenClass];
     if (learn) {
         if (chosenClass >= 11)
-            player.AddAura(classAuras[chosenClass-2], player)
+            player.AddAura(classAuras[chosenClass - 2], player)
         else
             player.AddAura(classAuras[chosenClass - 1], player)
         for (let j = 1; j < curClassSpells.length; j++) {
@@ -101,8 +103,8 @@ function controlSpells(player: TSPlayer, chosenClass: uint32, learn: bool) {
         }
     } else {
         if (chosenClass >= 11) {
-            if (player.HasAura(classAuras[chosenClass-2]))
-                player.RemoveAura(classAuras[chosenClass-2])
+            if (player.HasAura(classAuras[chosenClass - 2]))
+                player.RemoveAura(classAuras[chosenClass - 2])
         }
         else {
             if (player.HasAura(classAuras[chosenClass - 1]))
