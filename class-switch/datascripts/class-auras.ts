@@ -1,7 +1,7 @@
 import { std } from "wow/wotlk"
 import { MODNAME } from "./datascripts"
 
-let names = [
+let names = [//update with new class
     "Warrior",
     "Paladin",
     "Hunter",
