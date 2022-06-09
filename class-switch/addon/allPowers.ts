@@ -1,6 +1,6 @@
 //mana,rage,energy,runic
 
-let powerCount = 3 //change to 4 to enable runic power tracking, requires serverside changes
+let powerCount = 4 //change to 4 to enable runic power tracking, requires serverside changes
 let colors = [
     [0, 0, 1],
     [1, 0, 0],
@@ -13,7 +13,7 @@ let statusBars = []
 export function allPowers() {
     let mframe = CreateFrame("Frame", "powerBar", UIParent);
     mframe.SetWidth(140);
-    mframe.SetHeight(24*powerCount);
+    mframe.SetHeight(23 * powerCount);
     mframe.SetPoint("CENTER", -100, 0);
     mframe.EnableMouse(true);
     mframe.RegisterForDrag("LeftButton");
