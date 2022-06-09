@@ -2,7 +2,11 @@
 import { std } from "wow/wotlk";
 import { MODNAME } from "./datascripts";
 
-// Fiend Class
+// this requires modifying RuneFrame.lua line: 109 and replacing it with the following:
+//if ( class ~= "DEATHKNIGHT" and class ~= "ADVENTURER") then
+//this will show the rune frame for adventurers and death knights
+//also required a decently extensive core mod so dont merge this to master
+
 const ADVENTURER = std.Classes.create(MODNAME, 'adventurer', 'PALADIN')
 std.Tags.addUnique(MODNAME, 'adventurer-class', ADVENTURER.ID)
 ADVENTURER.Name.enGB.set('Adventurer');
