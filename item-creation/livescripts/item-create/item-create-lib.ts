@@ -5,10 +5,6 @@ import { getRandNumber } from "../livescripts";
 let startID = 200000
 const templateItemID = 38
 
-
-
-
-
 export function itemCreationSetup(events: TSEvents) {
     setupStartingID()
     setupBaseNameDict()
