@@ -1,7 +1,7 @@
 import { statToName } from "../item-create/const-creations"
 
 //reforge % modifier
-const reforgePercent = 0.4
+const reforgePercent = 0.4//40%
 //dont touch below
 const reforgeOpposite = 1 - reforgePercent
 const reforgeWholeNumber:uint32 = Math.floor(reforgePercent * 100)

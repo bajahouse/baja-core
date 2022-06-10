@@ -317,3 +317,95 @@ export const statChoices: TSArray<TSArray<TSArray<uint32>>> = <TSArray<TSArray<T
         ],
     ],
 ]
+
+export const displayDict = CreateDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>>>({//quality
+    2: emptyQuality,
+    3: emptyQuality,
+    4: emptyQuality,
+    5: emptyQuality,
+})
+
+export const prefixPostfixArray: TSArray<TSArray<TSString>> = <TSArray<TSArray<TSString>>>[<TSArray<TSString>>[], <TSArray<TSString>>[]]
+
+export const baseNameDict = CreateDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSArray<TSString>>>>({
+    2: CreateDictionary<uint32, TSDictionary<uint32, TSArray<TSString>>>({
+        0: CreateDictionary<uint32, TSArray<TSString>>({
+            13: <TSArray<TSString>>[]
+        }),
+        1: CreateDictionary<uint32, TSArray<TSString>>({
+            17: <TSArray<TSString>>[]
+        }),
+        2: CreateDictionary<uint32, TSArray<TSString>>({
+            15: <TSArray<TSString>>[]
+        }),
+        3: CreateDictionary<uint32, TSArray<TSString>>({
+            26: <TSArray<TSString>>[]
+        }),
+        4: CreateDictionary<uint32, TSArray<TSString>>({
+            13: <TSArray<TSString>>[]
+        }),
+        5: CreateDictionary<uint32, TSArray<TSString>>({
+            17: <TSArray<TSString>>[]
+        }),
+        6: CreateDictionary<uint32, TSArray<TSString>>({
+            17: <TSArray<TSString>>[]
+        }),
+        7: CreateDictionary<uint32, TSArray<TSString>>({
+            13: <TSArray<TSString>>[]
+        }),
+        8: CreateDictionary<uint32, TSArray<TSString>>({
+            17: <TSArray<TSString>>[]
+        }),
+        10: CreateDictionary<uint32, TSArray<TSString>>({
+            17: <TSArray<TSString>>[]
+        }),
+        13: CreateDictionary<uint32, TSArray<TSString>>({
+            13: <TSArray<TSString>>[]
+        }),
+        15: CreateDictionary<uint32, TSArray<TSString>>({
+            13: <TSArray<TSString>>[]
+        }),
+        19: CreateDictionary<uint32, TSArray<TSString>>({
+            26: <TSArray<TSString>>[]
+        }),
+    }),
+    4: CreateDictionary<uint32, TSDictionary<uint32, TSArray<TSString>>>({
+        0: CreateDictionary<uint32, TSArray<TSString>>({
+            2: <TSArray<TSString>>[],
+            11: <TSArray<TSString>>[],
+            12: <TSArray<TSString>>[],
+            23: <TSArray<TSString>>[],
+        }),
+        1: CreateDictionary<uint32, TSArray<TSString>>({
+            1: <TSArray<TSString>>[],
+            3: <TSArray<TSString>>[],
+            5: <TSArray<TSString>>[],
+            6: <TSArray<TSString>>[],
+            7: <TSArray<TSString>>[],
+            8: <TSArray<TSString>>[],
+            9: <TSArray<TSString>>[],
+            10: <TSArray<TSString>>[],
+            16: <TSArray<TSString>>[],
+        }),
+        2: CreateDictionary<uint32, TSArray<TSString>>({
+            1: <TSArray<TSString>>[],
+            3: <TSArray<TSString>>[],
+            5: <TSArray<TSString>>[],
+            6: <TSArray<TSString>>[],
+            7: <TSArray<TSString>>[],
+            8: <TSArray<TSString>>[],
+            9: <TSArray<TSString>>[],
+            10: <TSArray<TSString>>[],
+        }),
+        3: CreateDictionary<uint32, TSArray<TSString>>({
+            1: <TSArray<TSString>>[],
+            3: <TSArray<TSString>>[],
+            5: <TSArray<TSString>>[],
+            6: <TSArray<TSString>>[],
+            7: <TSArray<TSString>>[],
+            8: <TSArray<TSString>>[],
+            9: <TSArray<TSString>>[],
+            10: <TSArray<TSString>>[],
+        }),
+    })
+})
