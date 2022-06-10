@@ -1,19 +1,18 @@
 
-import { emptyQuality, itemClassInfo, qualityMultiplier, statCounts, statChoices, statToWeight, armorScalar } from "./const-creations";
+import { itemClassInfo, qualityMultiplier, statCounts, statChoices, statToWeight, armorScalar, baseNameDict, displayDict, prefixPostfixArray } from "./const-creations";
 import { getRandNumber } from "../livescripts";
 
 let startID = 200000
 const templateItemID = 38
 
-const displayDict = CreateDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>>>({//quality
-    2: emptyQuality,
-    3: emptyQuality,
-    4: emptyQuality,
-    5: emptyQuality,
-})
+
+
+
 
 export function itemCreationSetup(events: TSEvents) {
     setupStartingID()
+    setupBaseNameDict()
+    setupPrefixPostfixDict()
     setupDisplayIDDict()
 }
 
@@ -174,21 +173,13 @@ function getDisplayID(itemInfoArr: TSArray<float>, quality: uint32): uint32 {
 function getName(itemInfoArr: TSArray<float>, quality: uint32): string {
     let name = ""
     //base name
-    let q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 2 AND class = ' + itemInfoArr[0] + ' AND subclass = ' + itemInfoArr[1] + ' AND invtype = ' + itemInfoArr[2] + ' ORDER BY RAND() LIMIT 1')
-    while (q.GetRow()) {
-        name = q.GetString(0)
-    }
+    name = baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]][getRandNumber(baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]].length)]
+
     if (quality > 2) {//prefix
-        let q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 1 ORDER BY RAND() LIMIT 1')
-        while (q.GetRow()) {
-            name = q.GetString(0) + " " + name
-        }
+        name = prefixPostfixArray[0][getRandNumber(prefixPostfixArray[0].length)] + " " + name
     }
     if (quality == 4 || quality == 5) {//suffix
-        q = QueryWorld('SELECT name FROM custom_item_template_names WHERE  nametype = 3 ORDER BY RAND() LIMIT 1')
-        while (q.GetRow()) {
-            name += " " + q.GetString(0)
-        }
+        name += " " + prefixPostfixArray[1][getRandNumber(prefixPostfixArray[1].length)]
     }
     return name
 }
@@ -211,6 +202,23 @@ function setupDisplayIDDict() {
     }
 }
 
+function setupBaseNameDict() {
+    let q = QueryWorld('SELECT * FROM custom_item_template_names WHERE nametype = 2')
+    while (q.GetRow()) {
+        baseNameDict[q.GetUInt32(1)][q.GetUInt32(2)][q.GetUInt32(3)].push(q.GetString(4))
+    }
+}
+
+function setupPrefixPostfixDict() {
+    let q = QueryWorld('SELECT  name FROM custom_item_template_names WHERE nametype = 1')
+    while (q.GetRow()) {
+        prefixPostfixArray[0].push(q.GetString(0))
+    }
+    q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 3')
+    while (q.GetRow()) {
+        prefixPostfixArray[1].push(q.GetString(0))
+    }
+}
 function getStatGroup(statType: uint32, quality: uint32): TSArray<TSArray<uint32>> {
     let curStatCounts = statCounts[quality]
     let statGroup = <TSArray<TSArray<uint32>>>[<TSArray<uint32>>[], <TSArray<uint32>>[]]
