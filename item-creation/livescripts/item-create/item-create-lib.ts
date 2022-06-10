@@ -4,6 +4,7 @@ import { getRandNumber } from "../livescripts";
 
 let startID = 200000
 const templateItemID = 38
+//dont touch
 
 export function itemCreationSetup(events: TSEvents) {
     setupStartingID()
@@ -168,13 +169,14 @@ function getDisplayID(itemInfoArr: TSArray<float>, quality: uint32): uint32 {
 
 function getName(itemInfoArr: TSArray<float>, quality: uint32): string {
     let name = ""
-    //base name
-    name = baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]][getRandNumber(baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]].length)]
-
-    if (quality > 2) {//prefix
-        name = prefixPostfixArray[0][getRandNumber(prefixPostfixArray[0].length)] + " " + name
+    //prefix
+    if (quality > 2) {
+        name = prefixPostfixArray[0][getRandNumber(prefixPostfixArray[0].length)] + " "
     }
-    if (quality == 4 || quality == 5) {//suffix
+    //base name
+    name += baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]][getRandNumber(baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]].length)]
+    //suffix
+    if (quality == 4 || quality == 5) {
         name += " " + prefixPostfixArray[1][getRandNumber(prefixPostfixArray[1].length)]
     }
     return name
@@ -184,9 +186,8 @@ function setupStartingID() {
     //we start our custom items at 200k
     let q = QueryCharacters('SELECT MAX(entry) FROM custom_item_template')
     while (q.GetRow()) {
-        startID = (q.GetUInt32(0) + 1)
-        if (startID < 200000)
-            startID = 200000
+        if (startID < (q.GetUInt32(0) + 1))
+            startID = (q.GetUInt32(0) + 1)
     }
 }
 
