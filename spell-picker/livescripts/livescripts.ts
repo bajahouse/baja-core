@@ -1,5 +1,5 @@
 import { SpellPickerData, SpellPickerOptionsMsg, SPELL_PICKER_INIT_ID, SPELL_PICKER_RELOAD_ID } from '../shared/Messages'
-
+'
 export function Main (events: TSEvents) {
   events.Player.OnLevelChanged(player => {
     player.SendAddonMessage('reload', `${player.GetLevel()}`, 0, player)

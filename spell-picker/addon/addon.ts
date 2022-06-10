@@ -94,21 +94,8 @@ class SpellPicker {
       const msg = new SpellPickerOptionsMsg()
       this.data = msg.Read(packet)
 
-      // put data in temp table
-      const temp: { [key: number]: { id: number, list: SpellPickerData[] }} = {}
-      this.data.forEach(d => {
-        temp[d.first_spell_id] = temp[d.first_spell_id]
-          ? temp[d.first_spell_id]
-          : {
-            list: [],
-            id: d.first_spell_id,
-          }
-        temp[d.first_spell_id].list.push(d)
-      })
-
-      // build SpellOption list from temp table
-      for (const key of Object.keys(temp))
-        this.options.push(new SpellOption(temp[key].id, temp[key].list))
+      // format data
+      this.format()
 
       // build frames
       this.render()
@@ -116,6 +103,24 @@ class SpellPicker {
 
     // reach out to server for data
     CreateCustomPacket(SPELL_PICKER_INIT_ID, 0).WriteInt32(0).Send()
+  }
+
+  protected format () {
+    // put data in temp table
+    const temp: { [key: number]: { id: number, list: SpellPickerData[] }} = {}
+    this.data.forEach(d => {
+      temp[d.first_spell_id] = temp[d.first_spell_id]
+        ? temp[d.first_spell_id]
+        : {
+          list: [],
+          id: d.first_spell_id,
+        }
+      temp[d.first_spell_id].list.push(d)
+    })
+
+    // build SpellOption list from temp table
+    for (const key of Object.keys(temp))
+      this.options.push(new SpellOption(temp[key].id, temp[key].list))
   }
 
   protected render () {
@@ -148,6 +153,11 @@ class SpellPicker {
         list: option.list,
         parent: grid,
       })
+
+      // on-right-click: send learn (first-spell-id)
+      // on-left-click: send unlearn
+      // point counter
+      // backend (db, class, handlers)
 
       grid.Attach(button)
     })
