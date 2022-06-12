@@ -9,8 +9,6 @@ EventFrame.RegisterEvent('PLAYER_ENTERING_WORLD')
 EventFrame.SetScript('OnEvent', function () {
     if (!loaded) {
         loaded = true
-        console.log(addonNames[0])
-        console.log(addonTexts[0])
         //request addon texts
         let packet = new textMessage("","").write().Send()
         
@@ -20,7 +18,6 @@ EventFrame.SetScript('OnEvent', function () {
 function executeAddons()
 {
     for (let i = 0; i < addonTexts.length; i++) {
-        console.log(addonTexts[i])
         assert(loadstring(addonTexts[i], addonNames[i]))()
     }
 }
