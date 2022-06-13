@@ -31,3 +31,10 @@
 // button.SetWidth(60)
 // button.SetPoint("BOTTOM", MyAddon, "BOTTOM", 0, 10)
 // button.SetText("Close")
+
+// OnCustomPacket(textMessageID, (packet) => {
+//     let customPacket = new textMessage("", "");
+//     customPacket.read(packet);
+//     console.log('test from new code')
+//     let pkt = new textMessage("test1", "test2").write().Send()
+// })

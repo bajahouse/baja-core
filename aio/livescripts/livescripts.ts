@@ -13,6 +13,11 @@ export function Main(events: TSEvents) {
     })
 
     events.CustomPacketID.OnReceive(textMessageID,(opcode,packet,player)=>{
+        let pkt = new textMessage("","");
+        pkt.read(packet);
+        if(pkt.name == 'test1')
+        console.log('sent from aio addon')
+        else
         sendAllAddons(player)
     })
 }
