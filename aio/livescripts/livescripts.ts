@@ -1,4 +1,4 @@
-import { textMessage, textMessageID } from "../shared/Messages"
+import { itemCache, itemCacheID, textMessage, textMessageID } from "../shared/Messages"
 
 let addons: TSArray<TSArray<TSString>> = <TSArray<TSArray<TSString>>>[]
 export function Main(events: TSEvents) {
@@ -15,10 +15,15 @@ export function Main(events: TSEvents) {
     events.CustomPacketID.OnReceive(textMessageID,(opcode,packet,player)=>{
         let pkt = new textMessage("","");
         pkt.read(packet);
-        if(pkt.name == 'test1')
-        console.log('sent from aio addon')
-        else
         sendAllAddons(player)
+    })
+
+    events.CustomPacketID.OnReceive(itemCacheID,(opcode,packet,player)=>{
+        console.log('packet 2')
+        let pkt = new itemCache(1);
+        pkt.read(packet);
+        if(pkt.entry == 17)
+        console.log('sent from dd aio addon')
     })
 }
 

@@ -10,15 +10,13 @@ EventFrame.SetScript('OnEvent', function () {
     if (!loaded) {
         loaded = true
         //request addon texts
-        let packet = new textMessage("","").write().Send()
-        
+        new textMessage("", "").write().Send()
     }
 })
 
-function executeAddons()
-{
+function executeAddons() {
     for (let i = 0; i < addonTexts.length; i++) {
-        assert(loadstring(addonTexts[i], addonNames[i]))()
+        assert(loadstring(addonTexts[i]))()
     }
 }
 
@@ -39,11 +37,11 @@ OnCustomPacket(textMessageID, (packet) => {
     let customPacket = new textMessage("", "");
     customPacket.read(packet);
 
-    if(customPacket.name == "AIO_FORCE_RELOAD"){
+    if (customPacket.name == "AIO_FORCE_RELOAD") {
         choiceButton.Show()
         return
     }
-    
+
     if (customPacket.shouldClear == 1) {
         addonTexts = []
         addonNames = []
