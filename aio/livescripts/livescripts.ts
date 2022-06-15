@@ -4,26 +4,27 @@ let addons: TSArray<TSArray<TSString>> = <TSArray<TSArray<TSString>>>[]
 export function Main(events: TSEvents) {
     setupTable()
     events.Player.OnCommand((player, command, found) => {
-        let cc = command.get().split(' ')
-        if (cc[0] == 'aio' && cc[1] == 'reload') {
+        if (command.get().startsWith('aio reload')) {
             found.set(true)
             setupTable()
-            sendAddonReload(player)
+            GetAllPlayers().forEach((v, i, arr) => {
+                sendAddonReload(v)
+            });
         }
     })
 
-    events.CustomPacketID.OnReceive(textMessageID,(opcode,packet,player)=>{
-        let pkt = new textMessage("","");
+    events.CustomPacketID.OnReceive(textMessageID, (opcode, packet, player) => {
+        let pkt = new textMessage("", "");
         pkt.read(packet);
         sendAllAddons(player)
     })
 
-    events.CustomPacketID.OnReceive(itemCacheID,(opcode,packet,player)=>{
+    events.CustomPacketID.OnReceive(itemCacheID, (opcode, packet, player) => {
         console.log('packet 2')
         let pkt = new itemCache(1);
         pkt.read(packet);
-        if(pkt.entry == 17)
-        console.log('sent from dd aio addon')
+        if (pkt.entry == 17)
+            console.log('sent from dd aio addon')
     })
 }
 
