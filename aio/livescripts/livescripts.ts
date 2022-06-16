@@ -1,4 +1,4 @@
-import { itemCache, itemCacheID, textMessage, textMessageID } from "../shared/Messages"
+import { textMessage, textMessageID } from "../shared/Messages"
 
 let addons: TSArray<TSArray<TSString>> = <TSArray<TSArray<TSString>>>[]
 export function Main(events: TSEvents) {
@@ -14,17 +14,7 @@ export function Main(events: TSEvents) {
     })
 
     events.CustomPacketID.OnReceive(textMessageID, (opcode, packet, player) => {
-        let pkt = new textMessage("", "");
-        pkt.read(packet);
         sendAllAddons(player)
-    })
-
-    events.CustomPacketID.OnReceive(itemCacheID, (opcode, packet, player) => {
-        console.log('packet 2')
-        let pkt = new itemCache(1);
-        pkt.read(packet);
-        if (pkt.entry == 17)
-            console.log('sent from dd aio addon')
     })
 }
 
@@ -32,7 +22,7 @@ function setupTable() {
     addons = <TSArray<TSArray<TSString>>>[]
     let fs = ReadDirectory('./aio/')
     fs.forEach((v: TSString) => {
-        if (v.endsWith('.lua')) {
+        if (v.endsWith('.aio.lua')) {
             addons.push([v, ReadFile(v, `print("error loading ` + v + `")`)])
         }
     })
@@ -41,7 +31,7 @@ function setupTable() {
 
 function sendAllAddons(player: TSPlayer) {
     addons.forEach((v, i) => {
-        let pkt = new textMessage(v[0], v[1]);
+        let pkt = new textMessage(v[0], v[1])
         if (i == 0)
             pkt.shouldClear = 1
         if (i == addons.length - 1)
@@ -51,8 +41,5 @@ function sendAllAddons(player: TSPlayer) {
 }
 
 function sendAddonReload(player: TSPlayer) {
-    addons.forEach((v, i) => {
-        let pkt = new textMessage("AIO_FORCE_RELOAD", "");
-        pkt.write().SendToPlayer(player)
-    })
+    new textMessage("AIO_FORCE_RELOAD", "").write().SendToPlayer(player)
 }

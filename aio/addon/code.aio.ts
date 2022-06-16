@@ -1,8 +1,5 @@
-// import { textMessageID, textMessage } from "../shared/Messages"
+import { textMessageID, textMessage } from "../shared/Messages"
 
-import { textMessageID, textMessage, itemCache } from "../shared/Messages"
-
-//build addon, copy resulting lua to aio folder in default/datasets/realm/aio, run aio reload
 let MyAddon = CreateFrame("Frame", "MyAddonFrame")
 MyAddon.SetBackdrop({
     edgeFile: 'Interface/Tooltips/UI-Tooltip-Border',
@@ -40,6 +37,4 @@ OnCustomPacket(textMessageID, (packet) => {
     let customPacket = new textMessage("", "");
     customPacket.read(packet);
     console.log('test from new code')
-    new itemCache(17).write().Send()
-    
 })

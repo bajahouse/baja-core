@@ -1,6 +1,5 @@
 export const textMessageID = 100;
 export class textMessage {
-    
     name: string = "";
     addonText: string = "name";
     shouldClear: uint8 = 0;
@@ -26,25 +25,6 @@ export class textMessage {
         packet.WriteString(this.addonText);
         packet.WriteUInt8(this.shouldClear);
         packet.WriteUInt8(this.isLast);
-        return packet;
-    }
-}
-
-export const itemCacheID = 101;
-export class itemCache {
-    entry: uint32 = 0;
-
-    constructor(entry: uint32) {
-        this.entry = entry;
-    }
-
-    read(read: TSPacketRead): void {
-        this.entry = read.ReadUInt32();
-    }
-
-    write(): TSPacketWrite {
-        let packet = CreateCustomPacket(itemCacheID, 0);
-        packet.WriteUInt32(this.entry);
         return packet;
     }
 }
