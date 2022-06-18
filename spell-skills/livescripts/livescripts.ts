@@ -242,4 +242,32 @@ export function Main (events: TSEvents) {
     const damage = dmg.get() + (dmg.get() * (points * Random(0.05, 0.1)))
     dmg.set(damage)
   })
+
+  // FROSTBOLT
+  events.SpellID.OnApply(GetIDTag('spell-skills', 'FROSTBOLT_SKILL'), s => {
+    const p = s.GetCaster().ToPlayer()
+    const previous: uint32 = p.GetNumber('FROSTBOLT_SKILL')
+    const points: uint32 = s.GetSpellInfo().GetManaCost()
+    const next: uint32 = AtLeastZero(previous + points)
+    p.SetNumber('FROSTBOLT_SKILL', next)
+    AddSpellSkillTag(p, 'FROSTBOLT')
+  })
+  events.SpellID.OnRemove(GetIDTag('spell-skills', 'FROSTBOLT_SKILL'), s => {
+    const p = s.GetCaster().ToPlayer()
+    const previous: uint32 = p.GetNumber('FROSTBOLT_SKILL')
+    const points: uint32 = s.GetSpellInfo().GetManaCost()
+    const next: uint32 = AtLeastZero(previous - points)
+    p.SetNumber('FROSTBOLT_SKILL', next)
+    RemoveSpellSkillTag(p, 'FROSTBOLT')
+  })
+  events.SpellID.OnDamageEarly(GetIDTag('spell-skills', 'FROSTBOLT'), (s, dmg) => {
+    const p = s.GetCaster().ToPlayer()
+    const a: uint32 = AtLeastZero(p.GetNumber('FROSTBOLT_SKILL'))
+    const b: uint32 = AtLeastZero(p.GetNumber('ALL_SKILL'))
+    const c: uint32 = AtLeastZero(p.GetNumber('FROST_SKILL'))
+    const d: uint32 = AtLeastZero(p.GetNumber('MAGE_SKILL'))
+    const points = a + b + c + d
+    const damage = dmg.get() + (dmg.get() * (points * Random(0.05, 0.1)))
+    dmg.set(damage)
+  })
 }
