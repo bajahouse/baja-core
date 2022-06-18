@@ -214,6 +214,34 @@ export function Main (events: TSEvents) {
     const damage = dmg.get() + (dmg.get() * (points * Random(0.1, 0.2)))
     dmg.set(damage)
   })
+  
+  // EVISCERATE
+  events.SpellID.OnApply(GetIDTag('spell-skills', 'EVISCERATE_SKILL'), s => {
+    const p = s.GetCaster().ToPlayer()
+    const previous: uint32 = p.GetNumber('EVISCERATE_SKILL')
+    const points: uint32 = s.GetSpellInfo().GetManaCost()
+    const next: uint32 = AtLeastZero(previous + points)
+    p.SetNumber('EVISCERATE_SKILL', next)
+    AddSpellSkillTag(p, 'EVISCERATE')
+  })
+  events.SpellID.OnRemove(GetIDTag('spell-skills', 'EVISCERATE_SKILL'), s => {
+    const p = s.GetCaster().ToPlayer()
+    const previous: uint32 = p.GetNumber('EVISCERATE_SKILL')
+    const points: uint32 = s.GetSpellInfo().GetManaCost()
+    const next: uint32 = AtLeastZero(previous - points)
+    p.SetNumber('EVISCERATE_SKILL', next)
+    RemoveSpellSkillTag(p, 'EVISCERATE')
+  })
+  events.SpellID.OnDamageEarly(GetIDTag('spell-skills', 'EVISCERATE'), (spell, dmg) => {
+    const p = spell.GetCaster().ToPlayer()
+    const a: uint32 = AtLeastZero(p.GetNumber('EVISCERATE_SKILL'))
+    const b: uint32 = AtLeastZero(p.GetNumber('ALL_SKILL'))
+    const c: uint32 = AtLeastZero(p.GetNumber('ROGUE_SKILL'))
+    const d: uint32 = AtLeastZero(p.GetNumber('ASSASSINATION_SKILL'))
+    const points = a + b + c + d
+    const damage = dmg.get() + (dmg.get() * (points * Random(0.1, 0.2)))
+    dmg.set(damage)
+  })
 
   // FIREBALL
   events.SpellID.OnApply(GetIDTag('spell-skills', 'FIREBALL_SKILL'), s => {
