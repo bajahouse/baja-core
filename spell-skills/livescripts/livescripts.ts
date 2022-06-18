@@ -52,28 +52,7 @@
 //   })
 // }
 
-// on apply aura
-// - set [tag_dict_key]=true on player: sinister_strike=true, rogue=true
-
-// on remove aura:
-// - if stacks=0 then set [tag_dict_key]=false on player
-
-// on event (damage, after-cast, etc):
-// - lookup tags for spell
-// - accumulate effectiveness for tags based on aura stacks (prefer dictionaries)
-
 // const SpellTags = CreateDictionary<float, TSArray<TSString>>({})
-
-// const EXAMPLE_TAGS: TSArray<TSString> = <TSArray<TSString>>([
-//   'sinister-strike',
-//   'offensive',
-//   'rogue',
-// ]) 
-
-// SpellTags.set(
-//   GetIDTagUnique('spell-skills', 'SINISTER_STRIKE_FIRST'),
-//   EXAMPLE_TAGS,
-// )
 
 function Random (min: number = 1000000, max: number = 8999999): number {
   return Math.floor(Math.random() * max) + min
@@ -124,6 +103,7 @@ export function Main (events: TSEvents) {
     p.SendBroadcastMessage(`${p.GetNumber('SINISTER_STRIKE_SKILL')}`)
   })
 
+  // MISC
   // ALL
   events.SpellID.OnApply(GetIDTag('spell-skills', 'All_SKILL'), s => {
     const p = s.GetCaster().ToPlayer()
@@ -140,6 +120,7 @@ export function Main (events: TSEvents) {
     p.SetNumber('ALL_SKILL', next)
   })  
 
+  // CLASS
   // MAGE
   events.SpellID.OnApply(GetIDTag('spell-skills', 'Mage_SKILL'), s => {
     const p = s.GetCaster().ToPlayer()
@@ -172,6 +153,7 @@ export function Main (events: TSEvents) {
     p.SetNumber('ROGUE_SKILL', next)
   })
 
+  // SPEC
   // FIRE
   events.SpellID.OnApply(GetIDTag('spell-skills', 'Fire_SKILL'), s => {
     const p = s.GetCaster().ToPlayer()
@@ -204,6 +186,7 @@ export function Main (events: TSEvents) {
     p.SetNumber('COMBAT_SKILL', next)
   })
 
+  // SPELL
   // SINISTER_STRIKE
   events.SpellID.OnApply(GetIDTag('spell-skills', 'SINISTER_STRIKE_SKILL'), s => {
     const p = s.GetCaster().ToPlayer()
