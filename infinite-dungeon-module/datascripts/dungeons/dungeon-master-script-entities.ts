@@ -1,3 +1,13 @@
+// ============================================================================
+//
+// - Dungeon Master Script Entities -
+//
+//   This file creates the base entities for any dungeon
+//
+// - External scripts -
+//   Livescripts: livescripts/dungeon/dungeon-master
+//
+// ============================================================================
 
 import { std } from "wow/wotlk";
 import { MODNAME } from "../modname";

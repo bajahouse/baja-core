@@ -1,3 +1,16 @@
+// ============================================================================
+//
+// - Dungeon Master -
+//
+//   This file holds all reusable information for use in infinite dungeon creation
+//   This includes usage of spell choice, player rewards, resets, scaling, formation spawns,  and apply/removal of buffs
+//
+// - External scripts -
+//   datascripts: datascripts/dungeons/dungeon1/*
+//   livescripts: livescripts/dungeon/dungeon-master
+//
+// ============================================================================
+
 import { spellChoiceID, spellChoice, spellChoices } from "../../shared/Messages"
 export const startingMapID = GetID("Map","infinite-dungeon-mod","basemap")
 const classSpells: TSArray<TSArray<TSArray<uint32>>> = <TSArray<TSArray<TSArray<uint32>>>>[

@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Dungeon Master Player Choice Spells -
+//
+//   This file creates the spell choices for the player used any dungeon
+//
+// - External scripts -
+//   Livescripts: livescripts/dungeon/dungeon-master
+//
+// ============================================================================
+
 import { std } from "wow/wotlk"
 import { Spell } from "wow/wotlk/std/Spell/Spell"
 import { MODNAME } from "../modname"

@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Starting Map -
+//
+//   This file sets up the starter area map
+//
+// - External scripts -
+//   Assets: assets/world/dungeonbasemap/*
+//
+// ============================================================================
+
 import { std } from "wow/wotlk";
 import { MODNAME } from "../modname";
 

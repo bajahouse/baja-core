@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Dungeon 1 mini mobs -
+//
+//   This file creates the bosses for dungeon 1 mini mobs
+//
+// - External scripts -
+//   Livescripts: livescripts/dungeon/dungeon-1
+//
+// ============================================================================
+
 import { std } from "wow/wotlk";
 import { MODNAME } from "../../modname";
 

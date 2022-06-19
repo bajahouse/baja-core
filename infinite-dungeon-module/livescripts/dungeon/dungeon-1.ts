@@ -1,3 +1,17 @@
+// ============================================================================
+//
+// - Dungeon 1 -
+//
+//   This file holds all information to register a new dungeon with the infinite script
+//   This includes all mob positions, chest positions and vase positions.
+//     This also includes any creature and player events to a specific dungeon
+//
+// - External scripts -
+//   datascripts: datascripts/dungeons/dungeon1/*
+//   livescripts: livescripts/dungeon/dungeon-master
+//
+// ============================================================================
+
 import { applyPlayerBuffs, getRandomInt, prestigeSpell, removePlayerBuffs, resetGroup, rewardGroup, setupLastBossCheck, spawnMap, startingMapID } from "./dungeon-master"
 const dung1MapID = GetID("Map", "infinite-dungeon-mod", "dungeon-1")
 const miniMobSpawnCoords: TSArray<TSArray<TSDictionary<string, float>>> = [

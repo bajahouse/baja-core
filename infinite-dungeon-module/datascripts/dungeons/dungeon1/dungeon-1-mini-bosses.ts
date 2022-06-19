@@ -1,7 +1,17 @@
+// ============================================================================
+//
+// - Dungeon 1 mini Bosses -
+//
+//   This file creates the bosses for dungeon 1 mini bosses as well as basic spell scripting
+//
+// - External scripts -
+//   Livescripts: livescripts/dungeon/dungeon-1
+//
+// ============================================================================
+
 import { std } from "wow/wotlk";
 import { MODNAME } from "../../modname";
 import { mobOne } from "./dungeon-1-mobs";
-
 
 export let MiniBossBurdenofKnowledge = std.Spells.create(MODNAME,"minibossburdenofknowledge-spell",23187);
 MiniBossBurdenofKnowledge.Name.enGB.set("Burden of Knowledge");

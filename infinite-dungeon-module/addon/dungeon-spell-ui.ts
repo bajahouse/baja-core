@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Dungeon Spell UI -
+//
+//   This file displays spell choices to the client for use in the dungeon spell choices.
+//
+// - External scripts -
+//   Livescripts: livescripts/dungeon/*
+//
+// ============================================================================
+
 import { spellChoicesID, spellChoices, spellChoice } from "../shared/Messages";
 
 export function dungeonSpellUI() {
