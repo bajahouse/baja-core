@@ -1,6 +1,17 @@
+// ============================================================================
+//
+// - Functions -
+//
+//   This file holds reusable functions for creation of objects for this module
+//
+// - External scripts -
+//   Livescripts: livescripts/sql/*
+//
+// ============================================================================
+
 import { std } from "wow/wotlk";
-import { MODNAME } from "./farming-base";
-import { gobSpellEntry, creatureSpellEntry, itemEntry } from "./farming-objects";
+import { MODNAME } from "./datascripts";
+import { gobSpellEntry, creatureSpellEntry, itemEntry } from "./base-objects";
 
 export function setupAreaForCrops(areaID: number, cropCount: number) {
     std.SQL.Databases.world_dest.write(`INSERT INTO \`farming_crops_size\` VALUES ( ${areaID}, ${cropCount})`);

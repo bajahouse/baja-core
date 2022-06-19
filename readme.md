@@ -17,7 +17,7 @@ After tswow is installed, drag and drop any of the modules into your modules/ fo
 4. **item-creation**: Implementation of a runtime item generator for a diablo-like experience. 
     * by: @tester
     * balancing assistance: @Driggs
-5. **phase-module**: A player housing + farming module, inspired by IHM testing module. 
+5. **player-housing-farming-module**: A player housing + farming module, inspired by IHM testing module. 
     * By: @tester
 6. **spell-picker**: Pick your own spells.
     * By: nl

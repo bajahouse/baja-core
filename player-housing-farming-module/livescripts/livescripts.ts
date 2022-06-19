@@ -1,11 +1,11 @@
-import { baseFarm } from "./farming-base";
-import { SetupFarmInfo } from "./farming-classes";
-import { RegisterFarmingSpells } from "./farming-spell-scripts";
+import { baseHouse } from "./housing-base";
+import { SetupHouseInfo } from "./base-classes";
+import { RegisterFarmingSpells } from "./spell-scripts";
 
 export function Main(events: TSEvents) {
-    SetupFarmInfo(events)
+    SetupHouseInfo(events)
     RegisterFarmingSpells(events)
-    baseFarm(events)
+    baseHouse(events)
 }
 
 export function getRandNumber(min: uint32, max: uint32): uint32 {

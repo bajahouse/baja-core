@@ -1,0 +1,1 @@
+export const MODNAME = 'player-housing-mod'
