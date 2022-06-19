@@ -1,10 +1,8 @@
 # Baja-Core
-
-Baja-Core is a tswow demo library that gives real world examples for tswow. This project is not affiliated with tswow directly and is a community-driven project. For any questions, comments or concerns please refer to our discord: [Discord Link](https://discord.gg/Zy2PY9C3n3)
+Baja-Core is a tswow demo library that gives real world examples for tswow. This project is not affiliated with tswow directly and is a community-driven project. For any questions, comments or concerns please refer to our discord: [link](https://discord.gg/Zy2PY9C3n3)
 
 ## Installation
-
-Use the tswow installation guide [tswow wiki](https://tswow.github.io/tswow-wiki/home/) 
+Use the tswow installation guide [TSWoW Wiki](https://tswow.github.io/tswow-wiki/home/) 
 After tswow is installed, drag and drop any of the modules into your modules/ folder
 
 ## Current Modules
@@ -26,3 +24,6 @@ After tswow is installed, drag and drop any of the modules into your modules/ fo
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. We are open to any ideas but ask that any module is written to assure it does not impact other possible content.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
