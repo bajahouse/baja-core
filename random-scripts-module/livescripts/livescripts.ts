@@ -1,7 +1,5 @@
-
-import {itemRandomEnchantVisual} from "./randomenchants"
+import { itemRandomEnchantVisual } from "./randomenchants"
 
 export function Main(events: TSEvents) {
-
     itemRandomEnchantVisual(events)
 }
