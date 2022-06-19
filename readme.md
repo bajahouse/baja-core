@@ -5,6 +5,7 @@ Baja-Core is a tswow demo library that gives real world examples for tswow. This
 ## Installation
 
 Use the tswow installation guide [tswow wiki](https://tswow.github.io/tswow-wiki/home/) 
+After tswow is installed, drag and drop any of the modules into your modules/ folder
 
 ## Current Modules
 1. **baja-shared**: This module currently stores a new addon library. In the future it would house any other libraries that would be reused in other modules.    
