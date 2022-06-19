@@ -414,7 +414,7 @@ export function dungeon1(events: TSEvents) {
             let mapChoice = getRandomInt(mobSpawnCoords.length)
             spawnMap(map, miniMobSpawnCoords[mapChoice], miniMobIDs, mobSpawnCoords[mapChoice], mobIDs, miniBossSpawnCoords[mapChoice], miniBossIDs, bossSpawnCoords[mapChoice], bossIDs, vendorSpawnCoords[mapChoice], chestSpawnCoords[mapChoice], vaseSpawnCoords[mapChoice])
         }
-        
+
         player.AddNamedTimer('rebuff', 10000, TimerLoops.INDEFINITE, 2, (owner, timer) => {
             applyPlayerBuffs(owner.ToPlayer())
         })

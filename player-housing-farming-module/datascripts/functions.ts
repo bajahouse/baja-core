@@ -66,7 +66,7 @@ function makeHousingSpellGob(entry: number, name: string): number {
         .Priority.set(entry)
         .Tags.add(MODNAME, 'farming-gob-spell')
     let obj = std.GameObjectTemplates.Generic.create(MODNAME, "farming-" + name.toLowerCase().replace(" ", "-"), entry);
-        obj.Tags.add(MODNAME,'farming-gob')
+    obj.Tags.add(MODNAME, 'farming-gob')
     spl.Effects.get(0).MiscValueA.set(obj.ID)
 
     return spl.ID;

@@ -12,7 +12,7 @@
 // ============================================================================
 
 import { spellChoiceID, spellChoice, spellChoices } from "../../shared/Messages"
-export const startingMapID = GetID("Map","infinite-dungeon-mod","basemap")
+export const startingMapID = GetID("Map", "infinite-dungeon-mod", "basemap")
 const classSpells: TSArray<TSArray<TSArray<uint32>>> = <TSArray<TSArray<TSArray<uint32>>>>[
     <TSArray<TSArray<uint32>>>[],//none
     <TSArray<TSArray<uint32>>>[],
@@ -66,7 +66,7 @@ class dungeonBuffs {
 export function dungeonBuffSystem(events: TSEvents) {
     setupTables()
     events.CreatureID.OnCreate(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), (creature, cancel) => {
-        creature.GetCollisions().Add(ModID(), "hungergames-collision", 2, 500, 0, (self,collided,cancel,entry) => {
+        creature.GetCollisions().Add(ModID(), "hungergames-collision", 2, 500, 0, (self, collided, cancel, entry) => {
             if (collided.IsPlayer()) {
                 let player = collided.ToPlayer()
                 let creature = self.ToCreature()
@@ -109,7 +109,7 @@ export function dungeonBuffSystem(events: TSEvents) {
         removePlayerBuffs(player)
     })
 
-    events.Player.OnSay((player, msg,type, lang ) => {
+    events.Player.OnSay((player, msg, type, lang) => {
         if (msg.get().startsWith("#1")) {
             playerChoseBuff(player, 2)
             applyPlayerBuffs(player)
@@ -147,7 +147,7 @@ export function rewardGroup(player: TSPlayer) {
         }
     } else {
         let curPrestige: uint32 = player.GetUInt('prestige', 0)
-        player.AddItem(rewardID, (curPrestige * curPrestige) + curPrestige )
+        player.AddItem(rewardID, (curPrestige * curPrestige) + curPrestige)
         player.SetUInt('prestige', 0)
         player.RemoveItemByEntry(insideID, 999999)
         player.Teleport(startingMapID, -8750.45, -74.64, 31, 0)
@@ -359,15 +359,15 @@ function givePlayerChoiceOfBuffs(player: TSPlayer): boolean {
             let c: uint32 = spellInfo[0]
             if (spellIDToType[c] == 0) {
                 count++
-                player.SendBroadcastMessage('#'+count+': ' +desc)
+                player.SendBroadcastMessage('#' + count + ': ' + desc)
                 charItems.currentChoiceBuffs.push(c)
                 spellRarity.push(spellInfo[1])
                 spellDescs.push(desc)
-                
+
             } else if (spellIDToType[c] == 1 || spellIDToType[c] == 2) {
                 if (!charItems.currentBuffs.includes(c)) {
                     count++
-                    player.SendBroadcastMessage('#'+count+': ' + desc)
+                    player.SendBroadcastMessage('#' + count + ': ' + desc)
                     charItems.currentChoiceBuffs.push(c)
                     spellRarity.push(spellInfo[1])
                     spellDescs.push(desc)
@@ -441,28 +441,28 @@ export function applyPlayerBuffs(player: TSPlayer) {
     for (let i = 0; i < charItems.currentBuffs.length; i++) {
         if (charItems.currentBuffsType[i] == 0 || charItems.currentBuffsType[i] == 1) {
             //console.log('player:'+player.GetName() + ' spellID ' + charItems.currentBuffs[i] + ' stackAmt: ' +charItems.currentBuffsCount[i] )
-            if(player.HasAura(charItems.currentBuffs[i])){
+            if (player.HasAura(charItems.currentBuffs[i])) {
                 player.GetAura(charItems.currentBuffs[i]).SetStackAmount(charItems.currentBuffsCount[i])
-            }else{
+            } else {
                 player.AddAura(charItems.currentBuffs[i], player).SetStackAmount(charItems.currentBuffsCount[i])
             }
             //player.AddAura(charItems.currentBuffs[i], player).SetStackAmount(charItems.currentBuffsCount[i])
         } else if (charItems.currentBuffsType[i] == 2) {
-            if(!player.HasSpell(charItems.currentBuffs[i]))
-            player.LearnSpell(charItems.currentBuffs[i])
+            if (!player.HasSpell(charItems.currentBuffs[i]))
+                player.LearnSpell(charItems.currentBuffs[i])
         }
     }
     for (let i = 0; i < charItems.currentTormentsAndBlessings.length; i++) {
         if (charItems.currentTormentsAndBlessingsType[i] == 0 || charItems.currentTormentsAndBlessingsType[i] == 1) {
-            if(player.HasAura(charItems.currentTormentsAndBlessings[i])){
+            if (player.HasAura(charItems.currentTormentsAndBlessings[i])) {
                 player.GetAura(charItems.currentTormentsAndBlessings[i]).SetStackAmount(charItems.currentTormentsAndBlessingsCount[i])
-            }else{
+            } else {
                 player.AddAura(charItems.currentTormentsAndBlessings[i], player).SetStackAmount(charItems.currentTormentsAndBlessingsCount[i])
             }
             //player.AddAura(charItems.currentTormentsAndBlessings[i], player).SetStackAmount(charItems.currentTormentsAndBlessingsCount[i])
         } else if (charItems.currentTormentsAndBlessingsType[i] == 2) {
-            if(!player.HasSpell(charItems.currentTormentsAndBlessings[i]))
-            player.LearnSpell(charItems.currentTormentsAndBlessings[i])
+            if (!player.HasSpell(charItems.currentTormentsAndBlessings[i]))
+                player.LearnSpell(charItems.currentTormentsAndBlessings[i])
         }
     }
 }
@@ -494,23 +494,23 @@ function setupTables() {
     //sql query for all spells
     let query = QueryWorld("SELECT * FROM `dungeon_spells`;");
 
-        while (query.GetRow()) {
+    while (query.GetRow()) {
         let classID = query.GetUInt32(0)
         let spellID = query.GetUInt32(1)
         let spellRarity = query.GetUInt32(2)
         let spellType = query.GetUInt32(3)
         let spellDesc = query.GetString(4)
         spellIDToType[spellID] = spellType
-        if(classID == 0){//add spell to all
+        if (classID == 0) {//add spell to all
             for (let j = 1; j <= 11; j++) {//1->11 for class IDs
-                if (j == 10) 
+                if (j == 10)
                     continue;
-                classSpells[j].push(<TSArray<uint32>>[spellID,spellRarity,spellType])
+                classSpells[j].push(<TSArray<uint32>>[spellID, spellRarity, spellType])
                 classSpellDescriptions[j].push(spellDesc)
             }
-            
-        }else{//single class
-            classSpells[classID].push(<TSArray<uint32>>[spellID,spellRarity,spellType])
+
+        } else {//single class
+            classSpells[classID].push(<TSArray<uint32>>[spellID, spellRarity, spellType])
             classSpellDescriptions[classID].push(spellDesc)
         }
     }
@@ -519,7 +519,7 @@ function setupTables() {
 export function setupLastBossCheck(events: TSEvents, bossID: number) {
     events.CreatureID.OnDeath(bossID, (creature, killer) => {
         if (creature.GetUInt('lastBoss', 0) == 1) {
-            killer.SummonGameObject(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), creature.GetX(), creature.GetY(), creature.GetZ()+1, creature.GetO(), 0)
+            killer.SummonGameObject(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), creature.GetX(), creature.GetY(), creature.GetZ() + 1, creature.GetO(), 0)
         }
     })
 }

@@ -15,9 +15,9 @@ import { MODNAME } from "../modname";
 std.DBC.CreatureModelData.add(3500).ModelName.set('World\\Expansion01\\Doodads\\ZulAman\\Ruins\\TrollRuins_ZulAman_07.mdx').CollisionWidth.set(1).CollisionHeight.set(3).GeoBoxMinX.set(-1.57329094409943).GeoBoxMaxX.set(1.57456505298615).GeoBoxMinY.set(-1.83399701118469).GeoBoxMaxY.set(1.80083501338959).GeoBoxMinZ.set(-0.13425900042057).GeoBoxMaxZ.set(4.46832180023193)
 std.DBC.CreatureDisplayInfo.add(35000).ModelID.set(3500)
 std.SQL.creature_model_info.add(35000).BoundingRadius.set(1)
-export let dungeonVase = std.CreatureTemplates.create(MODNAME,'dungeon-vase',21185)
+export let dungeonVase = std.CreatureTemplates.create(MODNAME, 'dungeon-vase', 21185)
 dungeonVase.Name.enGB.set('Dungeon Vase')
-dungeonVase.Level.set(20,20)
+dungeonVase.Level.set(20, 20)
 dungeonVase.Models.clearAll()
 dungeonVase.Models.addIds(35000)
 dungeonVase.Scale.set(0.3)
@@ -72,7 +72,7 @@ animareCellItem.Name.enGB.set("Animare Cell");
 animareCellItem.Spells.clearAll();
 animareCellItem.Spells.addMod((spell) => {
     spell.Spell.set(dungeonChoice.ID);
-    spell.Charges.set(1,"DELETE_ITEM");
+    spell.Charges.set(1, "DELETE_ITEM");
     spell.ProcsPerMinute.set(-1);
     spell.Cooldown.set(3000);
 });
@@ -99,14 +99,14 @@ mapPrestige.Attributes.AURA_VISIBLE_TO_CASTER_ONLY.set(1);
 
 std.DBC.CurrencyCategory.add(50).Name.enGB.set('dungeon').Flags.set(16712190)
 
-export let dungeonEndCurrency = std.Items.create(MODNAME,'dungeon-end-currency',37742)
+export let dungeonEndCurrency = std.Items.create(MODNAME, 'dungeon-end-currency', 37742)
 dungeonEndCurrency.Name.enGB.set('dungeon End Token')
 dungeonEndCurrency.Description.enGB.set('This currency is rewarded from dungeon')
 dungeonEndCurrency.MaxStack.set(2147483647)
 dungeonEndCurrency.MaxCount.set(2147483647)
 std.DBC.CurrencyTypes.add(350).ItemID.set(dungeonEndCurrency.ID).CategoryID.set(50).BitIndex.set(60)
 
-export let dungeonInsideCurrency = std.Items.create(MODNAME,'dungeon-inside-currency',37742)
+export let dungeonInsideCurrency = std.Items.create(MODNAME, 'dungeon-inside-currency', 37742)
 dungeonInsideCurrency.Name.enGB.set('dungeon Inside Token')
 dungeonEndCurrency.Description.enGB.set('This currency is rewarded inside dungeon')
 dungeonInsideCurrency.MaxStack.set(2147483647)
@@ -114,9 +114,9 @@ dungeonInsideCurrency.MaxCount.set(2147483647)
 std.DBC.CurrencyTypes.add(351).ItemID.set(dungeonInsideCurrency.ID).CategoryID.set(50).BitIndex.set(60)
 
 std.DBC.ItemExtendedCost.add(6000)
-.ItemCount.fill(0).ItemCount.set([500])
-.ItemID.fill(0).ItemID.set([dungeonInsideCurrency.ID])
-.HonorPoints.set(0).ArenaPoints.set(0)
+    .ItemCount.fill(0).ItemCount.set([500])
+    .ItemID.fill(0).ItemID.set([dungeonInsideCurrency.ID])
+    .HonorPoints.set(0).ArenaPoints.set(0)
 
 let dungeonVendor = std.CreatureTemplates.create(
     MODNAME,
@@ -126,4 +126,4 @@ let dungeonVendor = std.CreatureTemplates.create(
 dungeonVendor.Name.enGB.set("Test Vendor");
 dungeonVendor.Subname.enGB.set("All Powerful");
 dungeonVendor.FactionTemplate.set(35);
-dungeonVendor.Vendor.add(animareCellItem.ID,6000);
+dungeonVendor.Vendor.add(animareCellItem.ID, 6000);

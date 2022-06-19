@@ -15,7 +15,7 @@ import { statToName } from "../item-create/const-creations"
 const reforgePercent = 0.4//40%
 //dont touch below
 const reforgeOpposite = 1 - reforgePercent
-const reforgeWholeNumber:uint32 = Math.floor(reforgePercent * 100)
+const reforgeWholeNumber: uint32 = Math.floor(reforgePercent * 100)
 
 export function reforging(events: TSEvents) {
     events.GameObjectID.OnGossipHello(GetID('gameobject_template', 'item-creation', 'reforge-master'), (gameObject, player, cancel) => {

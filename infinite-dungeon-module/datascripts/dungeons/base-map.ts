@@ -32,11 +32,11 @@ std.SQL.game_tele
     .position_z.set(31.1351)
     .map.set(baseMap.ID)
     .name.set("dungeonStartArea");
-    
-    export let dungeonStartObj = std.GameObjectTemplates.Rituals.create(
-        MODNAME,
-        "dungeonstartobj",
-        177193
-    );
-    dungeonStartObj.Name.enGB.set("Mystical Starting Stone");
-    dungeonStartObj.Spawns.add(MODNAME, 'dungeon-start-spawn', { map: baseMap.ID, x: -8739.3, y: -62.6, z: 31.14, o: 4.13 });
+
+export let dungeonStartObj = std.GameObjectTemplates.Rituals.create(
+    MODNAME,
+    "dungeonstartobj",
+    177193
+);
+dungeonStartObj.Name.enGB.set("Mystical Starting Stone");
+dungeonStartObj.Spawns.add(MODNAME, 'dungeon-start-spawn', { map: baseMap.ID, x: -8739.3, y: -62.6, z: 31.14, o: 4.13 });
