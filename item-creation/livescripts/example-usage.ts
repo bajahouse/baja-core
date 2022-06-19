@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Examples -
+//
+//   This file has a couple showcases of the item generator with commands
+//
+// - External scripts -
+//   Livescripts: livescripts/item-create/item-create-lib
+//
+// ============================================================================
+
 import { createItemRandom } from "./item-create/item-create-lib"
 
 export function example(events: TSEvents) {

@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Constants -
+//
+//   This file holds constants used in other files
+//
+// - External scripts -
+//   Datascripts: datascripts/fill-database
+//
+// ============================================================================
+
 export const displays =
     [
         [2, 2, 0, 13, 14029],

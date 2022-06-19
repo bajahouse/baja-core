@@ -1,3 +1,13 @@
+// ============================================================================
+//
+// - Item Generator Library -
+//
+//   This file is used to generate an item using multipliers from const-creations and control the IDs of any generated items.
+//   There are 4 functions to use external of the lib:createItemRandom,returnItemIDRandom,createItemWithChoices,returnItemIDWithChoices
+// - External scripts -
+//   datascripts: datascripts/fill-database
+//
+// ============================================================================
 
 import { itemClassInfo, qualityMultiplier, statCounts, statChoices, statToWeight, armorScalar, baseNameDict, displayDict, prefixPostfixArray } from "./const-creations";
 import { getRandNumber } from "../livescripts";
@@ -27,13 +37,13 @@ export function createItemWithChoices(player: TSPlayer, itemType: uint32, itemSu
     return player.AddItem(temp.GetEntry(), 1)
 }
 
-export function returnItemRandom(player: TSUnit): uint32 {
+export function returnItemIDRandom(player: TSUnit): uint32 {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
     temp = modifyItemProperties(temp, chooseItemType(), player.GetLevel(), getRandNumber(3))
     return temp.GetEntry()
 }
 
-export function returnItemWithChoices(itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): uint32 {
+export function returnItemIDWithChoices(itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): uint32 {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
     temp = modifyItemProperties(temp, itemClassInfo[itemType][itemSubType], level, statType)
     return temp.GetEntry()

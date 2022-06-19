@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Item Cache Updater -
+//
+//   This file is the response to the client requesting a new item cache
+//
+// - External scripts -
+//   Addon: addon/item-cache-request
+//
+// ============================================================================
+
 import { itemCache, itemCacheID } from "../shared/Messages";
 
 export function itemCacheSend(events: TSEvents) {

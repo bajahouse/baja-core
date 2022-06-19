@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Reforging -
+//
+//   This file allows reforging of a randomly generated item.
+//
+// - External scripts -
+//   Livescripts: livescripts/item-create/const-creations
+//
+// ============================================================================
+
 import { statToName } from "../item-create/const-creations"
 
 //reforge % modifier

@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Item Cache Updater -
+//
+//   This file forces the client to update item information on hover, removing need to update the whole server whenever a item changes
+//
+// - External scripts -
+//   Livescripts: livescripts/item-cache
+//
+// ============================================================================
+
 import { itemCache } from "../shared/Messages";
 
 export function itemCacheRequest() {

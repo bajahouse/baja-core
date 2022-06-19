@@ -1,3 +1,15 @@
+// ============================================================================
+//
+// - Constants -
+//
+//   This file holds constants used in other files
+//
+// - External scripts -
+//   livescripts: livescripts/item-create/item-create-lib
+//   livescripts: livescripts/reforging/reforging
+//
+// ============================================================================
+
 export const emptyQuality = CreateDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>>({
     2: CreateDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>({
         13: CreateDictionary<uint32, TSArray<uint32>>({

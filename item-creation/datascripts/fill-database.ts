@@ -1,3 +1,17 @@
+// ============================================================================
+//
+// - Fill Database -
+//
+//   This file creates the database tables and fills them with information from const-creations
+//   After being run once, createDatabase and fillDatabase can be safely commented out until you next run --rebuild
+//   or if you modify the name/displays of the items inside of const-creations
+//
+// - External scripts -
+//   Datascripts: datascripts/const-creation
+//   Livescripts: livescripts/item-create/item-create-lib 
+//
+// ============================================================================
+
 import { std } from "wow/wotlk"
 import { displays, names } from "./const-creations"
 
@@ -26,6 +40,7 @@ function createDatabase() {
         ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
     `)
 }
+
 function fillDatabase() {
     let sqlExecute = ""
     names.forEach((v, i, arr) => {
