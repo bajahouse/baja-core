@@ -1,20 +1,15 @@
-// TODO:
-// - [ ] reimplement store
-// - [ ] pass addon name to all child frames (prefix in map)
-// - [ ] position: 'ALL', WoWAPI.Point | { self: 'BOTTOMLEFT', parent: 'TOPLEFT', x: 0, y: 0 }
-// - [ ] z: [strata, level]
-// - [ ] reflow: z, sizing, scaling, isDeleted (recursively reflow all children)
-// - [ ] grid reflow
-// - [ ] delete -> reflow(isDeleted)
+// mod
+let _mod = ''
 
-// slash commands
-// FIXME: move to TSWoW
-export type SlashCmdHandler = (msg: string, frame: WoWAPI.Frame) => void
+// slash commands 
+declare type SlashCmdHandler = (msg: string, frame: WoWAPI.Frame) => void
+declare const SlashCmdList: { [msg:string]: SlashCmdHandler }
 
-export function SlashCommand (name: string, cmdList: string[], handler: SlashCmdHandler) {
-  for (let i = 0; i <= (cmdList.length - 1); i++) {
-    const cmd = cmdList[i]
-    _G['SlashCmdList'][name] = handler
+export function MakeSlashCommand (commands: string[], handler: SlashCmdHandler) {
+  for (let i = 0; i <= (commands.length - 1); i++) {
+    const name = _mod.toUpperCase().replace('-', '_')
+    const cmd = commands[i]
+    SlashCmdList[name] = handler
     _G[`SLASH_${name}${i + 1}`] = `${cmd}`
   }
 }
@@ -69,7 +64,7 @@ export class Store {
   }
 
   public Set (storeType: StoreType, storeKey: string, storeValue: StoreValue) {
-    const app = Get()
+    const app = Info()
     const primitive = typeof storeValue === 'number'
       ? 0 // number
       : typeof storeValue === 'string'
@@ -139,35 +134,87 @@ export function GetPlayerInfo (): PlayerInfo {
     }
 }
 
-export type AddonFn = ($: Container) => SmartFrame | void
+export type AddonFn = () => SmartFrame | void
 export type AddonDefinition = [string, AddonFn]
 
-export function Addon (name: string, fn: AddonFn) {
+export function Addon (mod: string, fn: AddonFn) {
+  _mod = mod
   if (!_G['__app__'])
-    _G['__app__'] = new Container()
-  const container = _G['__app__'] as Container
-  container.add([name, fn])
+    _G['__app__'] = new App()
+  const container = _G['__app__'] as App
+  container.add([_mod, fn])
 }
 
-export function Get () {
-  return _G['__app__'] as Container
+export function Info () {
+  return _G['__app__'] as App
 }
 
-export class Container {
+export interface TimerObject {
+  expiry: number
+  fn: () => void
+}
+
+export interface IntervalObject {
+  interval: number
+  next: number
+  fn: () => void
+}
+
+export function Timer (seconds: number, fn: () => void) {
+  const info = Info()
+  info.timers.push({
+    expiry: GetTime() + seconds,
+    fn,
+  })
+}
+
+export function Interval (seconds: number, fn: () => void) {
+  const info = Info()
+  info.intervals.push({
+    interval: seconds,
+    next: GetTime() + seconds,
+    fn,
+  })
+}
+
+export class App {
   protected isStarted: boolean = false
   protected queue: (AddonDefinition)[] = []
 
   public player: PlayerInfo
   public store: Store
   public addons: { [key: string]: SmartFrame | void } = {}
+  public timers: TimerObject[] = []
+  public intervals: IntervalObject[] = []
 
   constructor () {
     UIParent.SetScript('OnUpdate', () => {
       if (!this.isStarted) {
         this.start()
       } else {
-        UIParent.SetScript('OnUpdate', () => {})
+        UIParent.SetScript('OnUpdate', () => {
+          this.timers.forEach((t, i) => {
+            if (GetTime() >= t.expiry) {
+              t.fn()
+              this.timers.splice(i, 1)
+            }
+          })
+
+          this.intervals.forEach((o, i) => {
+            const time = GetTime()
+            if (time >= o.next) {
+              o.fn()
+              o.next = time + o.interval
+            }
+          })
+        })
       }
+    })
+
+    UIParent.RegisterEvent('PLAYER_LEVEL_UP')
+    UIParent.SetScript('OnEvent', (_, event) => {
+      if (event === 'PLAYER_LEVEL_UP')
+        Timer(0.1, () => this.player = GetPlayerInfo())
     })
   }
 
@@ -180,7 +227,7 @@ export class Container {
   }
 
   protected _add ([name, creator]: AddonDefinition) {
-    this.addons[name] = creator(this)
+    this.addons[name] = creator()
   }
 
   protected start () {
@@ -193,14 +240,17 @@ export class Container {
       if (info) {
         _G['__app__'] = this
 
+        this.player = info
         this.isStarted = true
-        this.store = new Store(() => this.queue.forEach(creator => this._add(creator)))
+        this.store = new Store(
+          () => this.queue.forEach(creator => this._add(creator))
+        )
       }
     }
   }
 }
 
-export function ConvertHex (hex: string) {
+export function HexToColor (hex: string): Color {
   let c = hex as any
   return [0, 0, 0]
   // if (/^#([a-f0-9]{3}){1,2}$/.test(c)) {
@@ -217,17 +267,15 @@ export function ConvertHex (hex: string) {
   // throw `Cannot convert hex value '${hex}' to RGB`
 }
 
-export function ConvertRGB (normal: RGB) {
+export function RGBToColor (webRGB: Color): Color {
   return [
-    normal[0] / 255,
-    normal[1] / 255,
-    normal[2] / 255,
+    webRGB[0] / 255,
+    webRGB[1] / 255,
+    webRGB[2] / 255,
   ]
 }
 
-export type PersistenceTarget = 'client' | 'server'
-
-export function Movable (frame: SmartFrame, button: WoWAPI.MouseButton, ersist?: PersistenceTarget) {
+export function Movable (frame: SmartFrame, button: WoWAPI.MouseButton, persist?: boolean) {
   frame.EnableMouse(true)
   frame.SetMovable(true)
   frame.RegisterForDrag(button)
@@ -246,10 +294,11 @@ export const DEFAULT_BACKDROP = {
 }
 
 export function Random (min: number = 1000000, max: number = 8999999) {
-  return Math.floor(Math.random() * max) + min
+  return Math.floor(Math.random
+    () * max) + min
 }
 
-export type RGB = [number, number, number]
+export type Color = [number, number, number]
 
 export type BackdropPreset = 'tooltip' | 'tutorial' | 'border' | 'noborder' | 'dialogue'
 
@@ -264,7 +313,7 @@ export interface FrameOptions {
   scale?: number
   backdrop?: BackdropPreset | WoWAPI.Backdrop
   alpha?: number
-  color?: RGB | string
+  color?: Color | string
   width?: number
   height?: number
   pctWidth?: number
@@ -351,15 +400,15 @@ const FRAME_MAP_SELECTOR = 'frame-map'
 
 let current_frame_index = 0
 
-export function $ (options?: CheckButtonOptions): CheckButton
-export function $ (options?: ModelOptions): Model
-export function $ (options?: SliderOptions): Slider
-export function $ (options?: StatusBarOptions): StatusBar
-export function $ (options?: SimpleHTMLOptions): SimpleHTML
-export function $ (options?: ScrollFrameOptions): ScrollFrame
-export function $ (options?: ButtonOptions): Button
-export function $ (options?: FrameOptions): SmartFrame
-export function $ (options: FrameOptions = {}) {
+export function Frame (options?: CheckButtonOptions): CheckButton
+export function Frame (options?: ModelOptions): Model
+export function Frame (options?: SliderOptions): Slider
+export function Frame (options?: StatusBarOptions): StatusBar
+export function Frame (options?: SimpleHTMLOptions): SimpleHTML
+export function Frame (options?: ScrollFrameOptions): ScrollFrame
+export function Frame (options?: ButtonOptions): Button
+export function Frame (options?: FrameOptions): SmartFrame
+export function Frame (options: FrameOptions = {}) {
   let frame: SmartFrame
   let list: SmartFrame[] = _G[FRAME_LIST_SELECTOR]
   let map: object = _G[FRAME_MAP_SELECTOR]
@@ -392,6 +441,10 @@ export function $ (options: FrameOptions = {}) {
   frame.IsDeleted = false
   frame.Delete = () => {
     CleanFrame(frame)
+    if (frame.GetChildren) {
+      const children = frame.GetChildren()
+      children.forEach((child: SmartFrame) => child.Delete ? child.Delete() : null)
+    }
   }
   let inner: any = frame
   frame.Inner = <F extends WoWAPI.UIObject = SmartFrame>(newInner?: F) => {
@@ -499,7 +552,7 @@ export function $ (options: FrameOptions = {}) {
   if (typeof options.color === 'object') {
     frame.SetBackdropColor(options.color[0], options.color[1], options.color[2], frame.GetAlpha())
   } else if (typeof options.color === 'string') {
-    const [r, g, b] = ConvertHex(options.color)
+    const [r, g, b] = HexToColor(options.color)
     frame.SetBackdropColor(r, g, b, frame.GetAlpha())
   } else {
     frame.SetBackdropColor(0, 0, 0, frame.GetAlpha())
@@ -573,4 +626,13 @@ export function $ (options: FrameOptions = {}) {
 }
 
 if (!_G['__app__'])
-  _G['__app__'] = new Container()
+  _G['__app__'] = new App()
+
+// TODO:
+// - [ ] reimplement store
+// - [ ] pass addon name to all child frames (prefix in map)
+// - [ ] position: 'ALL', WoWAPI.Point | { self: 'BOTTOMLEFT', parent: 'TOPLEFT', x: 0, y: 0 }
+// - [ ] z: [strata, level]
+// - [ ] reflow: z, sizing, scaling, isDeleted (recursively reflow all children)
+// - [ ] grid reflow
+// - [ ] delete -> reflow(isDeleted)

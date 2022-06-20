@@ -1,4 +1,4 @@
-import { $, SmartFrame, FrameOptions, RGB } from '../lib'
+import { Frame, SmartFrame, FrameOptions, Color } from '../lib'
 
 export interface ButtonOptions extends FrameOptions {
   text: string
@@ -6,13 +6,13 @@ export interface ButtonOptions extends FrameOptions {
   noBorder?: boolean
   textXOffset?: number
   textYOffset?: number
-  color?: RGB
+  color?: Color
   onClick?: (frame: SmartFrame) => void
 }
 
 export const Button = (options: ButtonOptions) => {
   // setup
-  const f = $({
+  const f = Frame({
     backdrop: (options.noBorder === true)
       ? 'noborder'
       : 'tooltip',

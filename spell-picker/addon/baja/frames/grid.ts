@@ -1,4 +1,4 @@
-import { $, SmartFrame, FrameOptions } from '../lib'
+import { Frame, SmartFrame, FrameOptions } from '../lib'
 
 export interface GridOptions extends FrameOptions {
   itemsPerRow: number
@@ -28,7 +28,7 @@ export interface GridFrame extends SmartFrame {
 }
 
 export const Grid = (options: GridOptions) => {
-  const frame = $(options).ToExtendedFrame<GridFrame>()
+  const frame = Frame(options).ToExtendedFrame<GridFrame>()
   const state: GridState = {
     itemsPerRow: options.itemsPerRow,
     rowHeight: options.rowHeight,
@@ -69,7 +69,7 @@ export const Grid = (options: GridOptions) => {
 }
 
 export const GridItem = (options: GridItemOptions) => {
-  const frame = $(options)
+  const frame = Frame(options)
 
   frame.SetPoint('TOPLEFT', options.x, options.y)
   frame.SetSize(options.width, options.height)

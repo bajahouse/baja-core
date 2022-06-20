@@ -1,5 +1,5 @@
 import { DropdownItemOptions, Dropdown } from './dropdown'
-import { $, SmartFrame, FrameOptions } from '../lib'
+import { Frame, SmartFrame, FrameOptions } from '../lib'
 
 let is_first_load = true
 
@@ -15,7 +15,7 @@ export const Panel = (options: PanelOptions) => {
   // const $ = Get()
 
   // title
-  const title = $({
+  const title = Frame({
     backdrop: 'tooltip',
     width: 168,
     height: 30,
@@ -34,7 +34,7 @@ export const Panel = (options: PanelOptions) => {
   titleText.SetText(options.title)
 
   // panel
-  const a = $({
+  const a = Frame({
     parent: title,
     backdrop: 'tooltip',
     width: 340,
@@ -44,7 +44,7 @@ export const Panel = (options: PanelOptions) => {
   a.SetPoint('TOP', title, 'BOTTOMLEFT', -2, -3)
 
   // panel-inner
-  const b = $({
+  const b = Frame({
     parent: a,
     width: 300 - 30,
     height: 400 - 30,

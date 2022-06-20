@@ -1,4 +1,4 @@
-import { $, SmartFrame, FrameOptions, RGB, DEFAULT_BACKDROP } from '../lib'
+import { Frame, SmartFrame, FrameOptions, Color, DEFAULT_BACKDROP } from '../lib'
 
 export interface SectionOptions extends FrameOptions {
   name: string
@@ -12,7 +12,7 @@ export interface SectionOptions extends FrameOptions {
 }
 
 export const Section = (options: SectionOptions) => {
-  const p = $(options)
+  const p = Frame(options)
 
   // padding
   p.SetHeight(options.bg ? options.height : (options.height - 20))
@@ -30,7 +30,7 @@ export const Section = (options: SectionOptions) => {
     p.SetPoint('TOPLEFT', options.previous, 'BOTTOMLEFT', x, -26)
 
   // inner
-  const f = $({ parent: p })
+  const f = Frame({ parent: p })
   if (options.bg) {
     f.SetHeight(p.GetHeight() - 20)
     f.SetWidth(p.GetWidth() - 20)

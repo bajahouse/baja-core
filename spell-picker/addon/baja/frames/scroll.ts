@@ -1,4 +1,4 @@
-import { $, SmartFrame, FrameOptions } from '../lib'
+import { Frame, SmartFrame, FrameOptions } from '../lib'
 
 export const SCROLL_WIDTH = 20
 
@@ -12,9 +12,9 @@ export interface ScrollFrame extends SmartFrame {
 }
 
 export const Scroll = (options: ScrollOptions) => {
-  const a = $(options).ToExtendedFrame<ScrollFrame>()
+  const a = Frame(options).ToExtendedFrame<ScrollFrame>()
 
-  const scrollframe = $({
+  const scrollframe = Frame({
     template: 'UIPanelScrollFrameTemplate',
     type: 'ScrollFrame',
     parent: a,
@@ -22,7 +22,7 @@ export const Scroll = (options: ScrollOptions) => {
 
   const ref = scrollframe as WoWAPI.ScrollFrame
 
-  const scrollchild = $({
+  const scrollchild = Frame({
     parent: scrollframe,
   })
 
@@ -49,7 +49,7 @@ export const Scroll = (options: ScrollOptions) => {
 
   scrollchild.SetSize(ref.GetWidth(), options.scrollHeight || ref.GetHeight() * 2)
 
-  const moduleoptions = CreateFrame('Frame', 'moduleoptions', scrollchild)
+  const moduleoptions = Frame({ parent: scrollchild })
 
   moduleoptions.SetPoint('TOPLEFT')
   moduleoptions.SetWidth(scrollchild.GetWidth() - SCROLL_WIDTH)
