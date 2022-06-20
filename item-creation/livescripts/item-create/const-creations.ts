@@ -10,6 +10,8 @@
 //
 // ============================================================================
 
+import { getRandNumber } from "../livescripts"
+
 export const emptyQuality = CreateDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>>({
     2: CreateDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>({
         13: CreateDictionary<uint32, TSArray<uint32>>({
@@ -421,3 +423,25 @@ export const baseNameDict = CreateDictionary<uint32, TSDictionary<uint32, TSDict
         }),
     })
 })
+
+export function classIDToStatType(classID: uint32): uint32 {
+    switch (classID) {
+        case 1:
+        case 6:
+            return 0
+        case 2:
+        return getRandNumber(2)==0?0:1
+        case 3:
+        case 4:
+            return 1
+        case 5:
+        case 8:
+        case 9:
+            return 2
+        case 7:
+        case 11:
+            return getRandNumber(2)+1
+    default:
+        return 0
+    }
+}
