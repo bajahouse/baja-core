@@ -14,10 +14,10 @@ Baja-Core is a TSWoW demo library that gives real world examples for TSWoW. This
     * Spell video: [link](https://streamable.com/rfvj7f)
     * Created By: @tester
 
-3. **infinite-dungeon-module**: This module was made to emulate a torghast experience, but without an ending to have infinite scaling. 
+3. **infinite-dungeon-module**: This module was made to emulate a torghast experience, but without an ending to have infinite scaling. The way it should have been. Creature spawns are randomly generated formations with only a single point given. Adding new dungeons should be fairly simple. 
     * Created By: @tester
 
-4. **item-creation**: Implementation of a runtime item generator for a diablo-like experience. This module also includes a gossip menu reforger.
+4. **item-creation**: Implementation of a runtime item generator for a diablo-like experience. The underlying system can also be used to update already created items. This module also includes a gossip menu reforger.
     * Item Creation video: [link](https://streamable.com/trrnk8)
     * Item Reloading video: [link](https://streamable.com/03u64f)
     * Reforging video: [link](https://streamable.com/x3fx7j)
@@ -31,8 +31,8 @@ Baja-Core is a TSWoW demo library that gives real world examples for TSWoW. This
 6. **spell-picker**: Pick your own spells.
     * Created By: nl
 
-7. **random-scripts-module**: Small scale creations that do not warrant their own module. You should check the headers of any file to see what they do.
-    * Created By:Everyone!
+7. **random-scripts-module**: Small scale creations that do not warrant their own module. You should check the header of any file to see what they are created for as well as specific credits.
+    * Created By: Everyone!
 
 ## Note
 Any modules seen on secondary branches not merged to the master branch should be considered incomplete and, if used, expect minimal support.
