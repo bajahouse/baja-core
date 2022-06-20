@@ -9,19 +9,33 @@ Baja-Core is a TSWoW demo library that gives real world examples for TSWoW. This
 ## Current Modules
 1. **baja-shared**: This module currently stores a new addon library. In the future it would house any other libraries that would be reused in other modules.    
     * Created By: @nl
+
 2. **emoji-module**: This module generates m2/skin, as well as spells required to create emoji spells ingame. It takes drag and dropping a blp into the assets/emoji/ folder to generate. 
+    * Spell video: [link](https://streamable.com/rfvj7f)
     * Created By: @tester
+
 3. **infinite-dungeon-module**: This module was made to emulate a torghast experience, but without an ending to have infinite scaling. 
     * Created By: @tester
-4. **item-creation**: Implementation of a runtime item generator for a diablo-like experience. 
+
+4. **item-creation**: Implementation of a runtime item generator for a diablo-like experience. This module also includes a gossip menu reforger.
+    * Item Creation video: [link](https://streamable.com/trrnk8)
+    * Item Reloading video: [link](https://streamable.com/03u64f)
+    * Reforging video: [link](https://streamable.com/x3fx7j)
     * Created By: @tester
     * Balancing Assistance: @Driggs
-5. **player-housing-farming-module**: A player housing + farming module, inspired by IHM testing module. 
+
+5. **player-housing-farming-module**: A player housing + farming module, inspired by IHM testing module. This utilizes phasing to accomplish solo player areas. There are functions created for inviting other players to your house.
+    * Overview video: [link](https://streamable.com/4n9umf)
     * By: @tester
+
 6. **spell-picker**: Pick your own spells.
     * Created By: nl
-7. **random-scripts-module**: Small scale creations that do not warrant their own module.
+
+7. **random-scripts-module**: Small scale creations that do not warrant their own module. You should check the headers of any file to see what they do.
     * Created By:Everyone!
+
+## Note
+Any modules seen on secondary branches not merged to the master branch should be considered incomplete and, if used, expect minimal support.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. We are open to any ideas but ask that any module is written to assure it does not impact other possible content.
