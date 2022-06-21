@@ -613,7 +613,7 @@ export interface SpellDef {
   tags: []
 }
 
-export const SPELLS: SpellDef[] = []
+export const SPELL_SKILL_SPELLS: SpellDef[] = []
 
 Object.keys(SPELL_ID_MAP).forEach(className => {
   const factions = SPELL_ID_MAP[className]
@@ -621,7 +621,7 @@ Object.keys(SPELL_ID_MAP).forEach(className => {
     const spells = factions[factionName]
     Object.keys(spells).forEach(spellName => {
       const list = spells[spellName]
-      SPELLS.push({
+      SPELL_SKILL_SPELLS.push({
         list,
         english: std.Spells.load(list[0]).Name.enGB.get(),
         id: spellName,
