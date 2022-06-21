@@ -1,7 +1,18 @@
+// ============================================================================
+//
+// - Base Classes -
+//
+//   This file creates the classes used for housing and farming
+//
+// - External scripts -
+//   Livescripts: livescripts/*
+//
+// ============================================================================
+
 import { getRandNumber } from "./livescripts";
 
 @CharactersTable
-export class PlayerFarm extends DBEntry {
+export class PlayerHouse extends DBEntry {
     @DBPrimaryKey
     player: uint64 = 0
     @DBField
@@ -13,23 +24,23 @@ export class PlayerFarm extends DBEntry {
         this.player = player;
     }
 
-    static get(player: TSPlayer): PlayerFarm {
-        return player.GetObject('FarmingFarmData', LoadDBEntry(new PlayerFarm(player.GetGUID())))
+    static get(player: TSPlayer): PlayerHouse {
+        return player.GetObject('FarmingFarmData', LoadDBEntry(new PlayerHouse(player.GetGUID())))
     }
 
     Open(player: TSPlayer) {
         this.open = true;
-        PlayerFarmCrops.get(player).forEach(x => x.Spawn(player));
-        PlayerFarmGobs.get(player).forEach(x => x.Spawn(player));
-        PlayerFarmCreatures.get(player).forEach(x => x.Spawn(player));
+        PlayerHouseCrops.get(player).forEach(x => x.Spawn(player));
+        PlayerHouseGobs.get(player).forEach(x => x.Spawn(player));
+        PlayerHouseCreatures.get(player).forEach(x => x.Spawn(player));
         player.SetPhaseMask(player.GetPhaseMask(), true, player.GetGUID());
     }
 
     Close(player: TSPlayer) {
         this.open = false;
-        PlayerFarmCrops.get(player).forEach(x => x.Despawn(player.GetMap()));
-        PlayerFarmGobs.get(player).forEach(x => x.Despawn(player.GetMap()));
-        PlayerFarmCreatures.get(player).forEach(x => x.Spawn(player));
+        PlayerHouseCrops.get(player).forEach(x => x.Despawn(player.GetMap()));
+        PlayerHouseGobs.get(player).forEach(x => x.Despawn(player.GetMap()));
+        PlayerHouseCreatures.get(player).forEach(x => x.Spawn(player));
         player.SetPhaseMask(player.GetPhaseMask(), true, 0);
         if (!player.GetGroup().IsNull()) {
             player.GetGroup().GetMembers().forEach(x => {
@@ -42,7 +53,7 @@ export class PlayerFarm extends DBEntry {
 }
 
 @CharactersTable
-export class PlayerFarmCrops extends DBArrayEntry {
+export class PlayerHouseCrops extends DBArrayEntry {
     @DBPrimaryKey
     player: uint64 = 0
     @DBField
@@ -112,8 +123,8 @@ export class PlayerFarmCrops extends DBArrayEntry {
         this.spawnedEntry = go.GetEntry();
     }
 
-    static get(player: TSPlayer): DBContainer<PlayerFarmCrops> {
-        return player.GetObject('FarmingCropData', LoadDBArrayEntry(PlayerFarmCrops, player.GetGUID()))
+    static get(player: TSPlayer): DBContainer<PlayerHouseCrops> {
+        return player.GetObject('FarmingCropData', LoadDBArrayEntry(PlayerHouseCrops, player.GetGUID()))
     }
 }
 export const CropSizes = CreateDictionary<uint32, uint32>({})
@@ -139,7 +150,7 @@ export class CropType {
 }
 
 @CharactersTable
-export class PlayerFarmGobs extends DBArrayEntry {
+export class PlayerHouseGobs extends DBArrayEntry {
     constructor(player: uint64) {
         super();
         this.player = player;
@@ -188,13 +199,13 @@ export class PlayerFarmGobs extends DBArrayEntry {
         this.spawnedEntry = go.GetEntry();
     }
 
-    static get(player: TSPlayer): DBContainer<PlayerFarmGobs> {
-        return player.GetObject('FarmingGobData', LoadDBArrayEntry(PlayerFarmGobs, player.GetGUID()))
+    static get(player: TSPlayer): DBContainer<PlayerHouseGobs> {
+        return player.GetObject('FarmingGobData', LoadDBArrayEntry(PlayerHouseGobs, player.GetGUID()))
     }
 }
 
 @CharactersTable
-export class PlayerFarmCreatures extends DBArrayEntry {
+export class PlayerHouseCreatures extends DBArrayEntry {
     constructor(player: uint64) {
         super();
         this.player = player;
@@ -237,13 +248,13 @@ export class PlayerFarmCreatures extends DBArrayEntry {
         this.spawnedEntry = creature.GetEntry();
     }
 
-    static get(player: TSPlayer): DBContainer<PlayerFarmCreatures> {
-        return player.GetObject('FarmingCreatureData', LoadDBArrayEntry(PlayerFarmCreatures, player.GetGUID())
+    static get(player: TSPlayer): DBContainer<PlayerHouseCreatures> {
+        return player.GetObject('FarmingCreatureData', LoadDBArrayEntry(PlayerHouseCreatures, player.GetGUID())
         )
     }
 }
 
-export function SetupFarmInfo(events: TSEvents) {
+export function SetupHouseInfo(events: TSEvents) {
     let q = QueryWorld('SELECT * from farming_crops')
     while (q.GetRow()) {
         CropTypes[q.GetUInt32(0)] = new CropType(q);
@@ -254,9 +265,9 @@ export function SetupFarmInfo(events: TSEvents) {
     }
 
     events.Player.OnSave(player => {
-        PlayerFarmCrops.get(player).Save();
-        PlayerFarmGobs.get(player).Save();
-        PlayerFarmCreatures.get(player).Save();
+        PlayerHouseCrops.get(player).Save();
+        PlayerHouseGobs.get(player).Save();
+        PlayerHouseCreatures.get(player).Save();
     })
 
 }

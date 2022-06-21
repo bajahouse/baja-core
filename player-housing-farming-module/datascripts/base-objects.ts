@@ -1,5 +1,17 @@
+// ============================================================================
+//
+// - Base Objects -
+//
+//   This file craetes the base object to be copied in functions
+//
+// - External scripts -
+//   Datascripts: datascripts/functions
+//
+// ============================================================================
+
 import { std } from "wow/wotlk";
-import { MODNAME } from "./farming-base";
+import { MODNAME } from "./datascripts";
+let sProp = std.DBC.SummonProperties.add(std.IDs.SummonProperties.id()).Control.set(0).Faction.set(35).Title.set(0).Slot.set(0).Flags.set(6272)
 
 let gobSpell = std.Spells.create(MODNAME, "farming-template-spell-gob", 61031)
     .CastTime.setSimple(1000, 0, 1000)
@@ -12,7 +24,7 @@ creatureSpell.CastTime.setSimple(1000, 0, 1000)
     .Duration.setSimple(0, 0, 0)
     .Effects.get(0)
     .Type.SUMMON.set()
-    .SummonProperties.set(4000)
+    .SummonProperties.set(sProp.ID.get())
     .ImplicitTargetA.DEST_CASTER.set();
 export let creatureSpellEntry = creatureSpell.ID
 

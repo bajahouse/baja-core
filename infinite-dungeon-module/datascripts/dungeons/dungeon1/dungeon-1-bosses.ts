@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Dungeon 1 Bosses -
+//
+//   This file creates the bosses for dungeon 1 bosses as well as basic spell scripting
+//
+// - External scripts -
+//   Livescripts: livescripts/dungeon/dungeon-1
+//
+// ============================================================================
+
 import { std } from "wow/wotlk";
 import { MODNAME } from "../../modname";
 
@@ -19,7 +30,7 @@ Abilities :
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export let Boss1FlameShock1 = std.Spells.create(MODNAME,"boss1flameshock1-spell2",8050);
+export let Boss1FlameShock1 = std.Spells.create(MODNAME, "boss1flameshock1-spell2", 8050);
 Boss1FlameShock1.Name.enGB.set("Crackling Flames");
 Boss1FlameShock1.AuraDescription.enGB.set("$s2 Fire damage every $t2 seconds.");
 Boss1FlameShock1.Description.enGB.set("Instantly sears the target with fire, causing $s1 Fire damage immediately and $o2 Fire damage over $d.");
@@ -32,7 +43,7 @@ Boss1FlameShock1.Effects.get(1).ChainAmplitude.set(3000);
 Boss1FlameShock1.Duration.setSimple(7000);
 Boss1FlameShock1.Cooldown.set(7000, 0, 0, 0);
 
-export let Boss1LightningBolt1 = std.Spells.create(MODNAME,"boss1lightningbolt1-spell",8246);
+export let Boss1LightningBolt1 = std.Spells.create(MODNAME, "boss1lightningbolt1-spell", 8246);
 Boss1LightningBolt1.Name.enGB.set("Lightning Strike");
 Boss1LightningBolt1.Description.enGB.set("Blasts an enemy with lightning for $s1 Nature damage.");
 Boss1LightningBolt1.Effects.get(0).PointsBase.set(384);
@@ -40,7 +51,7 @@ Boss1LightningBolt1.Effects.get(0).PointsDieSides.set(1);
 Boss1LightningBolt1.Effects.get(0).PointsPerLevel.set(0);
 Boss1LightningBolt1.CastTime.setSimple(2000);
 
-export let Boss1ChainLightning1 = std.Spells.create(MODNAME,"boss1chainlightning1-spell",16033);
+export let Boss1ChainLightning1 = std.Spells.create(MODNAME, "boss1chainlightning1-spell", 16033);
 Boss1ChainLightning1.Name.enGB.set("Lightning Rip");
 Boss1ChainLightning1.Description.enGB.set("Chain lightning rips through 10 targets dealing $s1 Nature damage.");
 Boss1ChainLightning1.Effects.get(0).PointsBase.set(714);
@@ -56,7 +67,7 @@ Boss1ChainLightning1.Attributes.ONLY_TARGET_PLAYERS.set(1);
 Boss1ChainLightning1.InterruptFlags.clearAll();
 Boss1ChainLightning1.AuraInterruptFlags.clearAll();
 
-export let Boss1HealingWave1 = std.Spells.create(MODNAME,"boss1healingwave1-spell",16033);
+export let Boss1HealingWave1 = std.Spells.create(MODNAME, "boss1healingwave1-spell", 16033);
 Boss1HealingWave1.Name.enGB.set("Restore Life");
 Boss1HealingWave1.Description.enGB.set("Heals a friendly target, restoring $s1 health.");
 Boss1HealingWave1.Effects.get(0).PointsBase.set(7499);
@@ -65,7 +76,7 @@ Boss1HealingWave1.Effects.get(0).PointsPerLevel.set(0);
 Boss1HealingWave1.Effects.get(0).ImplicitTargetA.UNIT_CASTER.set();
 Boss1HealingWave1.CastTime.setSimple(5000);
 
-export let dungeonBoss1 = std.CreatureTemplates.create(MODNAME,"dungeonboss1",3276);
+export let dungeonBoss1 = std.CreatureTemplates.create(MODNAME, "dungeonboss1", 3276);
 dungeonBoss1.Models.clearAll();
 dungeonBoss1.Models.addIds(19521);
 dungeonBoss1.Name.enGB.set("Agnar Steelwinter");
@@ -83,7 +94,7 @@ dungeonBoss1.Stats.ExperienceMod.set(10);
 
 export let dungeonBoss1Loot = dungeonBoss1.NormalLoot;
 dungeonBoss1.InlineScripts.OnJustEnteredCombat((creature, target) => {
-    function attemptCast(spellID: number,self: TSCreature,target: TSUnit,force: boolean) {
+    function attemptCast(spellID: number, self: TSCreature, target: TSUnit, force: boolean) {
         if (!self.IsCasting() || force) {
             if (target.IsPlayer()) {
                 self.CastSpell(target, spellID, false);
@@ -93,27 +104,27 @@ dungeonBoss1.InlineScripts.OnJustEnteredCombat((creature, target) => {
         }
     }
     //start of combat
-    creature.CastSpell(target,GetID("Spell", 'infinite-dungeon-mod', "boss1flameshock1-spell2"),true);
+    creature.CastSpell(target, GetID("Spell", 'infinite-dungeon-mod', "boss1flameshock1-spell2"), true);
     //start of timers
     creature.AddNamedTimer("event1", 3000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss1lightningbolt1-spell"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss1lightningbolt1-spell"), self, target, false);
     });
     creature.AddNamedTimer("event2", 5500, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss1flameshock1-spell2"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss1flameshock1-spell2"), self, target, false);
     });
     creature.AddNamedTimer("event3", 14000, 1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss1chainlightning1-spell"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss1chainlightning1-spell"), self, target, false);
     });
     creature.AddNamedTimer("event4", 20000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss1healingwave1-spell"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss1healingwave1-spell"), self, target, false);
     });
 });
 
@@ -155,7 +166,7 @@ Abilities :
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export let GuardChainHeal = std.Spells.create(MODNAME,"guardchainheal1-spell",1064);
+export let GuardChainHeal = std.Spells.create(MODNAME, "guardchainheal1-spell", 1064);
 GuardChainHeal.Name.enGB.set("Rejuvenating Waters");
 GuardChainHeal.Description.enGB.set("Heals the friendly target for $s1, then jumps to heal additional nearby targets.");
 GuardChainHeal.Effects.get(0).PointsBase.set(2195);
@@ -164,7 +175,7 @@ GuardChainHeal.Effects.get(0).ChainTarget.set(10);
 GuardChainHeal.CastTime.setSimple(5000);
 GuardChainHeal.Range.setSimple(0, 100);
 
-export let ShamanGuard1 = std.CreatureTemplates.create(MODNAME,"shamanguard1",25428);
+export let ShamanGuard1 = std.CreatureTemplates.create(MODNAME, "shamanguard1", 25428);
 ShamanGuard1.Name.enGB.set("Windspeaker Shaman");
 ShamanGuard1.FactionTemplate.set(48);
 ShamanGuard1.Level.set(20, 20);
@@ -177,10 +188,10 @@ ShamanGuard1.Stats.ManaMod.set(15);
 ShamanGuard1.Stats.ExperienceMod.set(10);
 ShamanGuard1.UnitClass.PALADIN.set();
 ShamanGuard1.InlineScripts.OnCreate((creature, cancel) => {
-creature.Attack(creature.GetNearestPlayer(50, 1, 0), false);
+    creature.Attack(creature.GetNearestPlayer(50, 1, 0), false);
 });
 ShamanGuard1.InlineScripts.OnJustEnteredCombat((creature, target) => {
-    function attemptCast(spellID: number,self: TSCreature,target: TSUnit,force: boolean) {
+    function attemptCast(spellID: number, self: TSCreature, target: TSUnit, force: boolean) {
         if (!self.IsCasting() || force) {
             if (target.IsPlayer()) {
                 self.CastSpell(target, spellID, false);
@@ -192,7 +203,7 @@ ShamanGuard1.InlineScripts.OnJustEnteredCombat((creature, target) => {
     creature.AddNamedTimer("event1", 5000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "guardchainheal1-spell"),self,self,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "guardchainheal1-spell"), self, self, false);
     });
 });
 ShamanGuard1.InlineScripts.OnDeath((creature, killer) => {
@@ -202,18 +213,18 @@ ShamanGuard1.InlineScripts.OnReachedHome((creature) => {
     creature.RemoveTimer("event1");
 });
 
-export let Boss2Charge1 = std.Spells.create(MODNAME,"boss2charge1-spell",31994);
+export let Boss2Charge1 = std.Spells.create(MODNAME, "boss2charge1-spell", 31994);
 Boss2Charge1.Name.enGB.set("Lumbering Charge");
 Boss2Charge1.Description.enGB.set("Charges an enemy, inflicting normal damage plus $s3.");
 Boss2Charge1.Range.setSimple(0, 100);
 
-export let Boss2Mortal1 = std.Spells.create( MODNAME,"boss2mortal1-spell",48137);
+export let Boss2Mortal1 = std.Spells.create(MODNAME, "boss2mortal1-spell", 48137);
 Boss2Mortal1.Name.enGB.set("Vicious Wound");
 Boss2Mortal1.Description.enGB.set("Inflicts $s1% weapon damage to an enemy and leaves it wounded");
 Boss2Mortal1.AuraDescription.enGB.set("Healing effects reduced by $s2%.");
 Boss2Mortal1.Range.setSimple(0, 8);
 
-export let Boss2DestructiveSlam1 = std.Spells.create(MODNAME,"boss2destructiveslam1-spell",25322);
+export let Boss2DestructiveSlam1 = std.Spells.create(MODNAME, "boss2destructiveslam1-spell", 25322);
 Boss2DestructiveSlam1.Name.enGB.set("Destructive Slam");
 Boss2DestructiveSlam1.Description.enGB.set("Inflicts normal damage plus $s1 to enemies in a cone in front of the caster, knocking them back.");
 Boss2DestructiveSlam1.CastTime.setSimple(4000);
@@ -227,7 +238,7 @@ Boss2DestructiveSlam1.Attributes.ONLY_TARGET_PLAYERS.set(1);
 Boss2DestructiveSlam1.InterruptFlags.clearAll();
 Boss2DestructiveSlam1.AuraInterruptFlags.clearAll();
 
-export let Boss2Bladestorm1 = std.Spells.create(MODNAME,"boss2bladestorm1-spell",46924);
+export let Boss2Bladestorm1 = std.Spells.create(MODNAME, "boss2bladestorm1-spell", 46924);
 Boss2Bladestorm1.Name.enGB.set("Blade Dancing");
 Boss2Bladestorm1.AuraDescription.enGB.set("You cannot be stopped and perform a Whirlwind every $t1 sec.  No other abilities can be used.");
 Boss2Bladestorm1.CastTime.setSimple(4000);
@@ -235,7 +246,7 @@ Boss2Bladestorm1.Power.PowerCostBase.set(0);
 Boss2Bladestorm1.Power.PowerCostPerLevel.set(0);
 Boss2Bladestorm1.Power.PowerCostPercent.set(0);
 
-export let Boss2Summon1 = std.Spells.create(MODNAME,"boss2summon1-spell",66543);
+export let Boss2Summon1 = std.Spells.create(MODNAME, "boss2summon1-spell", 66543);
 Boss2Summon1.Name.enGB.set("Call for Aid!");
 Boss2Summon1.Description.enGB.set("Calls 2 Windspeaker Shamans to join the fight.");
 Boss2Summon1.Effects.get(0).MiscValueA.set(ShamanGuard1.ID);
@@ -243,7 +254,7 @@ Boss2Summon1.Effects.get(0).PointsBase.set(1);
 Boss2Summon1.Effects.get(0).PointsDieSides.set(1);
 Boss2Summon1.Duration.setSimple(60000);
 
-export let Boss2LastStand1 = std.Spells.create(MODNAME,"boss2laststand1-spell",12976);
+export let Boss2LastStand1 = std.Spells.create(MODNAME, "boss2laststand1-spell", 12976);
 Boss2LastStand1.Name.enGB.set("Enraged Triumph");
 Boss2LastStand1.AuraDescription.enGB.set("Health increased by 30% of maximum.");
 Boss2LastStand1.Effects.get(0).PointsBase.set(29);
@@ -251,7 +262,7 @@ Boss2LastStand1.Effects.get(0).PointsDieSides.set(1);
 Boss2LastStand1.Effects.get(0).Aura.MOD_INCREASE_HEALTH_PERCENT.set();
 Boss2LastStand1.Duration.setSimple(-1, 0, -1);
 
-export let dungeonBoss2 = std.CreatureTemplates.create(MODNAME,"dungeonboss2",3276);
+export let dungeonBoss2 = std.CreatureTemplates.create(MODNAME, "dungeonboss2", 3276);
 dungeonBoss2.Models.clearAll();
 dungeonBoss2.Models.addIds(19521);
 dungeonBoss2.Name.enGB.set("Warglow Firehammer");
@@ -269,7 +280,7 @@ dungeonBoss2.Stats.ExperienceMod.set(10);
 export let dungeonBoss2Loot = dungeonBoss2.NormalLoot;
 
 dungeonBoss2.InlineScripts.OnJustEnteredCombat((creature, target) => {
-    function attemptCast(spellID: number,self: TSCreature,target: TSUnit,force: boolean) {
+    function attemptCast(spellID: number, self: TSCreature, target: TSUnit, force: boolean) {
         if (!self.IsCasting() || force) {
             if (target.IsPlayer()) {
                 self.CastSpell(target, spellID, false);
@@ -279,39 +290,39 @@ dungeonBoss2.InlineScripts.OnJustEnteredCombat((creature, target) => {
         }
     }
     //start of combat
-    creature.CastSpell(target,GetID("Spell", 'infinite-dungeon-mod', "boss2charge1-spell"),true);
+    creature.CastSpell(target, GetID("Spell", 'infinite-dungeon-mod', "boss2charge1-spell"), true);
     //start of timers
     creature.AddNamedTimer("event1", 5000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss2mortal1-spell"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss2mortal1-spell"), self, target, false);
     });
     creature.AddNamedTimer("event2", 14000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
         attemptCast(
-            GetID("Spell", 'infinite-dungeon-mod', "boss2destructiveslam1-spell"),self,target,false);
+            GetID("Spell", 'infinite-dungeon-mod', "boss2destructiveslam1-spell"), self, target, false);
     });
     creature.AddNamedTimer("event3", 15000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss2charge1-spell"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss2charge1-spell"), self, target, false);
     });
     creature.AddNamedTimer("event3.1", 16000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss2bladestorm1-spell"),self,target,true);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss2bladestorm1-spell"), self, target, true);
     });
 
     creature.AddNamedTimer("event4", 20000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss2summon1-spell"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss2summon1-spell"), self, target, false);
     });
     creature.AddNamedTimer("event5", 60000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss2laststand1-spell"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss2laststand1-spell"), self, target, false);
     });
 });
 
@@ -353,7 +364,7 @@ Abilities :
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export let HasteAuraEgg = std.Spells.create(MODNAME,"hasteauraegg-spell",19506);
+export let HasteAuraEgg = std.Spells.create(MODNAME, "hasteauraegg-spell", 19506);
 HasteAuraEgg.Name.enGB.set("Acrid Haste");
 HasteAuraEgg.AuraDescription.enGB.set("Increases haste by $s1%.");
 HasteAuraEgg.Effects.get(0).PointsBase.set(4);
@@ -366,7 +377,7 @@ HasteAuraEgg.Effects.get(1).Aura.MOD_MELEE_HASTE.set();
 HasteAuraEgg.Effects.get(1).Radius.setSimple(100);
 HasteAuraEgg.Stacks.set(99);
 
-export let GronglingEgg = std.CreatureTemplates.create(MODNAME,"gronglingegg",30268);
+export let GronglingEgg = std.CreatureTemplates.create(MODNAME, "gronglingegg", 30268);
 GronglingEgg.Name.enGB.set("Grongling Egg");
 GronglingEgg.FactionTemplate.set(48);
 GronglingEgg.Level.set(20, 20);
@@ -401,7 +412,7 @@ GronglingEgg.InlineScripts.OnJustEnteredCombat((creature, target) => {
     creature.AddNamedTimer("event1", 1000, 1, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "hasteauraegg-spell"),self,target,false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "hasteauraegg-spell"), self, target, false);
     });
 });
 GronglingEgg.InlineScripts.OnDeath((creature, killer) => {
@@ -411,7 +422,7 @@ GronglingEgg.InlineScripts.OnReachedHome((creature) => {
     creature.RemoveTimer("event1");
 });
 
-export let Boss3AcidWretch1 = std.Spells.create(MODNAME,"boss3acidwretch1-spell",12533);
+export let Boss3AcidWretch1 = std.Spells.create(MODNAME, "boss3acidwretch1-spell", 12533);
 Boss3AcidWretch1.Name.enGB.set("Acid Wretch");
 Boss3AcidWretch1.Description.enGB.set("Inflicts $s2 Nature damage and an additional $s1 damage every $t1 sec. to enemies in a cone in front of the caster. Lasts $d.");
 Boss3AcidWretch1.AuraDescription.enGB.set("$s1 Nature damage inflicted every $t1 sec.");
@@ -423,19 +434,19 @@ Boss3AcidWretch1.Effects.get(1).PointsDieSides.set(1);
 Boss3AcidWretch1.Duration.setSimple(10000, 0, 10000);
 Boss3AcidWretch1.CastTime.setSimple(2000);
 
-export let Boss3VenomPool1 = std.Spells.create(MODNAME,"boss3venompool1-spell",53400);
+export let Boss3VenomPool1 = std.Spells.create(MODNAME, "boss3venompool1-spell", 53400);
 Boss3VenomPool1.Name.enGB.set("Venom Cloud");
 Boss3VenomPool1.Description.enGB.set("Sprays acid at the location of the target, creating a cloud that deals $s1 Nature damage per second to enemies inside of it. Lasts $d.");
 Boss3VenomPool1.AuraDescription.enGB.set("Deals $s1 Nature damage per second.");
 Boss3VenomPool1.Duration.setSimple(-1, 0, -1);
 Boss3VenomPool1.CastTime.setSimple(3000);
 
-export let Boss3Rumble1 = std.Spells.create(MODNAME,"boss3rumble1-spell",62776);
+export let Boss3Rumble1 = std.Spells.create(MODNAME, "boss3rumble1-spell", 62776);
 Boss3Rumble1.Name.enGB.set("Rumble");
 Boss3Rumble1.Description.enGB.set("Deals $s1% damage every $t1 sec for $d. Nearby enemies are also dazed for the duration.");
 Boss3Rumble1.AuraDescription.enGB.set("Dealing damage to nearby enemies.");
 
-export let Boss3MeltArmor1 = std.Spells.create(MODNAME,"boss3meltarmor1-spell",13013);
+export let Boss3MeltArmor1 = std.Spells.create(MODNAME, "boss3meltarmor1-spell", 13013);
 Boss3MeltArmor1.Name.enGB.set("Melt Armor");
 Boss3MeltArmor1.Description.enGB.set("Reduces an enemy's armor by $s1% for $d.");
 Boss3MeltArmor1.AuraDescription.enGB.set("Armor reduced by $s1%.");
@@ -445,19 +456,19 @@ Boss3MeltArmor1.Duration.setSimple(15000);
 Boss3MeltArmor1.Stacks.set(5);
 Boss3MeltArmor1.Icon.setPath("INV_Chest_Plate04");
 
-export let Boss3PotentOdor1 = std.Spells.create(MODNAME,"boss3potentodor1-spell",17467);
+export let Boss3PotentOdor1 = std.Spells.create(MODNAME, "boss3potentodor1-spell", 17467);
 Boss3PotentOdor1.Name.enGB.set("Potent Odor");
 Boss3PotentOdor1.Description.enGB.set("Causes the caster to automatically inflict $17466s1 Shadow damage every $t1 sec. to nearby enemies.");
 Boss3PotentOdor1.AuraDescription.enGB.set("Automatically inflicting $17466s1 Shadow damage every $t1 sec. to nearby enemies.");
 
-export let Boss3Acridity1 = std.Spells.create(MODNAME,"boss3acridity1-spell",66543);
+export let Boss3Acridity1 = std.Spells.create(MODNAME, "boss3acridity1-spell", 66543);
 Boss3Acridity1.Name.enGB.set("Acridity");
 Boss3Acridity1.Description.enGB.set("Summons Egg Sacs to Increase Boss Haste by 5%.");
 Boss3Acridity1.Effects.get(0).MiscValueA.set(GronglingEgg.ID);
 Boss3Acridity1.Effects.get(0).PointsBase.set(1);
 Boss3Acridity1.Effects.get(0).PointsDieSides.set(1);
 
-export let dungeonBoss3 = std.CreatureTemplates.create(MODNAME,"dungeonboss3",3276);
+export let dungeonBoss3 = std.CreatureTemplates.create(MODNAME, "dungeonboss3", 3276);
 dungeonBoss3.Models.clearAll();
 dungeonBoss3.Models.addIds(19521);
 dungeonBoss3.Name.enGB.set("Beloved Grong");
@@ -476,7 +487,7 @@ dungeonBoss3.Stats.ExperienceMod.set(10);
 export let dungeonBoss3Loot = dungeonBoss3.NormalLoot;
 
 dungeonBoss3.InlineScripts.OnJustEnteredCombat((creature, target) => {
-    function attemptCast(spellID: number,self: TSCreature,target: TSUnit,force: boolean) {
+    function attemptCast(spellID: number, self: TSCreature, target: TSUnit, force: boolean) {
         if (!self.IsCasting() || force) {
             if (target.IsPlayer()) {
                 self.CastSpell(target, spellID, false);
@@ -489,7 +500,7 @@ dungeonBoss3.InlineScripts.OnJustEnteredCombat((creature, target) => {
     function getrandomInt(max: uint32): uint32 {
         return Math.floor(Math.random() * max);
     }
-    attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss3potentodor1-spell"),creature,creature,false);
+    attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss3potentodor1-spell"), creature, creature, false);
     creature.AddNamedTimer("combatLoop", 5000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToCreature();
         let target = self.GetVictim();
@@ -576,7 +587,7 @@ Abilities :
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export let Boss5Magnetize1 = std.Spells.create(MODNAME,"boss5magnetize1-spell",31705);
+export let Boss5Magnetize1 = std.Spells.create(MODNAME, "boss5magnetize1-spell", 31705);
 Boss5Magnetize1.Name.enGB.set("Magnetize");
 Boss5Magnetize1.AuraDescription.enGB.set("Teleports all nearby enemy targets to the caster.");
 Boss5Magnetize1.CastTime.setSimple(1000);
@@ -592,7 +603,7 @@ Boss5Magnetize1.Attributes.ONLY_TARGET_PLAYERS.set(1);
 Boss5Magnetize1.InterruptFlags.clearAll();
 Boss5Magnetize1.AuraInterruptFlags.clearAll();
 
-export let Boss5Energize1 = std.Spells.create(MODNAME,"boss5energize1-spell",8050);
+export let Boss5Energize1 = std.Spells.create(MODNAME, "boss5energize1-spell", 8050);
 Boss5Energize1.Name.enGB.set("Energized");
 Boss5Energize1.Visual.set(11416);
 Boss5Energize1.Description.enGB.set("Electrocute your target dealing 375 damage immediately and increasing the damage they take by 1%. Lasts $d.");
@@ -642,7 +653,7 @@ Boss5Nuke1.AuraInterruptFlags.clearAll();
 // Boss5Fulmination1PlayerSpell.Attributes.IS_NEGATIVE.set(1)
 // Boss5Fulmination1PlayerSpell.Duration.setSimple(15000)
 
-export let Boss5Fulmination1 = std.Spells.create(MODNAME,"boss5fulmination1-spell",71188);
+export let Boss5Fulmination1 = std.Spells.create(MODNAME, "boss5fulmination1-spell", 71188);
 Boss5Fulmination1.Name.enGB.set("Fulmination");
 Boss5Fulmination1.Description.enGB.set("Damage done increased by $s1%.");
 Boss5Fulmination1.AuraDescription.enGB.set("Damage done increased by $s1%.");
@@ -657,7 +668,7 @@ Boss5Fulmination1.Effects.get(0).PointsDieSides.set(1);
 // Boss5Fulmination1.Effects.get(2).Type.NULL.set()
 Boss5Fulmination1.Duration.setSimple(15000);
 
-export let Boss5Overload1 = std.Spells.create(MODNAME,"boss5overload1-spell",64487);
+export let Boss5Overload1 = std.Spells.create(MODNAME, "boss5overload1-spell", 64487);
 Boss5Overload1.Name.enGB.set("Overload");
 Boss5Overload1.Visual.set(14798);
 Boss5Overload1.Description.enGB.set("Inflicts $s1 Arcane damage to all enemies.");
@@ -678,7 +689,7 @@ Boss5Overload1.Attributes.ONLY_TARGET_PLAYERS.set(1);
 Boss5Overload1.InterruptFlags.clearAll();
 Boss5Overload1.AuraInterruptFlags.clearAll();
 
-export let Boss5Execution1 = std.Spells.create(MODNAME,"boss5execution1-spell",64487);
+export let Boss5Execution1 = std.Spells.create(MODNAME, "boss5execution1-spell", 64487);
 Boss5Execution1.Name.enGB.set("Execution");
 Boss5Overload1.Visual.set(14798);
 Boss5Execution1.Description.enGB.set("Inflicts $s1 Arcane damage to all enemies.");
@@ -688,7 +699,7 @@ Boss5Execution1.Effects.get(0).PointsPerLevel.set(0);
 Boss5Execution1.Effects.get(0).Radius.setSimple(100);
 Boss5Execution1.CastTime.setSimple(10000);
 
-export let dungeonBoss5 = std.CreatureTemplates.create(MODNAME,"dungeonboss5",3276);
+export let dungeonBoss5 = std.CreatureTemplates.create(MODNAME, "dungeonboss5", 3276);
 dungeonBoss5.Models.clearAll();
 dungeonBoss5.Models.addIds(22208);
 dungeonBoss5.Name.enGB.set("Magnar Crucio");
@@ -712,7 +723,7 @@ export let dungeonBoss5Loot = dungeonBoss5.NormalLoot;
 // })
 
 dungeonBoss5.InlineScripts.OnJustEnteredCombat((creature, target) => {
-    function attemptCast(spellID: number,self: TSUnit,target: TSUnit,force: boolean
+    function attemptCast(spellID: number, self: TSUnit, target: TSUnit, force: boolean
     ): boolean {
         if (!self.IsCasting() || force) {
             if (target.IsPlayer()) {
@@ -726,20 +737,20 @@ dungeonBoss5.InlineScripts.OnJustEnteredCombat((creature, target) => {
         }
     }
     //start of combat
-    creature.CastSpell(target,GetID("Spell", 'infinite-dungeon-mod', "boss5energize1-spell"),true);
+    creature.CastSpell(target, GetID("Spell", 'infinite-dungeon-mod', "boss5energize1-spell"), true);
     //start of timers
     creature.AddNamedTimer("event1", 7000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToUnit();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss5energize1-spell"),owner.ToCreature(),self.GetVictim(),false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss5energize1-spell"), owner.ToCreature(), self.GetVictim(), false);
     });
     creature.AddNamedTimer("event2", 12000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToUnit();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss5fulmination1-spell"),self,self.GetVictim(),false);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss5fulmination1-spell"), self, self.GetVictim(), false);
     });
     creature.AddNamedTimer("event3", 15000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToUnit();
         if (
-            attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss5magnetize1-spell"),self,self.GetVictim(),false)
+            attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss5magnetize1-spell"), self, self.GetVictim(), false)
         ) {
             self.SetBool("didCastMagnetize", true);
         }
@@ -747,13 +758,13 @@ dungeonBoss5.InlineScripts.OnJustEnteredCombat((creature, target) => {
     creature.AddNamedTimer("event3.1", 16000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToUnit();
         if (self.GetBool("didCastMagnetize", false)) {
-            attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss5nuke1-spell"),self,self.GetVictim(),true);
+            attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss5nuke1-spell"), self, self.GetVictim(), true);
         }
         self.SetBool("didCastMagnetize", false);
     });
     creature.AddNamedTimer("event4", 38000, TimerLoops.INDEFINITE, (owner, timer) => {
         let self = owner.ToUnit();
-        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss5execution1-spell"),self,self.GetVictim(),true);
+        attemptCast(GetID("Spell", 'infinite-dungeon-mod', "boss5execution1-spell"), self, self.GetVictim(), true);
     });
 });
 

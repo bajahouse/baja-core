@@ -1,10 +1,21 @@
+// ============================================================================
+//
+// - Reforging -
+//
+//   This file allows reforging of a randomly generated item.
+//
+// - External scripts -
+//   Livescripts: livescripts/item-create/const-creations
+//
+// ============================================================================
+
 import { statToName } from "../item-create/const-creations"
 
 //reforge % modifier
-const reforgePercent = 0.4
+const reforgePercent = 0.4//40%
 //dont touch below
 const reforgeOpposite = 1 - reforgePercent
-const reforgeWholeNumber:uint32 = Math.floor(reforgePercent * 100)
+const reforgeWholeNumber: uint32 = Math.floor(reforgePercent * 100)
 
 export function reforging(events: TSEvents) {
     events.GameObjectID.OnGossipHello(GetID('gameobject_template', 'item-creation', 'reforge-master'), (gameObject, player, cancel) => {

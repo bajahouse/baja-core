@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Dungeon 1 Map -
+//
+//   This file sets up the starter dungeon map
+//
+// - External scripts -
+//   Assets: assets/world/dungeonone/*
+//
+// ============================================================================
+
 import { std } from "wow/wotlk";
 import { MODNAME } from "../../modname";
 import { baseMap } from "../base-map";

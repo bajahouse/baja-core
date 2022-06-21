@@ -1,3 +1,14 @@
+// ============================================================================
+//
+// - Dungeon Spell UI -
+//
+//   This file displays spell choices to the client for use in the dungeon spell choices.
+//
+// - External scripts -
+//   Livescripts: livescripts/dungeon/*
+//
+// ============================================================================
+
 import { spellChoicesID, spellChoices, spellChoice } from "../shared/Messages";
 
 export function dungeonSpellUI() {
@@ -5,7 +16,7 @@ export function dungeonSpellUI() {
     let choiceRanks = [];
     let choiceDescs = [];
     let choiceButtons = [];
-    let rankColors = ["FFFFFF", "1EFF0C", "0070FF", "A335EE","FF8000"];
+    let rankColors = ["FFFFFF", "1EFF0C", "0070FF", "A335EE", "FF8000"];
     let rankText = [
         rankColors[0] + "Common",
         rankColors[1] + "Uncommon",

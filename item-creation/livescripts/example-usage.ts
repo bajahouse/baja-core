@@ -1,4 +1,16 @@
-import { createItemRandom } from "./item-create/item-create-lib"
+// ============================================================================
+//
+// - Examples -
+//
+//   This file has a couple showcases of the item generator with commands
+//
+// - External scripts -
+//   Livescripts: livescripts/item-create/item-create-lib
+//
+// ============================================================================
+
+import { classIDToStatType } from "./item-create/const-creations"
+import { createItemRandom, createItemWithChoices } from "./item-create/item-create-lib"
 
 export function example(events: TSEvents) {
     events.Player.OnCommand((player, command, found) => {
@@ -45,6 +57,21 @@ export function example(events: TSEvents) {
             //player.ApplyAllItemMods()//other option rather than slot ID reloading
             player.SendItemQueryPacket(t)
             //player.SendItemQueryPacket(item.GetEntry())//other option
+        } else if (cmd[0] == 'createset') {
+            //this will create a full set of items based on class and level
+            //level is passed as 2nd argument
+            found.set(true)
+            let classId = player.GetClass()
+            for(let i=0; i<8; i++) {
+                createItemWithChoices(player,0,i,ToUInt32(cmd[1]),classIDToStatType(classId))
+            }
+            for(let i=24; i<28; i++) {
+                createItemWithChoices(player,0,i,ToUInt32(cmd[1]),classIDToStatType(classId))
+            }
+            let wepID = [2,7,7,8,9,11,11,12,13,14]
+            wepID.forEach((v,i,arr)=>{
+                createItemWithChoices(player,1,v,ToUInt32(cmd[1]),classIDToStatType(classId))
+            })
         }
     })
 }

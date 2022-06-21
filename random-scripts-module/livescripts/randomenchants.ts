@@ -1,3 +1,14 @@
+// ============================================================================
+// -  By: @tester -
+//
+// - Random Enchant Display -
+//
+//   This file randomly applies enchant visuals to items onLoot
+//
+// - External scripts -
+//
+// ============================================================================
+
 @CharactersTable
 export class playerEnchantInfo extends DBEntry {
     @DBPrimaryKey
@@ -53,9 +64,7 @@ function applySingleVisual(player: TSPlayer, item: TSItem) {
     if (item.GetEnchantmentID(0) != 0) return
 
     let cur = playerEnchantInfo.get(player, item)
-    if (item.GetGUID() == cur.itemGUID)
-    {
+    if (item.GetGUID() == cur.itemGUID) {
         player.SetCoreUInt16(284 + (item.GetSlot() * 2), 0, cur.display)
     }
-        
 }

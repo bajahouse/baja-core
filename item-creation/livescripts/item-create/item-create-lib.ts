@@ -1,19 +1,25 @@
+// ============================================================================
+//
+// - Item Generator Library -
+//
+//   This file is used to generate an item using multipliers from const-creations and control the IDs of any generated items.
+//   There are 4 functions to use external of the lib:createItemRandom,returnItemIDRandom,createItemWithChoices,returnItemIDWithChoices
+// - External scripts -
+//   datascripts: datascripts/fill-database
+//
+// ============================================================================
 
-import { emptyQuality, itemClassInfo, qualityMultiplier, statCounts, statChoices, statToWeight, armorScalar } from "./const-creations";
+import { itemClassInfo, qualityMultiplier, statCounts, statChoices, statToWeight, armorScalar, baseNameDict, displayDict, prefixPostfixArray } from "./const-creations";
 import { getRandNumber } from "../livescripts";
 
 let startID = 200000
 const templateItemID = 38
-
-const displayDict = CreateDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>>>({//quality
-    2: emptyQuality,
-    3: emptyQuality,
-    4: emptyQuality,
-    5: emptyQuality,
-})
+//dont touch
 
 export function itemCreationSetup(events: TSEvents) {
     setupStartingID()
+    setupBaseNameDict()
+    setupPrefixPostfixDict()
     setupDisplayIDDict()
 }
 
@@ -31,13 +37,13 @@ export function createItemWithChoices(player: TSPlayer, itemType: uint32, itemSu
     return player.AddItem(temp.GetEntry(), 1)
 }
 
-export function returnItemRandom(player: TSUnit): uint32 {
+export function returnItemIDRandom(player: TSUnit): uint32 {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
     temp = modifyItemProperties(temp, chooseItemType(), player.GetLevel(), getRandNumber(3))
     return temp.GetEntry()
 }
 
-export function returnItemWithChoices(itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): uint32 {
+export function returnItemIDWithChoices(itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): uint32 {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
     temp = modifyItemProperties(temp, itemClassInfo[itemType][itemSubType], level, statType)
     return temp.GetEntry()
@@ -173,22 +179,15 @@ function getDisplayID(itemInfoArr: TSArray<float>, quality: uint32): uint32 {
 
 function getName(itemInfoArr: TSArray<float>, quality: uint32): string {
     let name = ""
+    //prefix
+    if (quality > 2) {
+        name = prefixPostfixArray[0][getRandNumber(prefixPostfixArray[0].length)] + " "
+    }
     //base name
-    let q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 2 AND class = ' + itemInfoArr[0] + ' AND subclass = ' + itemInfoArr[1] + ' AND invtype = ' + itemInfoArr[2] + ' ORDER BY RAND() LIMIT 1')
-    while (q.GetRow()) {
-        name = q.GetString(0)
-    }
-    if (quality > 2) {//prefix
-        let q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 1 ORDER BY RAND() LIMIT 1')
-        while (q.GetRow()) {
-            name = q.GetString(0) + " " + name
-        }
-    }
-    if (quality == 4 || quality == 5) {//suffix
-        q = QueryWorld('SELECT name FROM custom_item_template_names WHERE  nametype = 3 ORDER BY RAND() LIMIT 1')
-        while (q.GetRow()) {
-            name += " " + q.GetString(0)
-        }
+    name += baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]][getRandNumber(baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]].length)]
+    //suffix
+    if (quality == 4 || quality == 5) {
+        name += " " + prefixPostfixArray[1][getRandNumber(prefixPostfixArray[1].length)]
     }
     return name
 }
@@ -197,9 +196,8 @@ function setupStartingID() {
     //we start our custom items at 200k
     let q = QueryCharacters('SELECT MAX(entry) FROM custom_item_template')
     while (q.GetRow()) {
-        startID = (q.GetUInt32(0) + 1)
-        if (startID < 200000)
-            startID = 200000
+        if (startID < (q.GetUInt32(0) + 1))
+            startID = (q.GetUInt32(0) + 1)
     }
 }
 
@@ -211,6 +209,23 @@ function setupDisplayIDDict() {
     }
 }
 
+function setupBaseNameDict() {
+    let q = QueryWorld('SELECT * FROM custom_item_template_names WHERE nametype = 2')
+    while (q.GetRow()) {
+        baseNameDict[q.GetUInt32(1)][q.GetUInt32(2)][q.GetUInt32(3)].push(q.GetString(4))
+    }
+}
+
+function setupPrefixPostfixDict() {
+    let q = QueryWorld('SELECT  name FROM custom_item_template_names WHERE nametype = 1')
+    while (q.GetRow()) {
+        prefixPostfixArray[0].push(q.GetString(0))
+    }
+    q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 3')
+    while (q.GetRow()) {
+        prefixPostfixArray[1].push(q.GetString(0))
+    }
+}
 function getStatGroup(statType: uint32, quality: uint32): TSArray<TSArray<uint32>> {
     let curStatCounts = statCounts[quality]
     let statGroup = <TSArray<TSArray<uint32>>>[<TSArray<uint32>>[], <TSArray<uint32>>[]]
