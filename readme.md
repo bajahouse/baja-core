@@ -41,4 +41,4 @@ Any modules seen on secondary branches not merged to the master branch should be
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. We are open to any ideas but ask that any module is written to assure it does not impact other possible content.
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/)
