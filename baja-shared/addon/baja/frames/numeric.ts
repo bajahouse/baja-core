@@ -1,11 +1,18 @@
-import { Frame, SmartFrame, FrameOptions } from '../lib'
+// ============================================================================
+//
+// - Numeric -
+//
+//   This file defines a custom number field.
+//
+// ============================================================================
+
+import { Frame, EasyFrame, FrameOptions } from '../lib'
 
 export interface NumericOptions extends FrameOptions {
   initial?: number
-  onAccept?: (text: number, element: SmartFrame) => number | void
-  onCancel?: (text: number, element: SmartFrame) => number | void
-  onChange?: (text: number, element: SmartFrame) => number | void
-  // FIXME: min/max
+  onAccept?: (text: number, element: EasyFrame) => number | void
+  onCancel?: (text: number, element: EasyFrame) => number | void
+  onChange?: (text: number, element: EasyFrame) => number | void
 }
 
 export const Numeric = (options: NumericOptions) => {

@@ -1,4 +1,12 @@
-import { Frame, SmartFrame, FrameOptions, Color } from '../lib'
+// ============================================================================
+//
+// - Button -
+//
+//   This file defines a custom Button frame.
+//
+// ============================================================================
+
+import { Frame, EasyFrame, FrameOptions, Color } from '../lib'
 
 export interface ButtonOptions extends FrameOptions {
   text: string
@@ -7,7 +15,7 @@ export interface ButtonOptions extends FrameOptions {
   textXOffset?: number
   textYOffset?: number
   color?: Color
-  onClick?: (frame: SmartFrame) => void
+  onClick?: (frame: EasyFrame) => void
 }
 
 export const Button = (options: ButtonOptions) => {

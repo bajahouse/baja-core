@@ -1,5 +1,13 @@
+// ============================================================================
+//
+// - Section -
+//
+//   This file defines a Textarea field frame.
+//
+// ==============================================================
+
 import { Scroll } from './scroll'
-import { Frame, SmartFrame, FrameOptions } from '../lib'
+import { Frame, EasyFrame, FrameOptions } from '../lib'
 
 export interface TextareaOptions extends FrameOptions {
   initial?: string

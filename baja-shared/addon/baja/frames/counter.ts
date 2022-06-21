@@ -1,5 +1,14 @@
+// ============================================================================
+//
+// - Counter -
+//
+//   This file defines a custom number field with up/down buttons and scroll
+//   hook.
+//
+// ============================================================================
+
 import { Input } from './input'
-import { Frame, SmartFrame, FrameOptions } from '../lib'
+import { Frame, EasyFrame, FrameOptions } from '../lib'
 import { Button } from './button'
 
 export interface CounterOptions extends FrameOptions {
@@ -7,8 +16,8 @@ export interface CounterOptions extends FrameOptions {
   min?: number
   max?: number
   initial?: number
-  onAccept?: (amount: number, element: SmartFrame) => number | void
-  onCancel?: (amount: number, element: SmartFrame) => number | void
+  onAccept?: (amount: number, element: EasyFrame) => number | void
+  onCancel?: (amount: number, element: EasyFrame) => number | void
 }
 
 export const Counter = options => {

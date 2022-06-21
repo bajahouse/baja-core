@@ -1,4 +1,12 @@
-import { Frame, SmartFrame, FrameOptions } from '../lib'
+// ============================================================================
+//
+// - Scroll -
+//
+//   This file defines a scroll frame.
+//
+// ============================================================================
+
+import { Frame, EasyFrame, FrameOptions } from '../lib'
 
 export const SCROLL_WIDTH = 20
 
@@ -6,7 +14,7 @@ export interface ScrollOptions extends FrameOptions {
   scrollHeight?: number
 }
 
-export interface ScrollFrame extends SmartFrame {
+export interface ScrollFrame extends EasyFrame {
   Height: (amount: number) => void,
   Bottom: () => void,
 }

@@ -1,3 +1,12 @@
+// ============================================================================
+//
+// - List -
+//
+//   This file defines a small library for (hopefully) making it a bit easier
+//   to work with the addon API in TypeScript.
+//
+// ============================================================================
+
 // mod
 let _mod = ''
 
@@ -31,6 +40,7 @@ export class Store {
 
   constructor (onInit: () => void) {
     onInit()
+
     // const app = Get()
 
     // Events.ChatInfo.OnChatMsgAddon(UIParent, (prefix, text) => {
@@ -134,7 +144,7 @@ export function GetPlayerInfo (): PlayerInfo {
     }
 }
 
-export type AddonFn = () => SmartFrame | void
+export type AddonFn = () => EasyFrame | void
 export type AddonDefinition = [string, AddonFn]
 
 export function Addon (mod: string, fn: AddonFn) {
@@ -183,7 +193,7 @@ export class App {
 
   public player: PlayerInfo
   public store: Store
-  public addons: { [key: string]: SmartFrame | void } = {}
+  public addons: { [key: string]: EasyFrame | void } = {}
   public timers: TimerObject[] = []
   public intervals: IntervalObject[] = []
 
@@ -275,7 +285,7 @@ export function RGBToColor (webRGB: Color): Color {
   ]
 }
 
-export function Movable (frame: SmartFrame, button: WoWAPI.MouseButton, persist?: boolean) {
+export function Movable (frame: EasyFrame, button: WoWAPI.MouseButton, persist?: boolean) {
   frame.EnableMouse(true)
   frame.SetMovable(true)
   frame.RegisterForDrag(button)
@@ -305,7 +315,7 @@ export type BackdropPreset = 'tooltip' | 'tutorial' | 'border' | 'noborder' | 'd
 export interface FrameOptions {
   uid?: string
   type?: WoWAPI.FrameType | 'CheckButton'
-  parent?: SmartFrame
+  parent?: EasyFrame
   template?: string
   level?: number
   strata?: WoWAPI.FrameStrata
@@ -339,8 +349,8 @@ export interface FrameProps {
   // props
   UID: string
   Index: number
-  Inner: <F extends WoWAPI.Frame = SmartFrame>(newInner?: F) => F
-  Parent: <F extends WoWAPI.Frame = SmartFrame>(newParent?: F) => F
+  Inner: <F extends WoWAPI.Frame = EasyFrame>(newInner?: F) => F
+  Parent: <F extends WoWAPI.Frame = EasyFrame>(newParent?: F) => F
   // delete
   IsDeleted: boolean
   Delete: () => void
@@ -348,7 +358,7 @@ export interface FrameProps {
   ToggleShown: () => void
   // type cast
   ToUIObject: () => WoWAPI.UIObject
-  ToSmartFrame: () => SmartFrame,
+  ToEasyFrame: () => EasyFrame,
   ToFrame: () => WoWAPI.Frame
   ToScrollFrame: () => WoWAPI.ScrollFrame
   ToChatFrame: () => WoWAPI.ChatFrame
@@ -366,9 +376,9 @@ export interface FrameProps {
   ToCheckButton: () => WoWAPI.CheckButton
   ToAdvancedFrame: <
     O extends object = object,
-    F extends WoWAPI.UIObject = SmartFrame,
+    F extends WoWAPI.UIObject = EasyFrame,
   >() => WoWAPI.AdvancedFrame<F, O>
-  ToExtendedFrame: <F extends WoWAPI.UIObject = SmartFrame>() => F
+  ToExtendedFrame: <F extends WoWAPI.UIObject = EasyFrame>() => F
 }
 
 export type Model = WoWAPI.AdvancedFrame<WoWAPI.Model, FrameProps>
@@ -378,7 +388,7 @@ export type SimpleHTML = WoWAPI.AdvancedFrame<WoWAPI.SimpleHTML, FrameProps>
 export type ScrollFrame = WoWAPI.AdvancedFrame<WoWAPI.ScrollFrame, FrameProps>
 export type Button = WoWAPI.AdvancedFrame<WoWAPI.Button, FrameProps>
 export type CheckButton = WoWAPI.AdvancedFrame<WoWAPI.CheckButton, FrameProps>
-export type SmartFrame = WoWAPI.AdvancedFrame<WoWAPI.Frame, FrameProps>
+export type EasyFrame = WoWAPI.AdvancedFrame<WoWAPI.Frame, FrameProps>
 
 export function CleanFrame (f: WoWAPI.Frame) {
   f.SetAlpha(1)
@@ -392,7 +402,7 @@ export function CleanFrame (f: WoWAPI.Frame) {
   f.UnregisterAllEvents()
   f.SetID(0)
   f.ClearAllPoints()
-  ;(f as SmartFrame).IsDeleted = true
+  ;(f as EasyFrame).IsDeleted = true
 }
 
 const FRAME_LIST_SELECTOR = 'frame-list'
@@ -407,10 +417,10 @@ export function Frame (options?: StatusBarOptions): StatusBar
 export function Frame (options?: SimpleHTMLOptions): SimpleHTML
 export function Frame (options?: ScrollFrameOptions): ScrollFrame
 export function Frame (options?: ButtonOptions): Button
-export function Frame (options?: FrameOptions): SmartFrame
+export function Frame (options?: FrameOptions): EasyFrame
 export function Frame (options: FrameOptions = {}) {
-  let frame: SmartFrame
-  let list: SmartFrame[] = _G[FRAME_LIST_SELECTOR]
+  let frame: EasyFrame
+  let list: EasyFrame[] = _G[FRAME_LIST_SELECTOR]
   let map: object = _G[FRAME_MAP_SELECTOR]
   if (!list)
     _G[FRAME_LIST_SELECTOR] = list = []
@@ -418,7 +428,7 @@ export function Frame (options: FrameOptions = {}) {
     _G[FRAME_MAP_SELECTOR] = map = {}
   const uid = options.uid || `${Random()}`
   if (options.uid) {
-    const s: SmartFrame = map[uid]
+    const s: EasyFrame = map[uid]
     if (s)
       if (s.IsDeleted) {
         frame = s
@@ -443,7 +453,7 @@ export function Frame (options: FrameOptions = {}) {
     CleanFrame(frame)
   }
   let inner: any = frame
-  frame.Inner = <F extends WoWAPI.UIObject = SmartFrame>(newInner?: F) => {
+  frame.Inner = <F extends WoWAPI.UIObject = EasyFrame>(newInner?: F) => {
     if (newInner)
       inner = newInner
     return inner as F
@@ -596,10 +606,10 @@ export function Frame (options: FrameOptions = {}) {
   frame.ToMinimap = () => frame as any as WoWAPI.Minimap
   frame.ToAdvancedFrame = <
     O extends object = object,
-    F extends WoWAPI.UIObject = SmartFrame,
+    F extends WoWAPI.UIObject = EasyFrame,
   >() => frame as any as WoWAPI.AdvancedFrame<F, O>
   frame.ToExtendedFrame = <
-    F extends WoWAPI.UIObject = SmartFrame
+    F extends WoWAPI.UIObject = EasyFrame
   >() => frame as any as F
   if (options.level) {
     frame.SetFrameLevel(options.level)

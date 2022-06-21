@@ -1,10 +1,18 @@
-import { Frame, SmartFrame, FrameOptions, Color, DEFAULT_BACKDROP } from '../lib'
+// ============================================================================
+//
+// - Section -
+//
+//   This file defines a frame for labeling inputs.
+//
+// ============================================================================
+
+import { Frame, EasyFrame, FrameOptions, Color, DEFAULT_BACKDROP } from '../lib'
 
 export interface SectionOptions extends FrameOptions {
   name: string
-  parent: SmartFrame
+  parent: EasyFrame
   height: number
-  previous?: SmartFrame
+  previous?: EasyFrame
   x?: number
   y?: number
   title?: string

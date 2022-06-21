@@ -1,10 +1,18 @@
-import { Frame, SmartFrame, FrameOptions } from '../lib'
+// ============================================================================
+//
+// - Input -
+//
+//   This file defines an input field frame.
+//
+// ============================================================================
+
+import { Frame, EasyFrame, FrameOptions } from '../lib'
 
 export interface InputOptions extends FrameOptions {
   initial?: string
-  onAccept?: (text: string, element: SmartFrame) => string | void
-  onCancel?: (text: string, element: SmartFrame) => string | void
-  onChange?: (text: string, element: SmartFrame) => string | void
+  onAccept?: (text: string, element: EasyFrame) => string | void
+  onCancel?: (text: string, element: EasyFrame) => string | void
+  onChange?: (text: string, element: EasyFrame) => string | void
   // FIXME: min/max
 }
 

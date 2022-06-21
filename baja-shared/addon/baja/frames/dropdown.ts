@@ -1,5 +1,13 @@
+// ============================================================================
+//
+// - Dropdown -
+//
+//   This file defines a custom dropdown component.
+//
+// ============================================================================
+
 import { DEFAULT_BACKDROP } from '../lib'
-import { Frame, SmartFrame, FrameOptions } from '../lib'
+import { Frame, EasyFrame, FrameOptions } from '../lib'
 import { List } from './list'
 
 const AUTOHIDE_TIMER = 1
@@ -16,7 +24,7 @@ export interface DropdownItem extends FrameOptions {
   disabled?: boolean
   value?: string | number | boolean | null
   tooltip?: string
-  item?: SmartFrame
+  item?: EasyFrame
 }
 
 export type DropdownItemOptions = Omit<DropdownItem , 'item'>

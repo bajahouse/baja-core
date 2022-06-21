@@ -1,4 +1,12 @@
-import { Frame, SmartFrame, FrameOptions } from '../lib'
+// ============================================================================
+//
+// - Grid -
+//
+//   This file defines a grid layout frame.
+//
+// ============================================================================
+
+import { Frame, EasyFrame, FrameOptions } from '../lib'
 
 export interface GridOptions extends FrameOptions {
   itemsPerRow: number
@@ -6,7 +14,7 @@ export interface GridOptions extends FrameOptions {
 }
 
 export interface GridItemOptions extends FrameOptions {
-  item: SmartFrame
+  item: EasyFrame
   width: number
   height: number
   x: number
@@ -17,14 +25,14 @@ interface GridState {
   itemsPerRow: number
   rowHeight: number
   itemWidth: number
-  list: SmartFrame[]
+  list: EasyFrame[]
   index: number
   x: number
   y: number
 }
 
-export interface GridFrame extends SmartFrame {
-  Attach: (frame: SmartFrame) => void
+export interface GridFrame extends EasyFrame {
+  Attach: (frame: EasyFrame) => void
 }
 
 export const Grid = (options: GridOptions) => {

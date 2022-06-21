@@ -1,14 +1,22 @@
-import { Frame, SmartFrame, FrameOptions } from '../lib'
+// ============================================================================
+//
+// - List -
+//
+//   This file defines a list layout frame.
+//
+// ============================================================================
+
+import { Frame, EasyFrame, FrameOptions } from '../lib'
 
 export interface ListItemOptions extends FrameOptions {
   id: string,
   width: number
   height: number
   y: number
-  child: SmartFrame
+  child: EasyFrame
 }
 
-export interface ListItemFrame extends SmartFrame {
+export interface ListItemFrame extends EasyFrame {
   Reflow: (newY?: number) => void
   Id: string | null
 }
@@ -39,8 +47,8 @@ export interface ListState {
   y: number
 }
 
-export interface ListFrame extends SmartFrame {
-  Attach: (id: string, element: SmartFrame) => void
+export interface ListFrame extends EasyFrame {
+  Attach: (id: string, element: EasyFrame) => void
   Detach: (id: string) => void
   Reflow: () => void
 }
@@ -67,7 +75,7 @@ export const List = (options: ListOptions) => {
     })
   }
 
-  list.Attach = (id: string, child: SmartFrame) => {
+  list.Attach = (id: string, child: EasyFrame) => {
     const item = ListItem({
       id,
       child,

@@ -1,11 +1,19 @@
+// ============================================================================
+//
+// - Panel -
+//
+//   This file defines a floating panel frame.
+//
+// ============================================================================
+
 import { DropdownItemOptions, Dropdown } from './dropdown'
-import { Frame, SmartFrame, FrameOptions } from '../lib'
+import { Frame, EasyFrame, FrameOptions } from '../lib'
 
 let is_first_load = true
 
 export interface PanelOptions extends FrameOptions {
   nav?: DropdownItemOptions[]
-  frames?: ((options: FrameOptions) => SmartFrame)[]
+  frames?: ((options: FrameOptions) => EasyFrame)[]
   defaultSelectionId?: string
   isHiddenOnEmpty?: boolean
   title?: string
@@ -54,7 +62,7 @@ export const Panel = (options: PanelOptions) => {
   title.Inner(b)
 
   // pages
-  const pages: { [key: string]: SmartFrame } = {}
+  const pages: { [key: string]: EasyFrame } = {}
   const frames = options.frames
 
   //dropdown

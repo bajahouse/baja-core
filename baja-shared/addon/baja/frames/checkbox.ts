@@ -1,6 +1,14 @@
-import { Frame, SmartFrame, FrameOptions } from '../lib'
+// ============================================================================
+//
+// - CheckButton -
+//
+//   This file defines a custom Checkbox frame.
+//
+// ============================================================================
 
-export interface CheckButton extends SmartFrame {
+import { Frame, EasyFrame, FrameOptions } from '../lib'
+
+export interface CheckButton extends EasyFrame {
   GetChecked: () => number | null
   SetChecked: (isChecked: number | boolean | null) => void
   SetText: (text: string) => void
@@ -9,9 +17,9 @@ export interface CheckButton extends SmartFrame {
 export interface CheckboxOptions extends FrameOptions {
   text: string
   initial?: number
-  onChange?: (isChecked: number, element: SmartFrame) => void
-  onCheck?: (element: SmartFrame) => void
-  onUncheck?: (element: SmartFrame) => void
+  onChange?: (isChecked: number, element: EasyFrame) => void
+  onCheck?: (element: EasyFrame) => void
+  onUncheck?: (element: EasyFrame) => void
   // FIXME: min/max
 }
 
