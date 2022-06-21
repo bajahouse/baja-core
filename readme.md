@@ -28,7 +28,7 @@ Baja-Core is a TSWoW demo library that gives real world examples for TSWoW. This
     * Overview video: [link](https://streamable.com/4n9umf)
     * By: @tester
 
-6. **spell-picker**: Pick your spells as you level, as an alternative system to autolearning or trainers. Accessed in-game via the `/sp` or `/spellpicker` commands.
+6. **spell-picker (in progress)**: Pick your spells as you level, as an alternative system to autolearning or trainers. Accessed in-game via the `/sp` or `/spellpicker` commands.
     * Created By: nl
 
 7. **random-scripts-module**: Small scale creations that do not warrant their own module. You should check the header of any file to see what they are created for as well as specific credits.
@@ -43,4 +43,4 @@ Any modules seen on secondary branches not merged to the master branch should be
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. We are open to any ideas but ask that any module is written to assure it does not impact other possible content.
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/)
