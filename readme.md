@@ -34,7 +34,8 @@ Baja-Core is a TSWoW demo library that gives real world examples for TSWoW. This
 7. **random-scripts-module**: Small scale creations that do not warrant their own module. You should check the header of any file to see what they are created for as well as specific credits.
     * Created By: Everyone!
 
-8. **spell-skills**: () Item affixes that increase the damage/healing output of spells. 
+8. **spell-skills (in progress)**: Item affixes that increase the damage/healing output of spells. 
+    * Created By: nl
 
 ## Note
 Any modules seen on secondary branches not merged to the master branch should be considered incomplete and, if used, expect minimal support.
