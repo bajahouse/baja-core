@@ -11,6 +11,7 @@
 
 import { itemClassInfo, qualityMultiplier, statCounts, statChoices, statToWeight, armorScalar, baseNameDict, displayDict, prefixPostfixArray } from "./const-creations";
 import { getRandNumber } from "../livescripts";
+import { itemUpdatePacket } from "../../shared/Messages";
 
 let startID = 200000
 const templateItemID = 38
@@ -240,7 +241,7 @@ function getStatGroup(statType: uint32, quality: uint32): TSArray<TSArray<uint32
 
 function createItemPacket(itemID: number) {
     let item: TSItemTemplate = (itemID > 0) ? GetItemTemplate(itemID) : GetItemTemplate(templateItemID)
-    let pkt: any = ItemUpdatePacket()
+    let pkt: itemUpdatePacket = new itemUpdatePacket()
     pkt.class = item.GetClass()
     pkt.subclass = item.GetSubClass()
     pkt.soundOverrideSubclass = item.GetSoundOverrideSubclass()
@@ -320,6 +321,7 @@ function createItemPacket(itemID: number) {
     pkt.minMoneyLoot = item.GetMinMoneyLoot()
     pkt.maxMoneyLoot = item.GetMaxMoneyLoot()
     pkt.flagsCu = item.GetFlagsCu()
+    return pkt
 }
 
 function updateItem(itemID: number, pkt: any) {//ItemUpdatePacket
