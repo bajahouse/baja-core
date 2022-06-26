@@ -37,6 +37,9 @@ Baja-Core is a TSWoW demo library that gives real world examples for TSWoW. This
 8. **spell-skills (in progress)**: Item affixes that increase the damage/healing output of spells. 
     * Created By: @nl
 
+9. **naked-players-fix**: Fixes a WotLK client bug where other players load in without visible gear. This works by applying [X-Ray Specs](https://wotlkdb.com/?spell=54844) OnLogin and OnMapChanged.
+    * Created By: @nl
+
 ## Note
 Any modules seen on secondary branches not merged to the master branch should be considered incomplete and, if used, expect minimal support.
 
