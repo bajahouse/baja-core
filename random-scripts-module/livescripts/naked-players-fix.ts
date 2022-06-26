@@ -1,7 +1,6 @@
-/// fix naked bug
 const X_RAY_SPECS = 54844
 
-function NakedBugFix (player: TSPlayer) {
+function fix (player: TSPlayer) {
   player.AddNamedTimer('naked-fix-start', 1, 1, 0, (o, t) => {
     const p = o.ToPlayer()
     p.AddAura(X_RAY_SPECS, p)
@@ -12,7 +11,7 @@ function NakedBugFix (player: TSPlayer) {
   })
 }
 
-function Main (events: TSEvents) {
-  events.Player.OnLogin(player => NakedBugFix(player))
-  events.Player.OnMapChanged(player => NakedBugFix(player))
+export function nakedPlayersFix (events: TSEvents) {
+  events.Player.OnLogin(player => fix(player))
+  events.Player.OnMapChanged(player => fix(player))
 }
