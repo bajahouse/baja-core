@@ -213,7 +213,6 @@ export class itemUpdatePacket {
         packet.WriteInt32(this.statsCount)
         packet.WriteInt32(this.scalingStatDist)
         //come back for stats
-
         packet.WriteInt32(this.scalingStatValue)
         packet.WriteInt32(this.dmgMinA)
         packet.WriteInt32(this.dmgMaxA)
