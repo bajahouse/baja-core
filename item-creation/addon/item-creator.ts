@@ -56,13 +56,13 @@ export function itemCreator() {
         mframe.Hide()
     })
 
-    
-    //button to clear info
-    //button to send packet looking for info
+
+    //button to call clearInfo()
     //text boxes+description text for all item info
-    let entryBox = createTextBoxAndText('ItemID: ',0,0)
+    let entryBox = createTextBoxAndText('ItemID: ', 0, 0)
     //button to call requestInfo()
-    let nameBox = createTextBoxAndText('Name: ',0,-50)
+    //buttn to call sendInfo()
+    let nameBox = createTextBoxAndText('Name: ', 0, -50)
 
 
     OnCustomPacket(itemUpdateID, (packet) => {
@@ -70,8 +70,7 @@ export function itemCreator() {
         updateUI()
     });
 
-    function requestInfo()
-    {
+    function requestInfo() {
         let pkt = new itemRequest(info.entry)
         pkt.write().Send()
     }
@@ -93,23 +92,23 @@ export function itemCreator() {
         info.write().Send()
         clearInfo()
     }
-    
-    function createTextBoxAndText(name: string,x:number,y:number) {
+
+    function createTextBoxAndText(name: string, x: number, y: number) {
         let textbox = CreateFrame('EditBox', name + 'editbox', mframe)
-        textbox.SetSize(200,30)
+        textbox.SetSize(200, 30)
         textbox.SetFont("Fonts\\ARIALN.TTF", 14)
         textbox.SetMaxLetters(50)
         textbox.SetMultiLine(false)
 
         let text = textbox.CreateFontString('', "OVERLAY", 'GameTooltipText');
-        text.SetPoint('TOPLEFT', mframe, 'TOPLEFT',x+10,y-20)
+        text.SetPoint('TOPLEFT', mframe, 'TOPLEFT', x + 10, y - 20)
         text.SetText(name)
 
-        textbox.SetPoint('LEFT', text, 'RIGHT',5,0)
+        textbox.SetPoint('LEFT', text, 'RIGHT', 5, 0)
 
         let searchtexBox = textbox.CreateTexture("", "BACKGROUND")
         searchtexBox.SetTexture("Interface\\COMMON\\Common-Input-Border.blp")
-        searchtexBox.SetPoint("CENTER", textbox, "CENTER",-5,-5)
+        searchtexBox.SetPoint("CENTER", textbox, "CENTER", -5, -5)
         searchtexBox.SetSize(textbox.GetWidth(), textbox.GetHeight())
 
         return textbox
