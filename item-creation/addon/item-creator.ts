@@ -4,8 +4,8 @@ export function itemCreator() {
     let shown = false
     let info = new itemUpdatePacket();
     let mframe = CreateFrame("Frame", "torghastChoices", UIParent);
-    mframe.SetWidth(512);
-    mframe.SetHeight(512);
+    mframe.SetWidth(1500);
+    mframe.SetHeight(900);
     mframe.SetPoint("CENTER", 0, 0);
     mframe.SetBackdrop({
         bgFile: "Interface/TutorialFrame/TutorialFrameBackground",
@@ -56,10 +56,12 @@ export function itemCreator() {
         mframe.Hide()
     })
 
-    let test = createTextBoxAndText('obj1',0,0)
+    
     //button to clear info
     //button to send packet looking for info
     //text boxes+description text for all item info
+    let nameBox = createTextBoxAndText('Name: ',0,0)
+
 
     OnCustomPacket(itemUpdateID, (packet) => {
         info.read(packet);
@@ -78,11 +80,22 @@ export function itemCreator() {
     }
     function createTextBoxAndText(name: string,x:number,y:number) {
         let textbox = CreateFrame('EditBox', name + 'editbox', mframe)
-        textbox.SetSize(200,50)
-        textbox.SetPoint('TOPLEFT', mframe, 'TOPLEFT',x+20,y)
+        textbox.SetSize(200,30)
+        textbox.SetFont("Fonts\\ARIALN.TTF", 14)
+        textbox.SetMaxLetters(50)
+        textbox.SetMultiLine(false)
+
         let text = textbox.CreateFontString('', "OVERLAY", 'GameTooltipText');
-        text.SetPoint("RIGHT", textbox, "LEFT");
+        text.SetPoint('TOPLEFT', mframe, 'TOPLEFT',x+10,y-20)
         text.SetText(name)
+
+        textbox.SetPoint('LEFT', text, 'RIGHT',5,0)
+
+        let searchtexBox = textbox.CreateTexture("", "BACKGROUND")
+        searchtexBox.SetTexture("Interface\\COMMON\\Common-Input-Border.blp")
+        searchtexBox.SetPoint("CENTER", textbox, "CENTER",-5,-5)
+        searchtexBox.SetSize(textbox.GetWidth(), textbox.GetHeight())
+
         return textbox
     }
 }
