@@ -17,8 +17,29 @@ export class itemCache {
     }
 }
 
+
+export const itemRequestID = 27;
+export class itemRequest {
+    entry: uint32 = 0;
+
+    constructor(entry: uint32) {
+        this.entry = entry;
+    }
+
+    read(read: TSPacketRead): void {
+        this.entry = read.ReadUInt32();
+    }
+
+    write(): TSPacketWrite {
+        let packet = CreateCustomPacket(itemRequestID, 0);
+        packet.WriteUInt32(this.entry);
+        return packet;
+    }
+}
+
 export const itemUpdateID = 26;
 export class itemUpdatePacket {
+    entry: int32 = 0;
     class: int32 = 0;
     subclass: int32 = 0;
     soundOverrideSubclass: int32 = 0;
@@ -102,6 +123,7 @@ export class itemUpdatePacket {
     constructor() { }
 
     read(read: TSPacketRead): void {
+        this.entry = read.ReadInt32()
         this.class = read.ReadInt32()
         this.subclass = read.ReadInt32()
         this.soundOverrideSubclass = read.ReadInt32()
@@ -184,6 +206,7 @@ export class itemUpdatePacket {
 
     write(): TSPacketWrite {
         let packet = CreateCustomPacket(itemUpdateID, 0);
+        packet.WriteInt32(this.entry)
         packet.WriteInt32(this.class)
         packet.WriteInt32(this.subclass)
         packet.WriteInt32(this.soundOverrideSubclass)

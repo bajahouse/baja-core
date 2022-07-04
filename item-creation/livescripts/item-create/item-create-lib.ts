@@ -11,7 +11,7 @@
 
 import { itemClassInfo, qualityMultiplier, statCounts, statChoices, statToWeight, armorScalar, baseNameDict, displayDict, prefixPostfixArray } from "./const-creations";
 import { getRandNumber } from "../livescripts";
-import { itemUpdatePacket } from "../../shared/Messages";
+import { itemRequest, itemRequestID, itemUpdateID, itemUpdatePacket } from "../../shared/Messages";
 
 let startID = 200000
 const templateItemID = 38
@@ -22,6 +22,17 @@ export function itemCreationSetup(events: TSEvents) {
     setupBaseNameDict()
     setupPrefixPostfixDict()
     setupDisplayIDDict()
+
+    events.CustomPacketID.OnReceive(itemUpdateID,(opcode,packet,player)=>{
+        let pkt = new itemUpdatePacket()
+        pkt.read(packet)
+        updateItem(pkt)
+    })
+    events.CustomPacketID.OnReceive(itemRequestID,(opcode,packet,player)=>{
+        let pkt = new itemRequest(0)
+        pkt.read(packet)
+        createItemPacket(pkt.entry).write().SendToPlayer(player)
+    })
 }
 
 export function createItemRandom(player: TSPlayer): TSItem {
@@ -324,8 +335,8 @@ function createItemPacket(itemID: number) {
     return pkt
 }
 
-function updateItem(itemID: number, pkt: any) {//ItemUpdatePacket
-    let item: TSItemTemplate = (itemID > 0) ? GetItemTemplate(itemID) : CreateItemTemplate(startID++, templateItemID)
+function updateItem(pkt: itemUpdatePacket) {
+    let item: TSItemTemplate = (pkt.entry > 0) ? GetItemTemplate(pkt.entry) : CreateItemTemplate(startID++, templateItemID)
     item.SetClass(pkt.class)
     item.SetSubClass(pkt.subclass)
     item.SetSoundOverrideSubclass(pkt.soundOverrideSubclass)
@@ -374,7 +385,7 @@ function updateItem(itemID: number, pkt: any) {//ItemUpdatePacket
     item.SetRangedModRange(pkt.rangedModRange)
     //come back for spells
     item.SetBonding(pkt.bonding)
-    item.SetDescription(pkt.description)
+   // item.SetDescription(pkt.description)
     item.SetPageText(pkt.pageText)
     item.SetLanguageID(pkt.languageID)
     item.SetPageMaterial(pkt.pageMaterial)

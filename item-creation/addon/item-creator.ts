@@ -1,4 +1,4 @@
-import { itemUpdateID, itemUpdatePacket } from "../shared/Messages"
+import { itemRequest, itemUpdateID, itemUpdatePacket } from "../shared/Messages"
 
 export function itemCreator() {
     let shown = false
@@ -60,24 +60,40 @@ export function itemCreator() {
     //button to clear info
     //button to send packet looking for info
     //text boxes+description text for all item info
-    let nameBox = createTextBoxAndText('Name: ',0,0)
+    let entryBox = createTextBoxAndText('ItemID: ',0,0)
+    //button to call requestInfo()
+    let nameBox = createTextBoxAndText('Name: ',0,-50)
 
 
     OnCustomPacket(itemUpdateID, (packet) => {
         info.read(packet);
         updateUI()
     });
+
+    function requestInfo()
+    {
+        let pkt = new itemRequest(info.entry)
+        pkt.write().Send()
+    }
+
     function clearInfo() {
         info = new itemUpdatePacket()
         updateUI()
     }
+
     function updateUI() {
-        //take all data from info, apply to all UI elements
+        nameBox.SetText(info.name)
+
     }
+
     function sendInfo() {
-        //take all data from UI elements, apply to info, send
+        info.entry = Number(entryBox.GetText())
+        info.name = nameBox.GetText()
+
+        info.write().Send()
         clearInfo()
     }
+    
     function createTextBoxAndText(name: string,x:number,y:number) {
         let textbox = CreateFrame('EditBox', name + 'editbox', mframe)
         textbox.SetSize(200,30)
