@@ -81,6 +81,7 @@ export function itemCreator() {
     }
 
     function updateUI() {
+        entryBox.SetText(info.entry.toString())
         nameBox.SetText(info.name)
 
     }
