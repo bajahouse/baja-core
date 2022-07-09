@@ -23,12 +23,12 @@ export function itemCreationSetup(events: TSEvents) {
     setupPrefixPostfixDict()
     setupDisplayIDDict()
 
-    events.CustomPacketID.OnReceive(itemUpdateID,(opcode,packet,player)=>{
+    events.CustomPacket.OnReceive(itemUpdateID,(opcode,packet,player)=>{
         let pkt = new itemUpdatePacket()
         pkt.read(packet)
         updateItem(pkt)
     })
-    events.CustomPacketID.OnReceive(itemRequestID,(opcode,packet,player)=>{
+    events.CustomPacket.OnReceive(itemRequestID,(opcode,packet,player)=>{
         let pkt = new itemRequest(0)
         pkt.read(packet)
         createItemPacket(pkt.entry).write().SendToPlayer(player)

@@ -65,8 +65,8 @@ class dungeonBuffs {
 
 export function dungeonBuffSystem(events: TSEvents) {
     setupTables()
-    events.CreatureID.OnCreate(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), (creature, cancel) => {
-        creature.GetCollisions().Add(ModID(), "hungergames-collision", 2, 500, 0, (self, collided, cancel, entry) => {
+    events.Creature.OnCreate(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), (creature, cancel) => {
+        creature.GetCollisions().Add("infinite-dungeon", 2, 500, 0, (self, collided, cancel, entry) => {
             if (collided.IsPlayer()) {
                 let player = collided.ToPlayer()
                 let creature = self.ToCreature()
@@ -93,12 +93,12 @@ export function dungeonBuffSystem(events: TSEvents) {
         })
     })
 
-    events.GameObjectID.OnGossipHello(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeon-chest"), (obj, player, cancel) => {
+    events.GameObject.OnGossipHello(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeon-chest"), (obj, player, cancel) => {
         player.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), obj.GetX(), obj.GetY(), obj.GetZ(), obj.GetO(), 8, 0)
         obj.Despawn()
     })
 
-    events.GameObjectID.OnGossipHello(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), (obj, player, cancel) => {
+    events.GameObject.OnGossipHello(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), (obj, player, cancel) => {
         player.GossipClearMenu()
         player.GossipMenuAddItem(0, 'Go again', obj.GetGUIDLow(), 0, false, '', 0)
         player.GossipMenuAddItem(0, 'Escape', obj.GetGUIDLow(), 1, false, '', 0)
@@ -122,7 +122,7 @@ export function dungeonBuffSystem(events: TSEvents) {
         }
     })
 
-    events.CustomPacketID.OnReceive(spellChoiceID, (opcode, packet, player) => {
+    events.CustomPacket.OnReceive(spellChoiceID, (opcode, packet, player) => {
         let pkt = new spellChoice(0)
         pkt.read(packet)
         playerChoseBuff(player, pkt.choice)
@@ -517,7 +517,7 @@ function setupTables() {
 }
 
 export function setupLastBossCheck(events: TSEvents, bossID: number) {
-    events.CreatureID.OnDeath(bossID, (creature, killer) => {
+    events.Creature.OnDeath(bossID, (creature, killer) => {
         if (creature.GetUInt('lastBoss', 0) == 1) {
             killer.SummonGameObject(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), creature.GetX(), creature.GetY(), creature.GetZ() + 1, creature.GetO(), 0)
         }

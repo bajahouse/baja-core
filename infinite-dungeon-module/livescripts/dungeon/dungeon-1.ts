@@ -355,14 +355,14 @@ const prestigeMult = 24//this is 1 lower than real value, due to dieSides. 9 is 
 
 export function dungeon1(events: TSEvents) {
 
-    events.GameObjectID.OnGossipHello(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonstartobj"), (obj, player, cancel) => {
+    events.GameObject.OnGossipHello(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonstartobj"), (obj, player, cancel) => {
         player.GossipClearMenu()
         player.GossipMenuAddItem(0, 'Off I Go', obj.GetGUIDLow(), 0, false, '', 0)
         player.GossipMenuAddItem(0, 'Not yet', obj.GetGUIDLow(), 1, false, '', 0)
         player.GossipSendMenu(5, obj, 1)
     })
 
-    events.GameObjectID.OnGossipSelect(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonstartobj"), (obj, player, menuID, sel, cancel) => {
+    events.GameObject.OnGossipSelect(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonstartobj"), (obj, player, menuID, sel, cancel) => {
         if (sel == 0) {
             player.Teleport(726, 910, 157, 414, 0)
             player.GossipComplete()
@@ -389,12 +389,12 @@ export function dungeon1(events: TSEvents) {
         setupBossDeath(events, bossIDs[i])
         setupBossPull(events, bossIDs[i])
     }
-    events.CreatureID.OnDeath(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vase"), (creature, killer) => {
+    events.Creature.OnDeath(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vase"), (creature, killer) => {
         checkPlayerGiveReward(killer, getRandomInt(1) + 1)
         creature.DespawnOrUnsummon(5000)
     })
     //make a bossMinions loop for any spawned by spell creatures
-    events.GameObjectID.OnGossipSelect(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), (obj, player, menuID, sel, cancel) => {
+    events.GameObject.OnGossipSelect(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), (obj, player, menuID, sel, cancel) => {
         if (sel == 0) {
             let mapChoice = getRandomInt(mobSpawnCoords.length)
             resetGroup(player, playerSpawnCoords[mapChoice], miniMobSpawnCoords[mapChoice], miniMobIDs, mobSpawnCoords[mapChoice], mobIDs, miniBossSpawnCoords[mapChoice], miniBossIDs, bossSpawnCoords[mapChoice], bossIDs, vendorSpawnCoords[mapChoice], chestSpawnCoords[mapChoice], vaseSpawnCoords[mapChoice])
@@ -405,7 +405,7 @@ export function dungeon1(events: TSEvents) {
         }
     })
 
-    events.MapID.OnPlayerEnter(726, (map, player) => {
+    events.Map.OnPlayerEnter(726, (map, player) => {
         if (!map.GetBool('isSpawned', false)) {
             map.SetBool('isSpawned', true)
             map.SetUInt('rewardID', rewardCurrencyID)
@@ -420,7 +420,7 @@ export function dungeon1(events: TSEvents) {
         })
     })
 
-    events.MapID.OnPlayerLeave(726, (map, player) => {
+    events.Map.OnPlayerLeave(726, (map, player) => {
         removePlayerBuffs(player)
         let curPrestige: uint32 = player.GetUInt('prestige', 0)
         let rewCount: uint32 = <uint32>(curPrestige * curPrestige) / 10
@@ -434,7 +434,7 @@ export function dungeon1(events: TSEvents) {
         map.SetUInt('prestige', 0)
     })
 
-    events.SpellID.OnHit(8326, spell => {
+    events.Spell.OnHit(8326, spell => {
         let c = spell.GetCaster()
         if (c.GetMapID() == 726) {
             let p = c.ToPlayer()
@@ -452,16 +452,16 @@ function addPrestigeBuffToCreature(mob: TSCreature) {
 }
 
 function setupCreaturePrestigeScripts(events: TSEvents, mobID: number) {
-    events.CreatureID.OnCreate(mobID, (creature, cancel) => {
+    events.Creature.OnCreate(mobID, (creature, cancel) => {
         addPrestigeBuffToCreature(creature)
     })
-    events.CreatureID.OnReachedHome(mobID, (creature) => {
+    events.Creature.OnReachedHome(mobID, (creature) => {
         addPrestigeBuffToCreature(creature)
     })
 }
 
 function setupMiniMobDeath(events: TSEvents, mobID: number) {
-    events.CreatureID.OnDeath(mobID, (creature, killer) => {
+    events.Creature.OnDeath(mobID, (creature, killer) => {
         checkPlayerGiveReward(killer, getRandomInt(1) + 1)
         if (getRandomInt(100) >= 99) {
             creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
@@ -471,7 +471,7 @@ function setupMiniMobDeath(events: TSEvents, mobID: number) {
 }
 
 function setupMobDeath(events: TSEvents, mobID: number) {
-    events.CreatureID.OnDeath(mobID, (creature, killer) => {
+    events.Creature.OnDeath(mobID, (creature, killer) => {
         checkPlayerGiveReward(killer, getRandomInt(5) + 1)
         if (getRandomInt(100) >= 97) {
             creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
@@ -481,7 +481,7 @@ function setupMobDeath(events: TSEvents, mobID: number) {
 }
 
 function setupMiniBossDeath(events: TSEvents, mobID: number) {
-    events.CreatureID.OnDeath(mobID, (creature, killer) => {
+    events.Creature.OnDeath(mobID, (creature, killer) => {
         checkPlayerGiveReward(killer, getRandomInt(20) + 1)
         if (getRandomInt(100) >= 50) {
             creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
@@ -491,7 +491,7 @@ function setupMiniBossDeath(events: TSEvents, mobID: number) {
 }
 
 function setupBossDeath(events: TSEvents, mobID: number) {
-    events.CreatureID.OnDeath(mobID, (creature, killer) => {
+    events.Creature.OnDeath(mobID, (creature, killer) => {
         checkPlayerGiveReward(killer, getRandomInt(20) + 30)
         creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
         creature.DespawnOrUnsummon(3000)
@@ -499,7 +499,7 @@ function setupBossDeath(events: TSEvents, mobID: number) {
 }
 
 function setupBossPull(events: TSEvents, mobID: number) {
-    events.CreatureID.OnJustEnteredCombat(mobID, (creature, target) => {
+    events.Creature.OnJustEnteredCombat(mobID, (creature, target) => {
         let mobs = creature.GetCreaturesInRange(60, 0, 2, 1)
         for (let i = 0; i < mobs.length; i++) {
             mobs[i].AttackStart(target)
