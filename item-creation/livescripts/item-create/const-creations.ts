@@ -10,7 +10,10 @@
 //
 // ============================================================================
 
-import { getRandNumber } from "../livescripts"
+export function getRandNumber(max: uint32): uint32 {
+    return Math.floor((Math.random() * (max - 0.001)))
+}
+
 
 export const emptyQuality = CreateDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>>({
     2: CreateDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>({

@@ -9,8 +9,7 @@
 //
 // ============================================================================
 
-import { itemClassInfo, qualityMultiplier, statCounts, statChoices, statToWeight, armorScalar, baseNameDict, displayDict, prefixPostfixArray } from "./const-creations";
-import { getRandNumber } from "../livescripts";
+import { itemClassInfo, qualityMultiplier, statCounts, statChoices, statToWeight, armorScalar, baseNameDict, displayDict, prefixPostfixArray, getRandNumber } from "./const-creations";
 import { itemRequest, itemRequestID, itemUpdateID, itemUpdatePacket } from "../../shared/Messages";
 
 let startID = 200000

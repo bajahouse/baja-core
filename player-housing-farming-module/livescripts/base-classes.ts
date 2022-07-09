@@ -9,7 +9,9 @@
 //
 // ============================================================================
 
-import { getRandNumber } from "./livescripts";
+function getRandNumber(min: uint32, max: uint32): uint32 {
+    return Math.floor((Math.random() * (max - min)) + min);
+}
 
 @CharactersTable
 export class PlayerHouse extends DBEntry {
