@@ -57,12 +57,42 @@ export function itemCreator() {
         mframe.Hide()
     })
 
+    let clearInfoButton = CreateFrame("Button", 'clear', mframe);
+    clearInfoButton.SetSize(200, 45);
+    clearInfoButton.SetPoint("BOTTOMRIGHT", mframe, "BOTTOMRIGHT", -40, 55);
+    clearInfoButton.SetNormalTexture("Interface\\BUTTONS\\UI-Panel-Button-Up");
+    let choiceButtonText = clearInfoButton.CreateFontString("", "OVERLAY", "GameFontNormalLarge");
+    choiceButtonText.SetText("Clear");
+    choiceButtonText.SetPoint("LEFT", clearInfoButton, "LEFT", 40, 10);
+    clearInfoButton.HookScript("OnClick", (frame, button, down) => {
+        clearInfo()
+    });
 
-    //button to call clearInfo()
-    //button to call requestInfo()
-    //buttn to call sendInfo()
+
+    let requestInfoButton = CreateFrame("Button", 'request', mframe);
+    requestInfoButton.SetSize(clearInfoButton.GetWidth(), clearInfoButton.GetHeight());
+    requestInfoButton.SetPoint("TOP", clearInfoButton, "BOTTOM", 0, 15);
+    requestInfoButton.SetNormalTexture("Interface\\BUTTONS\\UI-Panel-Button-Up");
+    let requestInfoButtonText = requestInfoButton.CreateFontString("", "OVERLAY", "GameFontNormalLarge");
+    requestInfoButtonText.SetPoint("LEFT", requestInfoButton, "LEFT", 30, 10);
+    requestInfoButtonText.SetText("Request");
+    requestInfoButton.HookScript("OnClick", (frame, button, down) => {
+        requestInfo()
+    });
+
+    let sendInfoButton = CreateFrame("Button", 'send', mframe);
+    sendInfoButton.SetSize(clearInfoButton.GetWidth(), clearInfoButton.GetHeight());
+    sendInfoButton.SetPoint("TOP", requestInfoButton, "BOTTOM", 0, 15);
+    sendInfoButton.SetNormalTexture("Interface\\BUTTONS\\UI-Panel-Button-Up");
+    let sendInfoButtonText = sendInfoButton.CreateFontString("", "OVERLAY", "GameFontNormalLarge");
+    sendInfoButtonText.SetPoint("LEFT", sendInfoButton, "LEFT", 40, 10);
+    sendInfoButtonText.SetText("Send");
+    sendInfoButton.HookScript("OnClick", (frame, button, down) => {
+        sendInfo()
+    });
+
     createTextBoxes()
-    
+
     OnCustomPacket(itemUpdateID, (packet) => {
         info.read(packet);
         updateUI()
@@ -78,8 +108,7 @@ export function itemCreator() {
         updateUI()
     }
 
-    function createTextBoxes()
-    {
+    function createTextBoxes() {
         boxArr[0] = createTextBoxAndText('Entry: ', 0, 0)
         boxArr[1] = createTextBoxAndText('Class: ', 0, 1)
         boxArr[2] = createTextBoxAndText('Subclass: ', 0, 2)
