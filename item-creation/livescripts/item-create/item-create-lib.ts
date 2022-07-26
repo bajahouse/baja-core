@@ -249,10 +249,10 @@ function getStatGroup(statType: uint32, quality: uint32): TSArray<TSArray<uint32
     return statGroup
 }
 
-function createItemPacket(itemID: number) {
+function createItemPacket(itemID: number): itemUpdatePacket {
     let item: TSItemTemplate = (itemID > 0) ? GetItemTemplate(itemID) : GetItemTemplate(templateItemID)
     let pkt: itemUpdatePacket = new itemUpdatePacket()
-    pkt.class = item.GetClass()
+    pkt.iclass = item.GetClass()
     pkt.subclass = item.GetSubClass()
     pkt.soundOverrideSubclass = item.GetSoundOverrideSubclass()
     pkt.name = item.GetName()
@@ -390,7 +390,7 @@ function createItemPacket(itemID: number) {
 
 function updateItem(pkt: itemUpdatePacket) {
     let item: TSItemTemplate = (pkt.entry > 0) ? GetItemTemplate(pkt.entry) : CreateItemTemplate(startID++, templateItemID)
-    item.SetClass(pkt.class)
+    item.SetClass(pkt.iclass)
     item.SetSubClass(pkt.subclass)
     item.SetSoundOverrideSubclass(pkt.soundOverrideSubclass)
     item.SetName(pkt.name)

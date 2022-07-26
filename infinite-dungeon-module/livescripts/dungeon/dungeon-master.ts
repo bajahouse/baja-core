@@ -154,9 +154,9 @@ export function rewardGroup(player: TSPlayer) {
     }
 }
 
-export function resetGroup(player: TSPlayer, playerSpawnCoords: TSDictionary<string, float>, miniMobSpawnCoords: TSArray<TSDictionary<string, float>>, miniMobIDs: TSArray<uint32>, mobSpawnCoords: TSArray<TSDictionary<string, float>>, mobIDs: TSArray<uint32>, miniBossSpawnCoords: TSArray<TSDictionary<string, float>>, miniBossIDs: TSArray<uint32>, bossSpawnCoords: TSArray<TSDictionary<string, float>>, bossIDs: TSArray<uint32>, vendorSpawnCoords: TSDictionary<string, float>, chestSpawnCoords: TSArray<TSDictionary<string, float>>, vaseSpawnCoords: TSArray<TSDictionary<string, float>>) {
+export function resetGroup(player: TSPlayer, playerSpawnCoords: TSDictionary<string, double>, miniMobSpawnCoords: TSArray<TSDictionary<string, double>>, miniMobIDs: TSArray<uint32>, mobSpawnCoords: TSArray<TSDictionary<string, double>>, mobIDs: TSArray<uint32>, miniBossSpawnCoords: TSArray<TSDictionary<string, double>>, miniBossIDs: TSArray<uint32>, bossSpawnCoords: TSArray<TSDictionary<string, double>>, bossIDs: TSArray<uint32>, vendorSpawnCoords: TSDictionary<string, double>, chestSpawnCoords: TSArray<TSDictionary<string, double>>, vaseSpawnCoords: TSArray<TSDictionary<string, double>>) {
     let map = player.GetMap()
-    let prestige = map.GetUInt('prestige', 0) + 1
+    let prestige: uint32 = map.GetUInt('prestige', 0) + 1
     map.SetUInt('prestige', prestige)
     if (prestige % 5 == 0) {
         if (player.IsInGroup()) {
@@ -179,7 +179,7 @@ export function resetGroup(player: TSPlayer, playerSpawnCoords: TSDictionary<str
     spawnMap(map, miniMobSpawnCoords, miniMobIDs, mobSpawnCoords, mobIDs, miniBossSpawnCoords, miniBossIDs, bossSpawnCoords, bossIDs, vendorSpawnCoords, chestSpawnCoords, vaseSpawnCoords)
 }
 
-function teleportRandomStart(players: TSPlayer[], playerSpawnCoords: TSDictionary<string, float>) {
+function teleportRandomStart(players: TSPlayer[], playerSpawnCoords: TSDictionary<string, double>) {
     let prestige = players[0].GetMap().GetUInt('prestige', 0)
     for (let i = 0; i < players.length; i++) {
         players[i].SetUInt('prestige', players[i].GetUInt('prestige', 0) + 1)
@@ -201,7 +201,7 @@ function despawnMap(player: TSPlayer) {
     }
 }
 
-export function spawnMap(map: TSMap, miniMobSpawnCoords: TSArray<TSDictionary<string, float>>, miniMobIDs: TSArray<uint32>, mobSpawnCoords: TSArray<TSDictionary<string, float>>, mobIDs: TSArray<uint32>, miniBossSpawnCoords: TSArray<TSDictionary<string, float>>, miniBossIDs: TSArray<uint32>, bossSpawnCoords: TSArray<TSDictionary<string, float>>, bossIDs: TSArray<uint32>, vendorSpawnCoords: TSDictionary<string, float>, chestSpawnCoords: TSArray<TSDictionary<string, float>>, vaseSpawnCoords: TSArray<TSDictionary<string, float>>,) {
+export function spawnMap(map: TSMap, miniMobSpawnCoords: TSArray<TSDictionary<string, double>>, miniMobIDs: TSArray<uint32>, mobSpawnCoords: TSArray<TSDictionary<string, double>>, mobIDs: TSArray<uint32>, miniBossSpawnCoords: TSArray<TSDictionary<string, double>>, miniBossIDs: TSArray<uint32>, bossSpawnCoords: TSArray<TSDictionary<string, double>>, bossIDs: TSArray<uint32>, vendorSpawnCoords: TSDictionary<string, double>, chestSpawnCoords: TSArray<TSDictionary<string, double>>, vaseSpawnCoords: TSArray<TSDictionary<string, double>>,) {
     let c = map.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vendor"), vendorSpawnCoords['x'], vendorSpawnCoords['y'], vendorSpawnCoords['z'], vendorSpawnCoords['o'], 180000)
     //chests
     for (let i = 0; i < chestSpawnCoords.length; i++) {
@@ -245,7 +245,7 @@ function spawnBoss(map: TSMap, bossID: number, sPos: TSDictionary<string, number
     }
 }
 
-function spawnFormation(map: TSMap, sPos: TSDictionary<string, float>, mobIDs: TSArray<uint32>, mobCount: uint32) {
+function spawnFormation(map: TSMap, sPos: TSDictionary<string, double>, mobIDs: TSArray<uint32>, mobCount: uint32) {
     //forward is x+cosRad y+sinRad
     //backwards is x-cosRad y-sinRad
     //left is x+sinRad y+cosRad
@@ -496,9 +496,9 @@ function setupTables() {
 
     while (query.GetRow()) {
         let classID = query.GetUInt32(0)
-        let spellID = query.GetUInt32(1)
-        let spellRarity = query.GetUInt32(2)
-        let spellType = query.GetUInt32(3)
+        let spellID: uint32 = query.GetUInt32(1)
+        let spellRarity: uint32 = query.GetUInt32(2)
+        let spellType: uint32 = query.GetUInt32(3)
         let spellDesc = query.GetString(4)
         spellIDToType[spellID] = spellType
         if (classID == 0) {//add spell to all
