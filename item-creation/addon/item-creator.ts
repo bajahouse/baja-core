@@ -245,7 +245,7 @@ export function itemCreator() {
 
     function updateUI() {
         boxArr[0].SetText(info.entry.toString())
-        boxArr[1].SetText(info.class.toString())
+        boxArr[1].SetText(info.iclass.toString())
         boxArr[2].SetText(info.subclass.toString())
         boxArr[3].SetText(info.soundOverrideSubclass.toString())
         boxArr[4].SetText(info.name)
@@ -381,7 +381,7 @@ export function itemCreator() {
 
     function sendInfo() {
         info.entry = Number(boxArr[0].GetText())
-        info.class = Number(boxArr[1].GetText())
+        info.iclass = Number(boxArr[1].GetText())
         info.subclass = Number(boxArr[2].GetText())
         info.soundOverrideSubclass = Number(boxArr[3].GetText())
         info.name = boxArr[4].GetText()
