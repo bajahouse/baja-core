@@ -195,10 +195,10 @@ function getName(itemInfoArr: TSArray<float>, quality: uint32): string {
         name = prefixPostfixArray[0][getRandNumber(prefixPostfixArray[0].length)] + " "
     }
     //base name
-    name += baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]][getRandNumber(baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]].length)]
+    name = name + baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]][getRandNumber(baseNameDict[itemInfoArr[0]][itemInfoArr[1]][itemInfoArr[2]].length)]
     //suffix
     if (quality == 4 || quality == 5) {
-        name += " " + prefixPostfixArray[1][getRandNumber(prefixPostfixArray[1].length)]
+        name = name + " " + prefixPostfixArray[1][getRandNumber(prefixPostfixArray[1].length)]
     }
     return name
 }
