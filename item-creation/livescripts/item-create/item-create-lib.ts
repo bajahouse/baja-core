@@ -60,7 +60,7 @@ export function returnItemIDWithChoices(itemType: uint32, itemSubType: uint32, l
     return temp.GetEntry()
 }
 
-function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, level: uint32, statType: uint32): TSItemTemplate {
+function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<double>, level: uint32, statType: uint32): TSItemTemplate {
     const qualMult = qualityMultiplier[temp.GetQuality()]
     let itemLevel = level < 70 ? (((level * level) / 36) + 1) : (16.5 * level - 1004)
     const commonMath = itemLevel * itemInfo[5] * qualMult
@@ -123,7 +123,7 @@ function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<float>, le
     return temp
 }
 
-function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: float, statType: uint32) {
+function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: double, statType: uint32) {
     let group = getStatGroup(statType, temp.GetQuality())
     let totalStats = slotMult * itemLevel * 4 * qualityMultiplier[temp.GetQuality()]
     let statsPrimary: uint32 = totalStats * .7
@@ -175,7 +175,7 @@ function GetRandQuality(): uint32 {
     }
 }
 
-function chooseItemType(): TSArray<float> {
+function chooseItemType(): TSArray<double> {
     if (getRandNumber(100) < 85) {//armor
         return itemClassInfo[0][getRandNumber(itemClassInfo[0].length)]
     } else {//weapon
@@ -183,12 +183,12 @@ function chooseItemType(): TSArray<float> {
     }
 }
 
-function getDisplayID(itemInfoArr: TSArray<float>, quality: uint32): uint32 {
-    let chose = displayDict[quality][itemInfoArr[0]][itemInfoArr[2]][itemInfoArr[1]]
+function getDisplayID(itemInfoArr: TSArray<double>, quality: uint32): uint32 {
+    let chose:TSArray<number> = displayDict[quality][itemInfoArr[0]][itemInfoArr[2]][itemInfoArr[1]]
     return chose[getRandNumber(chose.length)]
 }
 
-function getName(itemInfoArr: TSArray<float>, quality: uint32): string {
+function getName(itemInfoArr: TSArray<double>, quality: uint32): string {
     let name = ""
     //prefix
     if (quality > 2) {
