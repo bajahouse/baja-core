@@ -16,14 +16,14 @@ function getRandNumber(min: uint32, max: uint32): uint32 {
 @CharactersTable
 export class PlayerHouse extends DBEntry {
     @DBPrimaryKey
-    player: uint64 = 0
+    playerGUID: uint64 = 0
     @DBField
     area: uint32 = 0;
     open: bool = false;
 
     constructor(player: uint64) {
         super();
-        this.player = player;
+        this.playerGUID = player;
     }
 
     static get(player: TSPlayer): PlayerHouse {
@@ -57,7 +57,7 @@ export class PlayerHouse extends DBEntry {
 @CharactersTable
 export class PlayerHouseCrops extends DBArrayEntry {
     @DBPrimaryKey
-    player: uint64 = 0
+    playerGUID: uint64 = 0
     @DBField
     x: float = 0;
     @DBField
@@ -77,9 +77,9 @@ export class PlayerHouseCrops extends DBArrayEntry {
     spawnGuid: uint64 = 0;
     spawnedEntry: uint32 = 0;
 
-    constructor(player: uint64) {
+    constructor(playerGUID: uint64) {
         super();
-        this.player = player;
+        this.playerGUID = playerGUID;
     }
 
     Harvest(player: TSPlayer) {
@@ -153,12 +153,12 @@ export class CropType {
 
 @CharactersTable
 export class PlayerHouseGobs extends DBArrayEntry {
-    constructor(player: uint64) {
+    constructor(playerGUID: uint64) {
         super();
-        this.player = player;
+        this.playerGUID = playerGUID;
     }
     @DBPrimaryKey
-    player: uint64 = 0
+    playerGUID: uint64 = 0
     @DBField
     entry: float = 0;
     @DBField
@@ -208,12 +208,12 @@ export class PlayerHouseGobs extends DBArrayEntry {
 
 @CharactersTable
 export class PlayerHouseCreatures extends DBArrayEntry {
-    constructor(player: uint64) {
+    constructor(playerGUID: uint64) {
         super();
-        this.player = player;
+        this.playerGUID = playerGUID;
     }
     @DBPrimaryKey
-    player: uint64 = 0
+    playerGUID: uint64 = 0
     @DBField
     entry: float = 0;
     @DBField
