@@ -184,12 +184,12 @@ function chooseItemType(): TSArray<double> {
 }
 
 function getDisplayID(itemInfoArr: TSArray<double>, quality: uint32): uint32 {
-    let chose:TSArray<number> = displayDict[quality][itemInfoArr[0]][itemInfoArr[2]][itemInfoArr[1]]
+    let chose:TSArray<uint32>= <TSArray<uint32>>displayDict[quality][itemInfoArr[0]][itemInfoArr[2]][itemInfoArr[1]]
     return chose[getRandNumber(chose.length)]
 }
 
 function getName(itemInfoArr: TSArray<double>, quality: uint32): string {
-    let name = ""
+    let name:string = ""
     //prefix
     if (quality > 2) {
         name = prefixPostfixArray[0][getRandNumber(prefixPostfixArray[0].length)] + " "
