@@ -88,7 +88,7 @@ export const qualityMultiplier = [
 ]
 
 export const statCounts = [
-    [0, 0], // no quality 0
+    [0, 0],//no quality 0
     [1, 1],//common unused
     [2, 1],//uncommon
     [2, 3],//rare
@@ -143,50 +143,84 @@ export let statToName = CreateDictionary<uint32, string>({
     48: 'Block Value',
 })
 
-export let statToWeight = CreateDictionary<uint32, double>({
+export let statToWeight = CreateDictionary<uint32, float>({
+    // Unused
     0: 1,
-    1: 1,
-    3: 1,
-    4: 1,
-    5: 1,
-    6: 1,
-    7: 1,
-    12: 1,
-    13: 1,
-    14: 1,
-    15: 1,
+    // Health
+    1: 12,
+    // Agility, Strength, Intellect, Spirit, Stamina
+    3: 1.15,
+    //str
+    4: 1.15,
+    //int
+    5: 1.15,
+    //spi
+    6: 1.15,
+    //stam
+    7: 1.15,
+    // Defense 
+    12: 1.1,
+    // Dodge
+    13: 1.1,
+    // Parry
+    14: 1.1,
+    // Shield Block
+    15: 1.1,
+    // Melee, Ranged, & Spell Hit
     16: 1,
     17: 1,
     18: 1,
+    // Melee Ranged & Spell Crit
     19: 1,
     20: 1,
     21: 1,
+    // Melee, Ranged, & Spell Hit Avoidance
     22: 1,
     23: 1,
     24: 1,
+    // Melee, Ranged & Spell Crit Avoidance
     25: 1,
     26: 1,
     27: 1,
+    // Melee, Ranged, Spell Haste
     28: 1,
     29: 1,
     30: 1,
+    // Hit Rating (General)
     31: 1,
+    // Critical Strike (General)
     32: 1,
+    // Hit Avoidance 
     33: 1,
+    // Crit Avoidance
     34: 1,
+    // Resilience
     35: 1,
-    36: 1,
-    37: 1,
-    38: 1,
-    39: 1,
+    // Haste (General)
+    36: 1.2,
+    // Expertise
+    37: 1.3,
+    // Attack Power
+    38: 1.3,
+    // Ranged Attack Power
+    39: 1.3,
+    // Feral Attack Power
     40: 1,
+    // Dmg Done
     41: 1,
+    // Healing Done
     42: 1,
+    // MP5
     43: 1,
-    44: 1,
-    45: 1,
+    // Armor Penentration
+    44: 1.1,
+    // Spell Power (General)
+    45: 3,
+    // HP5
     46: 1,
+    // Spell Penetration
     47: 1,
+    // Block Value
     48: 1,
 })
 
@@ -235,6 +269,7 @@ const enum itemStats /**@realType:uint32*/ {
     SPELL_PENETRATION = 47,
     BLOCK_VALUE = 48,
 }
+
 export const statChoices: uint32[][][] = [
     <uint32[][]>[//primaries
         <uint32[]>[//str group
@@ -296,164 +331,55 @@ export const statChoices: uint32[][][] = [
     ],
 ]
 
-export const displayDict:TSDictionary<int, TSDictionary<int32, TSDictionary<uint32, TSDictionary<uint32, uint32[]>>>> = <TSDictionary<int, TSDictionary<int32, TSDictionary<uint32, TSDictionary<uint32, uint32[]>>>>>CreateDictionary({//quality
-    2: CreateDictionary({
-        2: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
-            13: CreateDictionary<uint32, uint32[]>({
-            }),
-            15: CreateDictionary<uint32, uint32[]>({
-            }),
-            17: CreateDictionary<uint32, uint32[]>({
-            }),
-            26: CreateDictionary<uint32, uint32[]>({
-            }),
+const empty: TSDictionary<int32, TSDictionary<uint32, TSDictionary<uint32, uint32[]>>> = CreateDictionary({
+    2: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
+        13: CreateDictionary<uint32, uint32[]>({
         }),
-        4: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
-            1: CreateDictionary<uint32, uint32[]>({
-            }),
-            2: CreateDictionary<uint32, uint32[]>({
-            }),
-            3: CreateDictionary<uint32, uint32[]>({
-            }),
-            5: CreateDictionary<uint32, uint32[]>({
-            }),
-            6: CreateDictionary<uint32, uint32[]>({
-            }),
-            7: CreateDictionary<uint32, uint32[]>({
-            }),
-            8: CreateDictionary<uint32, uint32[]>({
-            }),
-            9: CreateDictionary<uint32, uint32[]>({
-            }),
-            10: CreateDictionary<uint32, uint32[]>({
-            }),
-            11: CreateDictionary<uint32, uint32[]>({
-            }),
-            12: CreateDictionary<uint32, uint32[]>({
-            }),
-            16: CreateDictionary<uint32, uint32[]>({
-            }),
-        })
-    }),
-    3: CreateDictionary({
-        2: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
-            13: CreateDictionary<uint32, uint32[]>({
-            }),
-            15: CreateDictionary<uint32, uint32[]>({
-            }),
-            17: CreateDictionary<uint32, uint32[]>({
-            }),
-            26: CreateDictionary<uint32, uint32[]>({
-            }),
+        15: CreateDictionary<uint32, uint32[]>({
         }),
-        4: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
-            1: CreateDictionary<uint32, uint32[]>({
-            }),
-            2: CreateDictionary<uint32, uint32[]>({
-            }),
-            3: CreateDictionary<uint32, uint32[]>({
-            }),
-            5: CreateDictionary<uint32, uint32[]>({
-            }),
-            6: CreateDictionary<uint32, uint32[]>({
-            }),
-            7: CreateDictionary<uint32, uint32[]>({
-            }),
-            8: CreateDictionary<uint32, uint32[]>({
-            }),
-            9: CreateDictionary<uint32, uint32[]>({
-            }),
-            10: CreateDictionary<uint32, uint32[]>({
-            }),
-            11: CreateDictionary<uint32, uint32[]>({
-            }),
-            12: CreateDictionary<uint32, uint32[]>({
-            }),
-            16: CreateDictionary<uint32, uint32[]>({
-            }),
-        })
-    }),
-    4: CreateDictionary({
-        2: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
-            13: CreateDictionary<uint32, uint32[]>({
-            }),
-            15: CreateDictionary<uint32, uint32[]>({
-            }),
-            17: CreateDictionary<uint32, uint32[]>({
-            }),
-            26: CreateDictionary<uint32, uint32[]>({
-            }),
+        17: CreateDictionary<uint32, uint32[]>({
         }),
-        4: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
-            1: CreateDictionary<uint32, uint32[]>({
-            }),
-            2: CreateDictionary<uint32, uint32[]>({
-            }),
-            3: CreateDictionary<uint32, uint32[]>({
-            }),
-            5: CreateDictionary<uint32, uint32[]>({
-            }),
-            6: CreateDictionary<uint32, uint32[]>({
-            }),
-            7: CreateDictionary<uint32, uint32[]>({
-            }),
-            8: CreateDictionary<uint32, uint32[]>({
-            }),
-            9: CreateDictionary<uint32, uint32[]>({
-            }),
-            10: CreateDictionary<uint32, uint32[]>({
-            }),
-            11: CreateDictionary<uint32, uint32[]>({
-            }),
-            12: CreateDictionary<uint32, uint32[]>({
-            }),
-            16: CreateDictionary<uint32, uint32[]>({
-            }),
-        })
-    }),
-    5: CreateDictionary({
-        2: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
-            13: CreateDictionary<uint32, uint32[]>({
-            }),
-            15: CreateDictionary<uint32, uint32[]>({
-            }),
-            17: CreateDictionary<uint32, uint32[]>({
-            }),
-            26: CreateDictionary<uint32, uint32[]>({
-            }),
+        26: CreateDictionary<uint32, uint32[]>({
         }),
-        4: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
-            1: CreateDictionary<uint32, uint32[]>({
-            }),
-            2: CreateDictionary<uint32, uint32[]>({
-            }),
-            3: CreateDictionary<uint32, uint32[]>({
-            }),
-            5: CreateDictionary<uint32, uint32[]>({
-            }),
-            6: CreateDictionary<uint32, uint32[]>({
-            }),
-            7: CreateDictionary<uint32, uint32[]>({
-            }),
-            8: CreateDictionary<uint32, uint32[]>({
-            }),
-            9: CreateDictionary<uint32, uint32[]>({
-            }),
-            10: CreateDictionary<uint32, uint32[]>({
-            }),
-            11: CreateDictionary<uint32, uint32[]>({
-            }),
-            12: CreateDictionary<uint32, uint32[]>({
-            }),
-            16: CreateDictionary<uint32, uint32[]>({
-            }),
-        })
     }),
+    4: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
+        1: CreateDictionary<uint32, uint32[]>({
+        }),
+        2: CreateDictionary<uint32, uint32[]>({
+        }),
+        3: CreateDictionary<uint32, uint32[]>({
+        }),
+        5: CreateDictionary<uint32, uint32[]>({
+        }),
+        6: CreateDictionary<uint32, uint32[]>({
+        }),
+        7: CreateDictionary<uint32, uint32[]>({
+        }),
+        8: CreateDictionary<uint32, uint32[]>({
+        }),
+        9: CreateDictionary<uint32, uint32[]>({
+        }),
+        10: CreateDictionary<uint32, uint32[]>({
+        }),
+        11: CreateDictionary<uint32, uint32[]>({
+        }),
+        12: CreateDictionary<uint32, uint32[]>({
+        }),
+        16: CreateDictionary<uint32, uint32[]>({
+        }),
+    })
 })
 
-export const prefixPostfixArray= [<string[]>[], <string[]>[]]
+export const displayDict: TSDictionary<int, TSDictionary<int32, TSDictionary<uint32, TSDictionary<uint32, uint32[]>>>> = <TSDictionary<int, TSDictionary<int32, TSDictionary<uint32, TSDictionary<uint32, uint32[]>>>>>CreateDictionary({//quality
+    2: empty,
+    3: empty,
+    4: empty,
+    5: empty,
+})
 
-export const baseNameDict:TSDictionary<int, TSDictionary<uint32, TSDictionary<uint32,string[]>>> = CreateDictionary({
+export const prefixPostfixArray = [<string[]>[], <string[]>[]]
+
+export const baseNameDict: TSDictionary<int, TSDictionary<uint32, TSDictionary<uint32, string[]>>> = CreateDictionary({
     2: CreateDictionary<uint32, TSDictionary<uint32, string[]>>({
         0: CreateDictionary<uint32, string[]>({
             13: <string[]>[]
