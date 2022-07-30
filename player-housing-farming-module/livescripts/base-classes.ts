@@ -94,11 +94,10 @@ export class PlayerHouseCrops extends DBArrayEntry {
         return (timeElapsed > type.stage1GrowthTime) ? type.stage1Entry : type.stage0Entry
     }
 
-    canGrow(player:TSPlayer) {
+    canGrow(player: TSPlayer) {
         let type = CropTypes[this.type];
         let timeElapsed = (GetUnixTime() - this.spawnTime) * this.fertilizeMultiplier;
-        if(timeElapsed > type.stage1GrowthTime)
-        {
+        if (timeElapsed > type.stage1GrowthTime) {
             this.Despawn(player.GetMap())
             this.Spawn(player)
         }
@@ -174,8 +173,7 @@ export class PlayerHouseGobs extends DBArrayEntry {
     spawnGuid: uint64 = 0;
     spawnedEntry: uint32 = 0;
 
-    Remove(map:TSMap)
-    {
+    Remove(map: TSMap) {
         this.Despawn(map)
         this.Delete()
     }

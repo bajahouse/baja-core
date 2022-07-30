@@ -62,15 +62,15 @@ export function example(events: TSEvents) {
             //level is passed as 2nd argument
             found.set(true)
             let classId = player.GetClass()
-            for(let i=0; i<8; i++) {
-                createItemWithChoices(player,0,i,ToUInt32(cmd[1]),classIDToStatType(classId))
+            for (let i = 0; i < 8; i++) {
+                createItemWithChoices(player, 0, i, ToUInt32(cmd[1]), classIDToStatType(classId))
             }
-            for(let i=24; i<28; i++) {
-                createItemWithChoices(player,0,i,ToUInt32(cmd[1]),classIDToStatType(classId))
+            for (let i = 24; i < 28; i++) {
+                createItemWithChoices(player, 0, i, ToUInt32(cmd[1]), classIDToStatType(classId))
             }
-            let wepID = [2,7,7,8,9,11,11,12,13,14]
-            wepID.forEach((v:double,i:uint32,arr)=>{
-                createItemWithChoices(player,1,v,ToUInt32(cmd[1]),classIDToStatType(classId))
+            let wepID = [2, 7, 7, 8, 9, 11, 11, 12, 13, 14]
+            wepID.forEach((v: double, i: uint32, arr) => {
+                createItemWithChoices(player, 1, v, ToUInt32(cmd[1]), classIDToStatType(classId))
             })
         }
     })
