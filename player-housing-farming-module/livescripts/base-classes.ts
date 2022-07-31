@@ -128,8 +128,8 @@ export class PlayerHouseCrops extends DBArrayEntry {
         return player.GetObject('FarmingCropData', LoadDBArrayEntry(PlayerHouseCrops, player.GetGUID()))
     }
 }
-export const CropSizes = CreateDictionary<uint32, uint32>({})
-export const CropTypes = CreateDictionary<uint32, CropType>({})
+export const CropSizes: TSDictionary<uint32, uint32> = CreateDictionary<uint32, uint32>({})
+export const CropTypes: TSDictionary<uint32, CropType> = CreateDictionary<uint32, CropType>({})
 export class CropType {
     stage0Entry: uint32
     stage1Entry: uint32

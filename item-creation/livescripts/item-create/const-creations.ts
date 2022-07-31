@@ -96,7 +96,7 @@ export const statCounts = [
     [3, 5]//legendary
 ]
 
-export let statToName = CreateDictionary<uint32, string>({
+export let statToName: TSDictionary<uint32,string> = CreateDictionary<uint32, string>({
     0: 'Mana',
     1: 'Health',
     3: 'Agility',
@@ -143,7 +143,7 @@ export let statToName = CreateDictionary<uint32, string>({
     48: 'Block Value',
 })
 
-export let statToWeight = CreateDictionary<uint32, float>({
+export let statToWeight: TSDictionary<uint32,float> = CreateDictionary<uint32, float>({
     // Unused
     0: 1,
     // Health
