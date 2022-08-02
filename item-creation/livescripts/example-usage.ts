@@ -69,7 +69,7 @@ export function example(events: TSEvents) {
                 createItemWithChoices(player, 0, i, ToUInt32(cmd[1]), classIDToStatType(classId))
             }
             let wepID = [2, 7, 7, 8, 9, 11, 11, 12, 13, 14]
-            wepID.forEach((v: double, i: uint32, arr) => {
+            wepID.forEach((v: number, i: number, arr) => {
                 createItemWithChoices(player, 1, v, ToUInt32(cmd[1]), classIDToStatType(classId))
             })
         }

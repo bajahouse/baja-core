@@ -41,26 +41,26 @@ export function createItemRandom(player: TSPlayer): TSItem {
     return player.AddItem(temp.GetEntry(), 1)
 }
 
-export function createItemWithChoices(player: TSPlayer, itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): TSItem {
+export function createItemWithChoices(player: TSPlayer, itemType: number, itemSubType: number, level: number, statType: number): TSItem {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
     temp = modifyItemProperties(temp, itemClassInfo[itemType][itemSubType], level, statType)
     player.SendItemQueryPacket(temp)
     return player.AddItem(temp.GetEntry(), 1)
 }
 
-export function returnItemIDRandom(player: TSUnit): uint32 {
+export function returnItemIDRandom(player: TSUnit): number {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
     temp = modifyItemProperties(temp, chooseItemType(), player.GetLevel(), getRandNumber(3))
     return temp.GetEntry()
 }
 
-export function returnItemIDWithChoices(itemType: uint32, itemSubType: uint32, level: uint32, statType: uint32): uint32 {
+export function returnItemIDWithChoices(itemType: number, itemSubType: number, level: number, statType: number): number {
     let temp: TSItemTemplate = CreateItemTemplate(startID++, templateItemID)
     temp = modifyItemProperties(temp, itemClassInfo[itemType][itemSubType], level, statType)
     return temp.GetEntry()
 }
 
-function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<double>, level: uint32, statType: uint32): TSItemTemplate {
+function modifyItemProperties(temp: TSItemTemplate, itemInfo: number[], level: number, statType: number): TSItemTemplate {
     const qualMult = qualityMultiplier[temp.GetQuality()]
     let itemLevel = level < 70 ? (((level * level) / 36) + 1) : (16.5 * level - 1004)
     const commonMath = itemLevel * itemInfo[5] * qualMult
@@ -81,37 +81,37 @@ function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<double>, l
         {
             if (itemInfo[2] == 14)//if shield
             {
-                temp.SetArmor(<uint32>(200 * commonMath))
-                temp.SetBlock(<uint32>(commonMath))
+                temp.SetArmor(<number>(200 * commonMath))
+                temp.SetBlock(<number>(commonMath))
             }
             else {
-                temp.SetArmor(<uint32>(3.3 * commonMath * armorScalar[itemInfo[1]]))
+                temp.SetArmor(<number>(3.3 * commonMath * armorScalar[itemInfo[1]]))
             }
         }
     } else {//setup weapon swing damage
         if (itemInfo[2] == 13) {//1h
             temp.SetDelay(1500 + (getRandNumber(7) * 100))
-            temp.SetDamageMinA(<uint32>(5 * commonMath))
-            temp.SetDamageMaxA(<uint32>(8 * commonMath))
+            temp.SetDamageMinA(<number>(5 * commonMath))
+            temp.SetDamageMaxA(<number>(8 * commonMath))
             if (temp.GetQuality() == 5) {
-                temp.SetDamageMinB(<uint32>(2 * commonMath))
-                temp.SetDamageMaxB(<uint32>(3 * commonMath))
+                temp.SetDamageMinB(<number>(2 * commonMath))
+                temp.SetDamageMaxB(<number>(3 * commonMath))
             }
         } else if (itemInfo[2] == 17) {//2h
             temp.SetDelay(2800 + (getRandNumber(10) * 100))
-            temp.SetDamageMinA(<uint32>(12 * commonMath))
-            temp.SetDamageMaxA(<uint32>(22 * commonMath))
+            temp.SetDamageMinA(<number>(12 * commonMath))
+            temp.SetDamageMaxA(<number>(22 * commonMath))
             if (temp.GetQuality() == 5) {
-                temp.SetDamageMinB(<uint32>(4 * commonMath))
-                temp.SetDamageMaxB(<uint32>(6 * commonMath))
+                temp.SetDamageMinB(<number>(4 * commonMath))
+                temp.SetDamageMaxB(<number>(6 * commonMath))
             }
         } else if (itemInfo[2] == 26 || itemInfo[2] == 15) {//ranged
             temp.SetDelay(1800 + (getRandNumber(6) * 100))
-            temp.SetDamageMinA(<uint32>(5 * commonMath))
-            temp.SetDamageMaxA(<uint32>(6 * commonMath))
+            temp.SetDamageMinA(<number>(5 * commonMath))
+            temp.SetDamageMaxA(<number>(6 * commonMath))
             if (temp.GetQuality() == 5) {
-                temp.SetDamageMinB(<uint32>(3 * commonMath))
-                temp.SetDamageMaxB(<uint32>(4 * commonMath))
+                temp.SetDamageMinB(<number>(3 * commonMath))
+                temp.SetDamageMaxB(<number>(4 * commonMath))
             }
         }
     }
@@ -123,14 +123,14 @@ function modifyItemProperties(temp: TSItemTemplate, itemInfo: TSArray<double>, l
     return temp
 }
 
-function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: double, statType: uint32) {
+function generateStats(itemLevel: number, temp: TSItemTemplate, slotMult: number, statType: number) {
     let group = getStatGroup(statType, temp.GetQuality())
     let totalStats = slotMult * itemLevel * 4 * qualityMultiplier[temp.GetQuality()]
-    let statsPrimary: uint32 = totalStats * .7
-    let statsSecondary: uint32 = totalStats * .35
-    let flat1: uint32 = statsPrimary * .1//forced value to each stat
-    let flat2: uint32 = statsSecondary * .1//forced value to each stat
-    let stats = CreateDictionary<uint32, int32>({})
+    let statsPrimary: number = totalStats * .7
+    let statsSecondary: number = totalStats * .35
+    let flat1: number = statsPrimary * .1//forced value to each stat
+    let flat2: number = statsSecondary * .1//forced value to each stat
+    let stats = CreateDictionary<number, int32>({})
 
     //apply flat primary
     for (let j = 0; j < group[0].length; j++) {
@@ -162,7 +162,7 @@ function generateStats(itemLevel: uint32, temp: TSItemTemplate, slotMult: double
     temp.SetStatsCount(index)
 }
 
-function GetRandQuality(): uint32 {
+function GetRandQuality(): number {
     let qualityCheck = getRandNumber(100)
     if (qualityCheck < 50) {//uncommon
         return 2
@@ -175,7 +175,7 @@ function GetRandQuality(): uint32 {
     }
 }
 
-function chooseItemType(): TSArray<double> {
+function chooseItemType(): number[] {
     if (getRandNumber(100) < 85) {//armor
         return itemClassInfo[0][getRandNumber(itemClassInfo[0].length)]
     } else {//weapon
@@ -183,12 +183,12 @@ function chooseItemType(): TSArray<double> {
     }
 }
 
-function getDisplayID(itemInfoArr: TSArray<double>, quality: uint32): uint32 {
-    let chose: TSArray<uint32> = <TSArray<uint32>>displayDict[quality][itemInfoArr[0]][itemInfoArr[2]][itemInfoArr[1]]
+function getDisplayID(itemInfoArr: number[], quality: number): number {
+    let chose: number[] = <number[]>displayDict[quality][itemInfoArr[0]][itemInfoArr[2]][itemInfoArr[1]]
     return chose[getRandNumber(chose.length)]
 }
 
-function getName(itemInfoArr: TSArray<double>, quality: uint32): string {
+function getName(itemInfoArr: number[], quality: number): string {
     let name: string = ""
     //prefix
     if (quality > 2) {
@@ -237,9 +237,9 @@ function setupPrefixPostfixDict() {
         prefixPostfixArray[1].push(q.GetString(0))
     }
 }
-function getStatGroup(statType: uint32, quality: uint32): TSArray<TSArray<uint32>> {
+function getStatGroup(statType: number, quality: number): number[][] {
     let curStatCounts = statCounts[quality]
-    let statGroup = <TSArray<TSArray<uint32>>>[<TSArray<uint32>>[], <TSArray<uint32>>[]]
+    let statGroup = <number[][]>[<number[]>[], <number[]>[]]
     for (let i = 0; i < curStatCounts[0]; i++) {
         statGroup[0].push(statChoices[0][statType][getRandNumber(statChoices[0][statType].length)])
     }

@@ -10,12 +10,12 @@
 //
 // ============================================================================
 
-export function getRandNumber(max: uint32): uint32 {
+export function getRandNumber(max: number): number {
     return Math.floor((Math.random() * (max - 0.001)))
 }
 
 
-export const itemClassInfo: double[][][] = [//class,subclass,invType,material,sheath,statMult
+export const itemClassInfo: number[][][] = [//class,subclass,invType,material,sheath,statMult
     [//ARMOR
         //cloth
         [4, 1, 1, 7, 0, 0.8125],//head
@@ -96,7 +96,7 @@ export const statCounts = [
     [3, 5]//legendary
 ]
 
-export let statToName: TSDictionary<uint32,string> = CreateDictionary<uint32, string>({
+export let statToName: TSDictionary<number,string> = CreateDictionary<number, string>({
     0: 'Mana',
     1: 'Health',
     3: 'Agility',
@@ -143,7 +143,7 @@ export let statToName: TSDictionary<uint32,string> = CreateDictionary<uint32, st
     48: 'Block Value',
 })
 
-export let statToWeight: TSDictionary<uint32,float> = CreateDictionary<uint32, float>({
+export let statToWeight: TSDictionary<number,number> = CreateDictionary<number, number>({
     // Unused
     0: 1,
     // Health
@@ -270,26 +270,26 @@ const enum itemStats /**@realType:uint32*/ {
     BLOCK_VALUE = 48,
 }
 
-export const statChoices: uint32[][][] = [
-    <uint32[][]>[//primaries
-        <uint32[]>[//str group
+export const statChoices: number[][][] = [
+    <number[][]>[//primaries
+        <number[]>[//str group
             itemStats.STRENGTH,
             itemStats.STAMINA,
             itemStats.AGILITY
         ],
-        <uint32[]>[//agi group
+        <number[]>[//agi group
             itemStats.AGILITY,
             itemStats.STAMINA,
             itemStats.STRENGTH,
         ],
-        <uint32[]>[//int group
+        <number[]>[//int group
             itemStats.INTELLECT,
             itemStats.STAMINA,
             itemStats.SPIRIT
         ],
     ],
-    <uint32[][]>[//secondaries
-        <uint32[]>[//str group
+    <number[][]>[//secondaries
+        <number[]>[//str group
             itemStats.HEALTH,
             itemStats.DEFENSE_SKILL_RATING,
             itemStats.BLOCK_RATING,
@@ -304,7 +304,7 @@ export const statChoices: uint32[][][] = [
             itemStats.STRENGTH,
             itemStats.AGILITY,
         ],
-        <uint32[]>[//agi group
+        <number[]>[//agi group
             itemStats.HEALTH,
             itemStats.DODGE_RATING,
             itemStats.HIT_RATING,
@@ -317,7 +317,7 @@ export const statChoices: uint32[][][] = [
             itemStats.AGILITY,
             itemStats.STRENGTH,
         ],
-        <uint32[]>[//int group
+        <number[]>[//int group
             itemStats.MANA,
             itemStats.SPIRIT,
             itemStats.INTELLECT,
@@ -331,46 +331,46 @@ export const statChoices: uint32[][][] = [
     ],
 ]
 
-const empty: TSDictionary<int32, TSDictionary<uint32, TSDictionary<uint32, uint32[]>>> = CreateDictionary({
-    2: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
-        13: CreateDictionary<uint32, uint32[]>({
+const empty: TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>> = CreateDictionary({
+    2: CreateDictionary<number, TSDictionary<number, number[]>>({
+        13: CreateDictionary<number, number[]>({
         }),
-        15: CreateDictionary<uint32, uint32[]>({
+        15: CreateDictionary<number, number[]>({
         }),
-        17: CreateDictionary<uint32, uint32[]>({
+        17: CreateDictionary<number, number[]>({
         }),
-        26: CreateDictionary<uint32, uint32[]>({
+        26: CreateDictionary<number, number[]>({
         }),
     }),
-    4: CreateDictionary<uint32, TSDictionary<uint32, uint32[]>>({
-        1: CreateDictionary<uint32, uint32[]>({
+    4: CreateDictionary<number, TSDictionary<number, number[]>>({
+        1: CreateDictionary<number, number[]>({
         }),
-        2: CreateDictionary<uint32, uint32[]>({
+        2: CreateDictionary<number, number[]>({
         }),
-        3: CreateDictionary<uint32, uint32[]>({
+        3: CreateDictionary<number, number[]>({
         }),
-        5: CreateDictionary<uint32, uint32[]>({
+        5: CreateDictionary<number, number[]>({
         }),
-        6: CreateDictionary<uint32, uint32[]>({
+        6: CreateDictionary<number, number[]>({
         }),
-        7: CreateDictionary<uint32, uint32[]>({
+        7: CreateDictionary<number, number[]>({
         }),
-        8: CreateDictionary<uint32, uint32[]>({
+        8: CreateDictionary<number, number[]>({
         }),
-        9: CreateDictionary<uint32, uint32[]>({
+        9: CreateDictionary<number, number[]>({
         }),
-        10: CreateDictionary<uint32, uint32[]>({
+        10: CreateDictionary<number, number[]>({
         }),
-        11: CreateDictionary<uint32, uint32[]>({
+        11: CreateDictionary<number, number[]>({
         }),
-        12: CreateDictionary<uint32, uint32[]>({
+        12: CreateDictionary<number, number[]>({
         }),
-        16: CreateDictionary<uint32, uint32[]>({
+        16: CreateDictionary<number, number[]>({
         }),
     })
 })
 
-export const displayDict: TSDictionary<int, TSDictionary<int32, TSDictionary<uint32, TSDictionary<uint32, uint32[]>>>> = <TSDictionary<int, TSDictionary<int32, TSDictionary<uint32, TSDictionary<uint32, uint32[]>>>>>CreateDictionary({//quality
+export const displayDict: TSDictionary<int, TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>>> = <TSDictionary<int, TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>>>>CreateDictionary({//quality
     2: empty,
     3: empty,
     4: empty,
@@ -379,56 +379,56 @@ export const displayDict: TSDictionary<int, TSDictionary<int32, TSDictionary<uin
 
 export const prefixPostfixArray = [<string[]>[], <string[]>[]]
 
-export const baseNameDict: TSDictionary<int, TSDictionary<uint32, TSDictionary<uint32, string[]>>> = CreateDictionary({
-    2: CreateDictionary<uint32, TSDictionary<uint32, string[]>>({
-        0: CreateDictionary<uint32, string[]>({
+export const baseNameDict: TSDictionary<int, TSDictionary<number, TSDictionary<number, string[]>>> = CreateDictionary({
+    2: CreateDictionary<number, TSDictionary<number, string[]>>({
+        0: CreateDictionary<number, string[]>({
             13: <string[]>[]
         }),
-        1: CreateDictionary<uint32, string[]>({
+        1: CreateDictionary<number, string[]>({
             17: <string[]>[]
         }),
-        2: CreateDictionary<uint32, string[]>({
+        2: CreateDictionary<number, string[]>({
             15: <string[]>[]
         }),
-        3: CreateDictionary<uint32, string[]>({
+        3: CreateDictionary<number, string[]>({
             26: <string[]>[]
         }),
-        4: CreateDictionary<uint32, string[]>({
+        4: CreateDictionary<number, string[]>({
             13: <string[]>[]
         }),
-        5: CreateDictionary<uint32, string[]>({
+        5: CreateDictionary<number, string[]>({
             17: <string[]>[]
         }),
-        6: CreateDictionary<uint32, string[]>({
+        6: CreateDictionary<number, string[]>({
             17: <string[]>[]
         }),
-        7: CreateDictionary<uint32, string[]>({
+        7: CreateDictionary<number, string[]>({
             13: <string[]>[]
         }),
-        8: CreateDictionary<uint32, string[]>({
+        8: CreateDictionary<number, string[]>({
             17: <string[]>[]
         }),
-        10: CreateDictionary<uint32, string[]>({
+        10: CreateDictionary<number, string[]>({
             17: <string[]>[]
         }),
-        13: CreateDictionary<uint32, string[]>({
+        13: CreateDictionary<number, string[]>({
             13: <string[]>[]
         }),
-        15: CreateDictionary<uint32, string[]>({
+        15: CreateDictionary<number, string[]>({
             13: <string[]>[]
         }),
-        19: CreateDictionary<uint32, string[]>({
+        19: CreateDictionary<number, string[]>({
             26: <string[]>[]
         }),
     }),
-    4: CreateDictionary<uint32, TSDictionary<uint32, string[]>>({
-        0: CreateDictionary<uint32, string[]>({
+    4: CreateDictionary<number, TSDictionary<number, string[]>>({
+        0: CreateDictionary<number, string[]>({
             2: <string[]>[],
             11: <string[]>[],
             12: <string[]>[],
             23: <string[]>[],
         }),
-        1: CreateDictionary<uint32, string[]>({
+        1: CreateDictionary<number, string[]>({
             1: <string[]>[],
             3: <string[]>[],
             5: <string[]>[],
@@ -439,7 +439,7 @@ export const baseNameDict: TSDictionary<int, TSDictionary<uint32, TSDictionary<u
             10: <string[]>[],
             16: <string[]>[],
         }),
-        2: CreateDictionary<uint32, string[]>({
+        2: CreateDictionary<number, string[]>({
             1: <string[]>[],
             3: <string[]>[],
             5: <string[]>[],
@@ -449,7 +449,7 @@ export const baseNameDict: TSDictionary<int, TSDictionary<uint32, TSDictionary<u
             9: <string[]>[],
             10: <string[]>[],
         }),
-        3: CreateDictionary<uint32, string[]>({
+        3: CreateDictionary<number, string[]>({
             1: <string[]>[],
             3: <string[]>[],
             5: <string[]>[],
@@ -462,7 +462,7 @@ export const baseNameDict: TSDictionary<int, TSDictionary<uint32, TSDictionary<u
     })
 })
 
-export function classIDToStatType(classID: uint32): uint32 {
+export function classIDToStatType(classID: number): number {
     switch (classID) {
         case 1:
         case 6:
