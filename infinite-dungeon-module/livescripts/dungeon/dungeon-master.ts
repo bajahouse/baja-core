@@ -13,54 +13,54 @@
 
 import { spellChoiceID, spellChoice, spellChoices } from "../../shared/Messages"
 export const startingMapID = GetID("Map", "infinite-dungeon-mod", "basemap")
-const classSpells: TSArray<TSArray<TSArray<uint32>>> = <TSArray<TSArray<TSArray<uint32>>>>[
-    <TSArray<TSArray<uint32>>>[],//none
-    <TSArray<TSArray<uint32>>>[],
-    <TSArray<TSArray<uint32>>>[],
-    <TSArray<TSArray<uint32>>>[],
-    <TSArray<TSArray<uint32>>>[],
-    <TSArray<TSArray<uint32>>>[],
-    <TSArray<TSArray<uint32>>>[],
-    <TSArray<TSArray<uint32>>>[],
-    <TSArray<TSArray<uint32>>>[],
-    <TSArray<TSArray<uint32>>>[],
-    <TSArray<TSArray<uint32>>>[],//none
-    <TSArray<TSArray<uint32>>>[],
+const classSpells: number[][][] = <number[][][]>[
+    <number[][]>[],//none
+    <number[][]>[],
+    <number[][]>[],
+    <number[][]>[],
+    <number[][]>[],
+    <number[][]>[],
+    <number[][]>[],
+    <number[][]>[],
+    <number[][]>[],
+    <number[][]>[],
+    <number[][]>[],//none
+    <number[][]>[],
 ]
-const classSpellDescriptions: TSArray<TSArray<string>> = <TSArray<TSArray<string>>>[
-    <TSArray<string>>[],//none
-    <TSArray<string>>[],
-    <TSArray<string>>[],
-    <TSArray<string>>[],
-    <TSArray<string>>[],
-    <TSArray<string>>[],
-    <TSArray<string>>[],
-    <TSArray<string>>[],
-    <TSArray<string>>[],
-    <TSArray<string>>[],
-    <TSArray<string>>[],//none
-    <TSArray<string>>[],
-]
-
-const tormentAndBlessingSpells: TSArray<TSArray<uint32>> = <TSArray<TSArray<uint32>>>[
-    <TSArray<uint32>>[GetID("Spell", 'infinite-dungeon-mod', "increasedhealth1-spell"), 0],
+const classSpellDescriptions: string[][] = <string[][]>[
+    <string[]>[],//none
+    <string[]>[],
+    <string[]>[],
+    <string[]>[],
+    <string[]>[],
+    <string[]>[],
+    <string[]>[],
+    <string[]>[],
+    <string[]>[],
+    <string[]>[],
+    <string[]>[],//none
+    <string[]>[],
 ]
 
-export const prestigeSpell: uint32 = GetID("Spell", 'infinite-dungeon-mod', "mapprestige-spell")
+const tormentAndBlessingSpells: number[][] = <number[][]>[
+    <number[]>[GetID("Spell", 'infinite-dungeon-mod', "increasedhealth1-spell"), 0],
+]
+
+export const prestigeSpell: number = GetID("Spell", 'infinite-dungeon-mod', "mapprestige-spell")
 //end of config
-const spellIDToType: TSDictionary<uint32, uint32> = CreateDictionary<uint32, uint32>({
+const spellIDToType: TSDictionary<number, number> = CreateDictionary<number, number>({
     1: 1
 });
 class dungeonBuffs {
-    currentBuffs: TSArray<uint32> = []
-    currentBuffsType: TSArray<uint32> = []
-    currentBuffsCount: TSArray<uint32> = []
+    currentBuffs: number[] = []
+    currentBuffsType: number[] = []
+    currentBuffsCount: number[] = []
 
-    currentTormentsAndBlessings: TSArray<uint32> = []
-    currentTormentsAndBlessingsType: TSArray<uint32> = []
-    currentTormentsAndBlessingsCount: TSArray<uint32> = []
+    currentTormentsAndBlessings: number[] = []
+    currentTormentsAndBlessingsType: number[] = []
+    currentTormentsAndBlessingsCount: number[] = []
 
-    currentChoiceBuffs: TSArray<uint32> = []
+    currentChoiceBuffs: number[] = []
 }
 
 export function dungeonBuffSystem(events: TSEvents) {
@@ -132,13 +132,13 @@ export function dungeonBuffSystem(events: TSEvents) {
 
 export function rewardGroup(player: TSPlayer) {
     despawnMap(player)
-    let rewardID: uint32 = player.GetMap().GetUInt('rewardID', GetID("item_template", 'infinite-dungeon-mod', "dungeon-end-currency"))
-    let insideID: uint32 = player.GetMap().GetUInt('dropID', GetID("item_template", 'infinite-dungeon-mod', "dungeon-inside-currency"))
+    let rewardID: number = player.GetMap().GetUInt('rewardID', GetID("item_template", 'infinite-dungeon-mod', "dungeon-end-currency"))
+    let insideID: number = player.GetMap().GetUInt('dropID', GetID("item_template", 'infinite-dungeon-mod', "dungeon-inside-currency"))
     if (player.IsInGroup()) {
         let group = player.GetGroup().GetMembers()
         for (let i = 0; i < group.length; i++) {
-            let curPrestige: uint32 = group[i].GetUInt('prestige', 0)
-            let rewCount: uint32 = (curPrestige * curPrestige) + curPrestige
+            let curPrestige: number = group[i].GetUInt('prestige', 0)
+            let rewCount: number = (curPrestige * curPrestige) + curPrestige
             group[i].SendAreaTriggerMessage('You were rewarded with ' + rewCount + ' of animare power for your prowess')
             group[i].AddItem(rewardID, rewCount)
             group[i].SetUInt('prestige', 0)
@@ -146,7 +146,7 @@ export function rewardGroup(player: TSPlayer) {
             group[i].Teleport(startingMapID, -8750.45, -74.64, 31, 0)
         }
     } else {
-        let curPrestige: uint32 = player.GetUInt('prestige', 0)
+        let curPrestige: number = player.GetUInt('prestige', 0)
         player.AddItem(rewardID, (curPrestige * curPrestige) + curPrestige)
         player.SetUInt('prestige', 0)
         player.RemoveItemByEntry(insideID, 999999)
@@ -154,11 +154,11 @@ export function rewardGroup(player: TSPlayer) {
     }
 }
 
-export function resetGroup(player: TSPlayer, playerSpawnCoords: TSDictionary<string, double>, miniMobSpawnCoords: TSArray<TSDictionary<string, double>>, miniMobIDs: TSArray<uint32>, mobSpawnCoords: TSArray<TSDictionary<string, double>>, mobIDs: TSArray<uint32>, miniBossSpawnCoords: TSArray<TSDictionary<string, double>>, miniBossIDs: TSArray<uint32>, bossSpawnCoords: TSArray<TSDictionary<string, double>>, bossIDs: TSArray<uint32>, vendorSpawnCoords: TSDictionary<string, double>, chestSpawnCoords: TSArray<TSDictionary<string, double>>, vaseSpawnCoords: TSArray<TSDictionary<string, double>>) {
+export function resetGroup(player: TSPlayer, playerSpawnCoords: TSDictionary<string, number>, miniMobSpawnCoords: TSDictionary<string, number>[], miniMobIDs: number[], mobSpawnCoords: TSDictionary<string, number>[], mobIDs: number[], miniBossSpawnCoords: TSDictionary<string, number>[], miniBossIDs: number[], bossSpawnCoords:TSDictionary<string, number>[], bossIDs: number[], vendorSpawnCoords: TSDictionary<string, number>, chestSpawnCoords:TSDictionary<string, number>[], vaseSpawnCoords:TSDictionary<string, number>[]) {
     let map = player.GetMap()
-    let prestige: uint32 = map.GetUInt('prestige', 0) + 1
+    let prestige: number = map.GetUInt('prestige', 0) + 1
     map.SetUInt('prestige', prestige)
-    if (prestige % 5 == 0) {
+    if ((<uint32>prestige) % 5 == 0) {
         if (player.IsInGroup()) {
             let pGroup = player.GetGroup().GetMembers()
             for (let i = 0; i > pGroup.length; i++) {
@@ -179,7 +179,7 @@ export function resetGroup(player: TSPlayer, playerSpawnCoords: TSDictionary<str
     spawnMap(map, miniMobSpawnCoords, miniMobIDs, mobSpawnCoords, mobIDs, miniBossSpawnCoords, miniBossIDs, bossSpawnCoords, bossIDs, vendorSpawnCoords, chestSpawnCoords, vaseSpawnCoords)
 }
 
-function teleportRandomStart(players: TSPlayer[], playerSpawnCoords: TSDictionary<string, double>) {
+function teleportRandomStart(players: TSPlayer[], playerSpawnCoords: TSDictionary<string, number>) {
     let prestige = players[0].GetMap().GetUInt('prestige', 0)
     for (let i = 0; i < players.length; i++) {
         players[i].SetUInt('prestige', players[i].GetUInt('prestige', 0) + 1)
@@ -201,7 +201,7 @@ function despawnMap(player: TSPlayer) {
     }
 }
 
-export function spawnMap(map: TSMap, miniMobSpawnCoords: TSArray<TSDictionary<string, double>>, miniMobIDs: TSArray<uint32>, mobSpawnCoords: TSArray<TSDictionary<string, double>>, mobIDs: TSArray<uint32>, miniBossSpawnCoords: TSArray<TSDictionary<string, double>>, miniBossIDs: TSArray<uint32>, bossSpawnCoords: TSArray<TSDictionary<string, double>>, bossIDs: TSArray<uint32>, vendorSpawnCoords: TSDictionary<string, double>, chestSpawnCoords: TSArray<TSDictionary<string, double>>, vaseSpawnCoords: TSArray<TSDictionary<string, double>>,) {
+export function spawnMap(map: TSMap, miniMobSpawnCoords:TSDictionary<string, number>[], miniMobIDs: number[], mobSpawnCoords:TSDictionary<string, number>[], mobIDs: number[], miniBossSpawnCoords:TSDictionary<string, number>[], miniBossIDs: number[], bossSpawnCoords:TSDictionary<string, number>[], bossIDs: number[], vendorSpawnCoords: TSDictionary<string, number>, chestSpawnCoords:TSDictionary<string, number>[], vaseSpawnCoords:TSDictionary<string, number>[],) {
     let c = map.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vendor"), vendorSpawnCoords['x'], vendorSpawnCoords['y'], vendorSpawnCoords['z'], vendorSpawnCoords['o'], 180000)
     //chests
     for (let i = 0; i < chestSpawnCoords.length; i++) {
@@ -245,7 +245,7 @@ function spawnBoss(map: TSMap, bossID: number, sPos: TSDictionary<string, number
     }
 }
 
-function spawnFormation(map: TSMap, sPos: TSDictionary<string, double>, mobIDs: TSArray<uint32>, mobCount: uint32) {
+function spawnFormation(map: TSMap, sPos: TSDictionary<string, number>, mobIDs: number[], mobCount: number) {
     //forward is x+cosRad y+sinRad
     //backwards is x-cosRad y-sinRad
     //left is x+sinRad y+cosRad
@@ -340,10 +340,10 @@ function spawnFormation(map: TSMap, sPos: TSDictionary<string, double>, mobIDs: 
 
 function givePlayerChoiceOfBuffs(player: TSPlayer): boolean {
     let charItems = player.GetObject<dungeonBuffs>("dungeonBuffs", new dungeonBuffs())
-    let spellRarity: TSArray<uint32> = []
-    let spellDescs: TSArray<string> = []
+    let spellRarity: number[] = []
+    let spellDescs: string[] = []
     let classID = player.GetClass()
-    let allSpells: TSArray<TSArray<uint32>> = classSpells[classID]
+    let allSpells: number[][] = classSpells[classID]
     let allDesc = classSpellDescriptions[classID]
     let continueLoop = true
     let count = 0
@@ -354,9 +354,9 @@ function givePlayerChoiceOfBuffs(player: TSPlayer): boolean {
         player.SendBroadcastMessage('--- Spell Choices---')
         while (continueLoop == true) {
             const index = Math.floor(Math.random() * allSpells.length)
-            let spellInfo: TSArray<uint32> = allSpells[index]
+            let spellInfo: number[] = allSpells[index]
             let desc = allDesc[index]
-            let c: uint32 = spellInfo[0]
+            let c: number = spellInfo[0]
             if (spellIDToType[c] == 0) {
                 count++
                 player.SendBroadcastMessage('#' + count + ': ' + desc)
@@ -383,12 +383,12 @@ function givePlayerChoiceOfBuffs(player: TSPlayer): boolean {
     }
 }
 
-function playerChoseBuff(player: TSPlayer, index: uint32) {
+function playerChoseBuff(player: TSPlayer, index: number) {
     let charItems = player.GetObject<dungeonBuffs>("dungeonBuffs", new dungeonBuffs())
     if (charItems.currentChoiceBuffs.length == 3) {
-        let currentChoicesID: TSArray<uint32> = [charItems.currentChoiceBuffs.pop()!, charItems.currentChoiceBuffs.pop()!, charItems.currentChoiceBuffs.pop()!]
-        let choice: uint32 = currentChoicesID[index]
-        let found: uint32 = -1
+        let currentChoicesID: number[] = [charItems.currentChoiceBuffs.pop()!, charItems.currentChoiceBuffs.pop()!, charItems.currentChoiceBuffs.pop()!]
+        let choice: number = currentChoicesID[index]
+        let found: number = -1
         for (let i = 0; i < charItems.currentBuffs.length; i++) {
             if (charItems.currentBuffs[i] == choice) {
                 found = i
@@ -410,10 +410,10 @@ function addTormentOrBlessing(player: TSPlayer) {
     let continueLoop = true
     while (continueLoop == true) {
         let index = getRandomInt(tormentAndBlessingSpells.length)
-        let spellInfo: TSArray<uint32> = tormentAndBlessingSpells[index]
+        let spellInfo: number[] = tormentAndBlessingSpells[index]
         let spellID = spellInfo[0]
         let spellType = spellInfo[1]
-        let found: uint32 = -1
+        let found: number = -1
 
         for (let i = 0; i < charItems.currentTormentsAndBlessings.length; i++) {
             if (charItems.currentTormentsAndBlessings[i] == spellID) {
@@ -486,7 +486,7 @@ export function removePlayerBuffs(player: TSPlayer) {
     player.SetObject("dungeonBuffs", new dungeonBuffs())
 }
 
-export function getRandomInt(max: uint32): uint32 {
+export function getRandomInt(max: number): number {
     return Math.floor(Math.random() * max)
 }
 
@@ -496,21 +496,21 @@ function setupTables() {
 
     while (query.GetRow()) {
         let classID = query.GetUInt32(0)
-        let spellID: uint32 = query.GetUInt32(1)
-        let spellRarity: uint32 = query.GetUInt32(2)
-        let spellType: uint32 = query.GetUInt32(3)
+        let spellID: number = query.GetUInt32(1)
+        let spellRarity: number = query.GetUInt32(2)
+        let spellType: number = query.GetUInt32(3)
         let spellDesc = query.GetString(4)
         spellIDToType[spellID] = spellType
         if (classID == 0) {//add spell to all
             for (let j = 1; j <= 11; j++) {//1->11 for class IDs
                 if (j == 10)
                     continue;
-                classSpells[j].push(<TSArray<uint32>>[spellID, spellRarity, spellType])
+                classSpells[j].push(<number[]>[spellID, spellRarity, spellType])
                 classSpellDescriptions[j].push(spellDesc)
             }
 
         } else {//single class
-            classSpells[classID].push(<TSArray<uint32>>[spellID, spellRarity, spellType])
+            classSpells[classID].push(<number[]>[spellID, spellRarity, spellType])
             classSpellDescriptions[classID].push(spellDesc)
         }
     }
