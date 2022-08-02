@@ -18,7 +18,7 @@ export class PlayerHouse extends DBEntry {
     @DBPrimaryKey
     playerGUID: uint64 = 0
     @DBField
-    area: number = 0;
+    area: uint32 = 0;
     open: bool = false;
 
     constructor(player: uint64) {
@@ -69,13 +69,13 @@ export class PlayerHouseCrops extends DBArrayEntry {
     @DBField
     spawnTime: uint64 = 0;
     @DBField
-    type: number = 0;
+    type: uint32 = 0;
     @DBField
     fertilizeMultiplier: float = 10.0;
 
-    spawnMap: number = 0;
+    spawnMap: uint32 = 0;
     spawnGuid: uint64 = 0;
-    spawnedEntry: number = 0;
+    spawnedEntry: uint32 = 0;
 
     constructor(playerGUID: uint64) {
         super();
@@ -131,13 +131,13 @@ export class PlayerHouseCrops extends DBArrayEntry {
 export const CropSizes: TSDictionary<number, number> = CreateDictionary<number, number>({})
 export const CropTypes: TSDictionary<number, CropType> = CreateDictionary<number, CropType>({})
 export class CropType {
-    stage0Entry: number
-    stage1Entry: number
-    stage1GrowthTime: number
-    spellID: number
-    harvestItem: number
-    minHarvestItem: number
-    maxHarvestItem: number
+    stage0Entry: uint32
+    stage1Entry: uint32
+    stage1GrowthTime: uint32
+    spellID: uint32
+    harvestItem: uint32
+    minHarvestItem: uint32
+    maxHarvestItem: uint32
 
     constructor(res: TSDatabaseResult) {
         this.stage0Entry = res.GetUInt32(0);
@@ -169,9 +169,9 @@ export class PlayerHouseGobs extends DBArrayEntry {
     @DBField
     o: float = 0;
 
-    spawnMap: number = 0;
+    spawnMap: uint32 = 0;
     spawnGuid: uint64 = 0;
-    spawnedEntry: number = 0;
+    spawnedEntry: uint32 = 0;
 
     Remove(map: TSMap) {
         this.Despawn(map)
@@ -223,9 +223,9 @@ export class PlayerHouseCreatures extends DBArrayEntry {
     @DBField
     o: float = 0;
 
-    spawnMap: number = 0;
+    spawnMap: uint32 = 0;
     spawnGuid: uint64 = 0;
-    spawnedEntry: number = 0;
+    spawnedEntry: uint32 = 0;
 
     Despawn(map: TSMap) {
         if (this.spawnGuid === 0 || this.spawnMap != map.GetMapID()) return;
