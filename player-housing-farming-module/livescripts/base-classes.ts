@@ -9,7 +9,7 @@
 //
 // ============================================================================
 
-function getRandNumber(min: uint32, max: uint32): uint32 {
+function getRandNumber(min: number, max: number): number {
     return Math.floor((Math.random() * (max - min)) + min);
 }
 
@@ -18,7 +18,7 @@ export class PlayerHouse extends DBEntry {
     @DBPrimaryKey
     playerGUID: uint64 = 0
     @DBField
-    area: uint32 = 0;
+    area: number = 0;
     open: bool = false;
 
     constructor(player: uint64) {
@@ -69,13 +69,13 @@ export class PlayerHouseCrops extends DBArrayEntry {
     @DBField
     spawnTime: uint64 = 0;
     @DBField
-    type: uint32 = 0;
+    type: number = 0;
     @DBField
     fertilizeMultiplier: float = 10.0;
 
-    spawnMap: uint32 = 0;
+    spawnMap: number = 0;
     spawnGuid: uint64 = 0;
-    spawnedEntry: uint32 = 0;
+    spawnedEntry: number = 0;
 
     constructor(playerGUID: uint64) {
         super();
@@ -88,7 +88,7 @@ export class PlayerHouseCrops extends DBArrayEntry {
         player.AddItem(CropTypes[this.type].harvestItem, getRandNumber(CropTypes[this.type].minHarvestItem, CropTypes[this.type].maxHarvestItem))
     }
 
-    GetActiveGOEntry(): uint32 {
+    GetActiveGOEntry(): number {
         let type = CropTypes[this.type];
         let timeElapsed = (GetUnixTime() - this.spawnTime) * this.fertilizeMultiplier;
         return (timeElapsed > type.stage1GrowthTime) ? type.stage1Entry : type.stage0Entry
@@ -128,16 +128,16 @@ export class PlayerHouseCrops extends DBArrayEntry {
         return player.GetObject('FarmingCropData', LoadDBArrayEntry(PlayerHouseCrops, player.GetGUID()))
     }
 }
-export const CropSizes: TSDictionary<uint32, uint32> = CreateDictionary<uint32, uint32>({})
-export const CropTypes: TSDictionary<uint32, CropType> = CreateDictionary<uint32, CropType>({})
+export const CropSizes: TSDictionary<number, number> = CreateDictionary<number, number>({})
+export const CropTypes: TSDictionary<number, CropType> = CreateDictionary<number, CropType>({})
 export class CropType {
-    stage0Entry: uint32
-    stage1Entry: uint32
-    stage1GrowthTime: uint32
-    spellID: uint32
-    harvestItem: uint32
-    minHarvestItem: uint32
-    maxHarvestItem: uint32
+    stage0Entry: number
+    stage1Entry: number
+    stage1GrowthTime: number
+    spellID: number
+    harvestItem: number
+    minHarvestItem: number
+    maxHarvestItem: number
 
     constructor(res: TSDatabaseResult) {
         this.stage0Entry = res.GetUInt32(0);
@@ -169,9 +169,9 @@ export class PlayerHouseGobs extends DBArrayEntry {
     @DBField
     o: float = 0;
 
-    spawnMap: uint32 = 0;
+    spawnMap: number = 0;
     spawnGuid: uint64 = 0;
-    spawnedEntry: uint32 = 0;
+    spawnedEntry: number = 0;
 
     Remove(map: TSMap) {
         this.Despawn(map)
@@ -223,9 +223,9 @@ export class PlayerHouseCreatures extends DBArrayEntry {
     @DBField
     o: float = 0;
 
-    spawnMap: uint32 = 0;
+    spawnMap: number = 0;
     spawnGuid: uint64 = 0;
-    spawnedEntry: uint32 = 0;
+    spawnedEntry: number = 0;
 
     Despawn(map: TSMap) {
         if (this.spawnGuid === 0 || this.spawnMap != map.GetMapID()) return;
