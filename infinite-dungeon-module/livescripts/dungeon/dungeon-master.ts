@@ -154,7 +154,7 @@ export function rewardGroup(player: TSPlayer) {
     }
 }
 
-export function resetGroup(player: TSPlayer, playerSpawnCoords: TSDictionary<string, number>, miniMobSpawnCoords: TSDictionary<string, number>[], miniMobIDs: number[], mobSpawnCoords: TSDictionary<string, number>[], mobIDs: number[], miniBossSpawnCoords: TSDictionary<string, number>[], miniBossIDs: number[], bossSpawnCoords:TSDictionary<string, number>[], bossIDs: number[], vendorSpawnCoords: TSDictionary<string, number>, chestSpawnCoords:TSDictionary<string, number>[], vaseSpawnCoords:TSDictionary<string, number>[]) {
+export function resetGroup(player: TSPlayer, playerSpawnCoords: TSDictionary<string, number>, miniMobSpawnCoords: TSDictionary<string, number>[], miniMobIDs: number[], mobSpawnCoords: TSDictionary<string, number>[], mobIDs: number[], miniBossSpawnCoords: TSDictionary<string, number>[], miniBossIDs: number[], bossSpawnCoords: TSDictionary<string, number>[], bossIDs: number[], vendorSpawnCoords: TSDictionary<string, number>, chestSpawnCoords: TSDictionary<string, number>[], vaseSpawnCoords: TSDictionary<string, number>[]) {
     let map = player.GetMap()
     let prestige: number = map.GetUInt('prestige', 0) + 1
     map.SetUInt('prestige', prestige)
@@ -201,7 +201,7 @@ function despawnMap(player: TSPlayer) {
     }
 }
 
-export function spawnMap(map: TSMap, miniMobSpawnCoords:TSDictionary<string, number>[], miniMobIDs: number[], mobSpawnCoords:TSDictionary<string, number>[], mobIDs: number[], miniBossSpawnCoords:TSDictionary<string, number>[], miniBossIDs: number[], bossSpawnCoords:TSDictionary<string, number>[], bossIDs: number[], vendorSpawnCoords: TSDictionary<string, number>, chestSpawnCoords:TSDictionary<string, number>[], vaseSpawnCoords:TSDictionary<string, number>[],) {
+export function spawnMap(map: TSMap, miniMobSpawnCoords: TSDictionary<string, number>[], miniMobIDs: number[], mobSpawnCoords: TSDictionary<string, number>[], mobIDs: number[], miniBossSpawnCoords: TSDictionary<string, number>[], miniBossIDs: number[], bossSpawnCoords: TSDictionary<string, number>[], bossIDs: number[], vendorSpawnCoords: TSDictionary<string, number>, chestSpawnCoords: TSDictionary<string, number>[], vaseSpawnCoords: TSDictionary<string, number>[],) {
     let c = map.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vendor"), vendorSpawnCoords['x'], vendorSpawnCoords['y'], vendorSpawnCoords['z'], vendorSpawnCoords['o'], 180000)
     //chests
     for (let i = 0; i < chestSpawnCoords.length; i++) {
