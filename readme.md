@@ -1,3 +1,6 @@
+## NOTICE
+This repository is now updated to the strings-rewrite branch. These modules are no longer setup to work with 0.14 and earlier versions of TSWOW.
+
 # Baja-Core
 Baja-Core is a TSWoW demo library that gives real world examples for TSWoW. This project is not affiliated with TSWoW directly and is a community-driven project. For any questions, comments or concerns please refer to our discord: [link](https://discord.gg/Zy2PY9C3n3)
 
