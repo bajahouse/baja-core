@@ -38,11 +38,11 @@ export function itemRandomEnchantVisual(events: TSEvents) {
         applyVisuals(player)
     })
 
-    events.Items.OnEquip((item, player, slot, isMerge) => {
+    events.Item.OnEquip((item, player, slot, isMerge) => {
         applySingleVisual(player, item)
     })
 
-    events.Items.OnTakenAsLoot((item, lootItem, loot, player) => {
+    events.Item.OnTakenAsLoot((item, lootItem, loot, player) => {
         if (item.GetClass() == 2) {
             if (Math.random() <= chance) {
                 playerEnchantInfo.get(player, item).display = enchants[Math.floor(Math.random() * enchantsLength)]

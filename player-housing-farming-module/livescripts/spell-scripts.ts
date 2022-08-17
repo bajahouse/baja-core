@@ -16,7 +16,7 @@ export function RegisterFarmingSpells(events: TSEvents) {
     spellScriptsForPlacement(events)
     //harvesting crop
     GetIDTag('player-housing-mod', 'farming-crop-final').forEach(x => {
-        events.GameObjectID.OnUse(x, (obj, user, cancel) => {
+        events.GameObject.OnUse(x, (obj, user, cancel) => {
             let player = user.ToPlayer();
             if (player.IsNull())
                 return
@@ -37,7 +37,7 @@ export function RegisterFarmingSpells(events: TSEvents) {
 
     //fertilizer
     GetIDTag('player-housing-mod', 'farming-fertilizer-spell').forEach(x => {
-        events.SpellID.OnCheckCast(x, (spell, result) => {
+        events.Spell.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer()
             if (player.IsNull())
                 return
@@ -49,7 +49,7 @@ export function RegisterFarmingSpells(events: TSEvents) {
             }
         })
 
-        events.SpellID.OnCast(x, (spell) => {
+        events.Spell.OnCast(x, (spell) => {
             let player = spell.GetCaster().ToPlayer()
             let nearbyGobs = player.GetGameObjectsInRange(10, 0, 0)
             nearbyGobs.forEach((v, i, arr) => {
@@ -66,7 +66,7 @@ export function RegisterFarmingSpells(events: TSEvents) {
 
 function spellScriptsForPlacement(events: TSEvents) {
     GetIDTag('player-housing-mod', 'farming-crop-spell').forEach(x => {
-        events.SpellID.OnCheckCast(x, (spell, result) => {
+        events.Spell.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
             if (player.IsNull())
                 return
@@ -96,7 +96,7 @@ function spellScriptsForPlacement(events: TSEvents) {
     })
 
     GetIDTag('player-housing-mod', 'farming-gob-spell').forEach(x => {
-        events.SpellID.OnCheckCast(x, (spell, result) => {
+        events.Spell.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
             if (player.IsNull())
                 return
@@ -119,7 +119,7 @@ function spellScriptsForPlacement(events: TSEvents) {
     })
 
     GetIDTag('player-housing-mod', 'farming-creature-spell').forEach(x => {
-        events.SpellID.OnCheckCast(x, (spell, result) => {
+        events.Spell.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
             if (player.IsNull())
                 return

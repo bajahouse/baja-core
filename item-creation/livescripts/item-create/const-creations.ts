@@ -10,48 +10,12 @@
 //
 // ============================================================================
 
-import { getRandNumber } from "../livescripts"
+export function getRandNumber(max: number): number {
+    return Math.floor((Math.random() * (max - 0.001)))
+}
 
-export const emptyQuality = CreateDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>>({
-    2: CreateDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>({
-        13: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        15: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        17: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        26: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-    }),
-    4: CreateDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>({
-        1: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        2: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        3: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        5: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        6: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        7: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        8: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        9: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        10: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        11: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        12: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-        16: CreateDictionary<uint32, TSArray<uint32>>({
-        }),
-    })
-})
 
-export const itemClassInfo: TSArray<TSArray<TSArray<float>>> = [//class,subclass,invType,material,sheath,statMult
+export const itemClassInfo: number[][][] = [//class,subclass,invType,material,sheath,statMult
     [//ARMOR
         //cloth
         [4, 1, 1, 7, 0, 0.8125],//head
@@ -124,7 +88,7 @@ export const qualityMultiplier = [
 ]
 
 export const statCounts = [
-    [0, 0], // no quality 0
+    [0, 0],//no quality 0
     [1, 1],//common unused
     [2, 1],//uncommon
     [2, 3],//rare
@@ -132,7 +96,7 @@ export const statCounts = [
     [3, 5]//legendary
 ]
 
-export let statToName = CreateDictionary<uint32, TSString>({
+export let statToName: TSDictionary<number,string> = CreateDictionary<number, string>({
     0: 'Mana',
     1: 'Health',
     3: 'Agility',
@@ -179,50 +143,84 @@ export let statToName = CreateDictionary<uint32, TSString>({
     48: 'Block Value',
 })
 
-export let statToWeight = CreateDictionary<uint32, float>({
+export let statToWeight: TSDictionary<number,number> = CreateDictionary<number, number>({
+    // Unused
     0: 1,
-    1: 1,
-    3: 1,
-    4: 1,
-    5: 1,
-    6: 1,
-    7: 1,
-    12: 1,
-    13: 1,
-    14: 1,
-    15: 1,
+    // Health
+    1: 12,
+    // Agility, Strength, Intellect, Spirit, Stamina
+    3: 1.15,
+    //str
+    4: 1.15,
+    //int
+    5: 1.15,
+    //spi
+    6: 1.15,
+    //stam
+    7: 1.15,
+    // Defense 
+    12: 1.1,
+    // Dodge
+    13: 1.1,
+    // Parry
+    14: 1.1,
+    // Shield Block
+    15: 1.1,
+    // Melee, Ranged, & Spell Hit
     16: 1,
     17: 1,
     18: 1,
+    // Melee Ranged & Spell Crit
     19: 1,
     20: 1,
     21: 1,
+    // Melee, Ranged, & Spell Hit Avoidance
     22: 1,
     23: 1,
     24: 1,
+    // Melee, Ranged & Spell Crit Avoidance
     25: 1,
     26: 1,
     27: 1,
+    // Melee, Ranged, Spell Haste
     28: 1,
     29: 1,
     30: 1,
+    // Hit Rating (General)
     31: 1,
+    // Critical Strike (General)
     32: 1,
+    // Hit Avoidance 
     33: 1,
+    // Crit Avoidance
     34: 1,
+    // Resilience
     35: 1,
-    36: 1,
-    37: 1,
-    38: 1,
-    39: 1,
+    // Haste (General)
+    36: 1.2,
+    // Expertise
+    37: 1.3,
+    // Attack Power
+    38: 1.3,
+    // Ranged Attack Power
+    39: 1.3,
+    // Feral Attack Power
     40: 1,
+    // Dmg Done
     41: 1,
+    // Healing Done
     42: 1,
+    // MP5
     43: 1,
-    44: 1,
-    45: 1,
+    // Armor Penentration
+    44: 1.1,
+    // Spell Power (General)
+    45: 3,
+    // HP5
     46: 1,
+    // Spell Penetration
     47: 1,
+    // Block Value
     48: 1,
 })
 
@@ -271,26 +269,27 @@ const enum itemStats /**@realType:uint32*/ {
     SPELL_PENETRATION = 47,
     BLOCK_VALUE = 48,
 }
-export const statChoices: TSArray<TSArray<TSArray<uint32>>> = <TSArray<TSArray<TSArray<uint32>>>>[
-    <TSArray<TSArray<uint32>>>[//primaries
-        <TSArray<uint32>>[//str group
+
+export const statChoices: number[][][] = [
+    <number[][]>[//primaries
+        <number[]>[//str group
             itemStats.STRENGTH,
             itemStats.STAMINA,
             itemStats.AGILITY
         ],
-        <TSArray<uint32>>[//agi group
+        <number[]>[//agi group
             itemStats.AGILITY,
             itemStats.STAMINA,
             itemStats.STRENGTH,
         ],
-        <TSArray<uint32>>[//int group
+        <number[]>[//int group
             itemStats.INTELLECT,
             itemStats.STAMINA,
             itemStats.SPIRIT
         ],
     ],
-    <TSArray<TSArray<uint32>>>[//secondaries
-        <TSArray<uint32>>[//str group
+    <number[][]>[//secondaries
+        <number[]>[//str group
             itemStats.HEALTH,
             itemStats.DEFENSE_SKILL_RATING,
             itemStats.BLOCK_RATING,
@@ -305,7 +304,7 @@ export const statChoices: TSArray<TSArray<TSArray<uint32>>> = <TSArray<TSArray<T
             itemStats.STRENGTH,
             itemStats.AGILITY,
         ],
-        <TSArray<uint32>>[//agi group
+        <number[]>[//agi group
             itemStats.HEALTH,
             itemStats.DODGE_RATING,
             itemStats.HIT_RATING,
@@ -318,7 +317,7 @@ export const statChoices: TSArray<TSArray<TSArray<uint32>>> = <TSArray<TSArray<T
             itemStats.AGILITY,
             itemStats.STRENGTH,
         ],
-        <TSArray<uint32>>[//int group
+        <number[]>[//int group
             itemStats.MANA,
             itemStats.SPIRIT,
             itemStats.INTELLECT,
@@ -332,105 +331,144 @@ export const statChoices: TSArray<TSArray<TSArray<uint32>>> = <TSArray<TSArray<T
     ],
 ]
 
-export const displayDict = CreateDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSArray<uint32>>>>>({//quality
-    2: emptyQuality,
-    3: emptyQuality,
-    4: emptyQuality,
-    5: emptyQuality,
-})
-
-export const prefixPostfixArray: TSArray<TSArray<TSString>> = <TSArray<TSArray<TSString>>>[<TSArray<TSString>>[], <TSArray<TSString>>[]]
-
-export const baseNameDict = CreateDictionary<uint32, TSDictionary<uint32, TSDictionary<uint32, TSArray<TSString>>>>({
-    2: CreateDictionary<uint32, TSDictionary<uint32, TSArray<TSString>>>({
-        0: CreateDictionary<uint32, TSArray<TSString>>({
-            13: <TSArray<TSString>>[]
+const empty: TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>> = CreateDictionary({
+    2: CreateDictionary<number, TSDictionary<number, number[]>>({
+        13: CreateDictionary<number, number[]>({
         }),
-        1: CreateDictionary<uint32, TSArray<TSString>>({
-            17: <TSArray<TSString>>[]
+        15: CreateDictionary<number, number[]>({
         }),
-        2: CreateDictionary<uint32, TSArray<TSString>>({
-            15: <TSArray<TSString>>[]
+        17: CreateDictionary<number, number[]>({
         }),
-        3: CreateDictionary<uint32, TSArray<TSString>>({
-            26: <TSArray<TSString>>[]
-        }),
-        4: CreateDictionary<uint32, TSArray<TSString>>({
-            13: <TSArray<TSString>>[]
-        }),
-        5: CreateDictionary<uint32, TSArray<TSString>>({
-            17: <TSArray<TSString>>[]
-        }),
-        6: CreateDictionary<uint32, TSArray<TSString>>({
-            17: <TSArray<TSString>>[]
-        }),
-        7: CreateDictionary<uint32, TSArray<TSString>>({
-            13: <TSArray<TSString>>[]
-        }),
-        8: CreateDictionary<uint32, TSArray<TSString>>({
-            17: <TSArray<TSString>>[]
-        }),
-        10: CreateDictionary<uint32, TSArray<TSString>>({
-            17: <TSArray<TSString>>[]
-        }),
-        13: CreateDictionary<uint32, TSArray<TSString>>({
-            13: <TSArray<TSString>>[]
-        }),
-        15: CreateDictionary<uint32, TSArray<TSString>>({
-            13: <TSArray<TSString>>[]
-        }),
-        19: CreateDictionary<uint32, TSArray<TSString>>({
-            26: <TSArray<TSString>>[]
+        26: CreateDictionary<number, number[]>({
         }),
     }),
-    4: CreateDictionary<uint32, TSDictionary<uint32, TSArray<TSString>>>({
-        0: CreateDictionary<uint32, TSArray<TSString>>({
-            2: <TSArray<TSString>>[],
-            11: <TSArray<TSString>>[],
-            12: <TSArray<TSString>>[],
-            23: <TSArray<TSString>>[],
+    4: CreateDictionary<number, TSDictionary<number, number[]>>({
+        1: CreateDictionary<number, number[]>({
         }),
-        1: CreateDictionary<uint32, TSArray<TSString>>({
-            1: <TSArray<TSString>>[],
-            3: <TSArray<TSString>>[],
-            5: <TSArray<TSString>>[],
-            6: <TSArray<TSString>>[],
-            7: <TSArray<TSString>>[],
-            8: <TSArray<TSString>>[],
-            9: <TSArray<TSString>>[],
-            10: <TSArray<TSString>>[],
-            16: <TSArray<TSString>>[],
+        2: CreateDictionary<number, number[]>({
         }),
-        2: CreateDictionary<uint32, TSArray<TSString>>({
-            1: <TSArray<TSString>>[],
-            3: <TSArray<TSString>>[],
-            5: <TSArray<TSString>>[],
-            6: <TSArray<TSString>>[],
-            7: <TSArray<TSString>>[],
-            8: <TSArray<TSString>>[],
-            9: <TSArray<TSString>>[],
-            10: <TSArray<TSString>>[],
+        3: CreateDictionary<number, number[]>({
         }),
-        3: CreateDictionary<uint32, TSArray<TSString>>({
-            1: <TSArray<TSString>>[],
-            3: <TSArray<TSString>>[],
-            5: <TSArray<TSString>>[],
-            6: <TSArray<TSString>>[],
-            7: <TSArray<TSString>>[],
-            8: <TSArray<TSString>>[],
-            9: <TSArray<TSString>>[],
-            10: <TSArray<TSString>>[],
+        5: CreateDictionary<number, number[]>({
+        }),
+        6: CreateDictionary<number, number[]>({
+        }),
+        7: CreateDictionary<number, number[]>({
+        }),
+        8: CreateDictionary<number, number[]>({
+        }),
+        9: CreateDictionary<number, number[]>({
+        }),
+        10: CreateDictionary<number, number[]>({
+        }),
+        11: CreateDictionary<number, number[]>({
+        }),
+        12: CreateDictionary<number, number[]>({
+        }),
+        16: CreateDictionary<number, number[]>({
         }),
     })
 })
 
-export function classIDToStatType(classID: uint32): uint32 {
+export const displayDict: TSDictionary<int, TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>>> = <TSDictionary<int, TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>>>>CreateDictionary({//quality
+    2: empty,
+    3: empty,
+    4: empty,
+    5: empty,
+})
+
+export const prefixPostfixArray = [<string[]>[], <string[]>[]]
+
+export const baseNameDict: TSDictionary<int, TSDictionary<number, TSDictionary<number, string[]>>> = CreateDictionary({
+    2: CreateDictionary<number, TSDictionary<number, string[]>>({
+        0: CreateDictionary<number, string[]>({
+            13: <string[]>[]
+        }),
+        1: CreateDictionary<number, string[]>({
+            17: <string[]>[]
+        }),
+        2: CreateDictionary<number, string[]>({
+            15: <string[]>[]
+        }),
+        3: CreateDictionary<number, string[]>({
+            26: <string[]>[]
+        }),
+        4: CreateDictionary<number, string[]>({
+            13: <string[]>[]
+        }),
+        5: CreateDictionary<number, string[]>({
+            17: <string[]>[]
+        }),
+        6: CreateDictionary<number, string[]>({
+            17: <string[]>[]
+        }),
+        7: CreateDictionary<number, string[]>({
+            13: <string[]>[]
+        }),
+        8: CreateDictionary<number, string[]>({
+            17: <string[]>[]
+        }),
+        10: CreateDictionary<number, string[]>({
+            17: <string[]>[]
+        }),
+        13: CreateDictionary<number, string[]>({
+            13: <string[]>[]
+        }),
+        15: CreateDictionary<number, string[]>({
+            13: <string[]>[]
+        }),
+        19: CreateDictionary<number, string[]>({
+            26: <string[]>[]
+        }),
+    }),
+    4: CreateDictionary<number, TSDictionary<number, string[]>>({
+        0: CreateDictionary<number, string[]>({
+            2: <string[]>[],
+            11: <string[]>[],
+            12: <string[]>[],
+            23: <string[]>[],
+        }),
+        1: CreateDictionary<number, string[]>({
+            1: <string[]>[],
+            3: <string[]>[],
+            5: <string[]>[],
+            6: <string[]>[],
+            7: <string[]>[],
+            8: <string[]>[],
+            9: <string[]>[],
+            10: <string[]>[],
+            16: <string[]>[],
+        }),
+        2: CreateDictionary<number, string[]>({
+            1: <string[]>[],
+            3: <string[]>[],
+            5: <string[]>[],
+            6: <string[]>[],
+            7: <string[]>[],
+            8: <string[]>[],
+            9: <string[]>[],
+            10: <string[]>[],
+        }),
+        3: CreateDictionary<number, string[]>({
+            1: <string[]>[],
+            3: <string[]>[],
+            5: <string[]>[],
+            6: <string[]>[],
+            7: <string[]>[],
+            8: <string[]>[],
+            9: <string[]>[],
+            10: <string[]>[],
+        }),
+    })
+})
+
+export function classIDToStatType(classID: number): number {
     switch (classID) {
         case 1:
         case 6:
             return 0
         case 2:
-        return getRandNumber(2)==0?0:1
+            return getRandNumber(2) == 0 ? 0 : 1
         case 3:
         case 4:
             return 1
@@ -440,8 +478,8 @@ export function classIDToStatType(classID: uint32): uint32 {
             return 2
         case 7:
         case 11:
-            return getRandNumber(2)+1
-    default:
-        return 0
+            return getRandNumber(2) + 1
+        default:
+            return 0
     }
 }

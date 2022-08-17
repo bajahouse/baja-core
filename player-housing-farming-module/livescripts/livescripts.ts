@@ -7,7 +7,3 @@ export function Main(events: TSEvents) {
     RegisterFarmingSpells(events)
     baseHouse(events)
 }
-
-export function getRandNumber(min: uint32, max: uint32): uint32 {
-    return Math.floor((Math.random() * (max - min)) + min);
-}
