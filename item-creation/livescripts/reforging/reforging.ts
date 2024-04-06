@@ -17,8 +17,12 @@ const reforgePercent = 0.4//40%
 const reforgeOpposite = 1 - reforgePercent
 const reforgeWholeNumber: uint32 = Math.floor(reforgePercent * 100)
 
+
+
 export function reforging(events: TSEvents) {
-    events.GameObject.OnGossipHello(GetID('gameobject_template', 'item-creation', 'reforge-master'), (gameObject, player, cancel) => {
+
+    
+    events.GameObject.OnGossipHello(GetID('gameobject_template', 'wardonic-mod', 'reforge-master'), (gameObject, player, cancel) => {
         player.SetUInt('selCount', 0)
         player.SetUInt('reforge_item_choice', 0)
         player.SetUInt('reforge_item_stat_choice_loss', 0)
@@ -27,13 +31,13 @@ export function reforging(events: TSEvents) {
         for (let i = 0; i <= 18; i++) {
             let curItem = player.GetItemByPos(255, i)
             if (!curItem.IsNull() && curItem.GetEntry() > 200000 && curItem.GetTemplate().GetPageMaterial() == 0) {
-                player.GossipMenuAddItem(1, "Reforge: " + curItem.GetName(), gameObject.GetGUID(), i)
+                player.GossipMenuAddItem(1, "Reforge: " + curItem.GetName(), gameObject.GetGUID().GetCounter(), i)
             }
         }
         player.GossipSendMenu(5, gameObject, 1)
     })
 
-    events.GameObject.OnGossipSelect(GetID('gameobject_template', 'item-creation', 'reforge-master'), (gameObject, player, menu, selection, cancel) => {
+    events.GameObject.OnGossipSelect(GetID('gameobject_template', 'wardonic-mod', 'reforge-master'), (gameObject, player, menu, selection, cancel) => {
         player.GossipComplete()
         player.GossipClearMenu()
         if (player.GetUInt('selCount', 0) == 0) {
@@ -43,7 +47,7 @@ export function reforging(events: TSEvents) {
             let itemTemplate = chosenItem.GetTemplate()
             for (let i = 0; i < itemTemplate.GetStatsCount(); i++) {
                 let choice: string = isPrimary(itemTemplate.GetStatType(i)) ? '(Primary Stat) ' : '(Secondary Stat) ';
-                player.GossipMenuAddItem(1, choice + "Reforge Stat Type: " + statToName[itemTemplate.GetStatType(i)], gameObject.GetGUID(), i)
+                player.GossipMenuAddItem(1, choice + "Reforge Stat Type: " + statToName[itemTemplate.GetStatType(i)], gameObject.GetGUID().GetCounter(), i)
             }
             player.GossipSendMenu(5, gameObject, 1)
         } else if (player.GetUInt('selCount', 0) == 1) {
@@ -54,7 +58,7 @@ export function reforging(events: TSEvents) {
             let isPrim = isPrimary(itemTemplate.GetStatType(selection))
             for (let i = 0; i < itemTemplate.GetStatsCount(); i++) {
                 if (i != selection && isPrim == isPrimary(itemTemplate.GetStatType(i))) {
-                    player.GossipMenuAddItem(1, 'Reforge  ' + reforgeWholeNumber + '% of ' + statToName[itemTemplate.GetStatType(selection)] + ' to ' + statToName[itemTemplate.GetStatType(i)], gameObject.GetGUID(), i, false, 'are you sure you want to replace ' + reforgeWholeNumber + '% of ' + statToName[itemTemplate.GetStatType(selection)] + ' with ' + statToName[itemTemplate.GetStatType(i)] + '?')
+                    player.GossipMenuAddItem(1, 'Reforge  ' + reforgeWholeNumber + '% of ' + statToName[itemTemplate.GetStatType(selection)] + ' to ' + statToName[itemTemplate.GetStatType(i)], gameObject.GetGUID().GetCounter(), i, false, 'are you sure you want to replace ' + reforgeWholeNumber + '% of ' + statToName[itemTemplate.GetStatType(selection)] + ' with ' + statToName[itemTemplate.GetStatType(i)] + '?')
                 }
             }
             player.GossipSendMenu(5, gameObject, 1)

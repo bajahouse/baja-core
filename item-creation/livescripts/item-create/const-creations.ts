@@ -1,21 +1,20 @@
-// ============================================================================
-//
-// - Constants -
-//
-//   This file holds constants used in other files
-//
-// - External scripts -
-//   livescripts: livescripts/item-create/item-create-lib
-//   livescripts: livescripts/reforging/reforging
-//
-// ============================================================================
-
-export function getRandNumber(max: number): number {
-    return Math.floor((Math.random() * (max - 0.001)))
+export function getRandNumberWithSeed(seed: number, max: number): number {
+    return Math.floor((Math.abs((Math.sin(seed)) * 10000) % max));
 }
 
+export function generateSeed(): uint32 {
+    return <uint32>Math.round(Math.random() * 100000000);
+};
 
-export const itemClassInfo: number[][][] = [//class,subclass,invType,material,sheath,statMult
+export function setupConstCreations() {
+    setupStatToWeightsDict()
+    setupBaseNameDict()
+    setupPrefixPostfixDict()
+    setupDisplayIDDict()
+    setupStatChoicesDict()
+}
+
+export const itemClassInfo: number[][][] = [//class,subclass,invType,material,sheath,slotStatMult
     [//ARMOR
         //cloth
         [4, 1, 1, 7, 0, 0.8125],//head
@@ -79,24 +78,97 @@ export const armorScalar = [
 ]
 
 export const qualityMultiplier = [
-    0.5,//no quality 0
-    0.4,//common unused
+    0.1,//no quality 0
+    0.3,//common unused
     0.5,//uncommon
     0.6,//rare
     0.75,//epic
     1//legendary
 ]
 
-export const statCounts = [
+export const statCounts = [//primary,secondary
     [0, 0],//no quality 0
-    [1, 1],//common unused
+    [1, 0],//common unused
     [2, 1],//uncommon
     [2, 3],//rare
     [2, 4],//epic
     [3, 5]//legendary
 ]
 
-export let statToName: TSDictionary<number,string> = CreateDictionary<number, string>({
+function setupDisplayIDDict() {
+    //quality->class->invType->subclass->[displayIDs]
+    let q = QueryWorld('SELECT * FROM custom_item_template_displays')
+    while (q.GetRow()) {
+        displayID[q.GetUInt32(0)][q.GetUInt32(1)][q.GetUInt32(3)][q.GetUInt32(2)].push(q.GetUInt32(4))
+    }
+}
+
+function setupBaseNameDict() {
+    let q = QueryWorld('SELECT * FROM custom_item_template_names WHERE nametype = 2')
+    while (q.GetRow()) {
+        baseName[q.GetUInt32(1)][q.GetUInt32(2)][q.GetUInt32(3)].push(q.GetString(4))
+    }
+}
+
+function setupPrefixPostfixDict() {
+    let q = QueryWorld('SELECT  name FROM custom_item_template_names WHERE nametype = 1')
+    while (q.GetRow()) {
+        prefixPostfix[0].push(q.GetString(0))
+    }
+    q = QueryWorld('SELECT name FROM custom_item_template_names WHERE nametype = 3')
+    while (q.GetRow()) {
+        prefixPostfix[1].push(q.GetString(0))
+    }
+}
+
+
+function setupStatToWeightsDict() {
+    let q = QueryWorld('SELECT * FROM stat_weights')
+    while (q.GetRow()) {
+        statToWeight[q.GetUInt32(0)] = q.GetDouble(1)
+    }
+}
+
+function setupStatChoicesDict() {
+    let q = QueryWorld('SELECT * FROM stat_choices')
+    while (q.GetRow()) {
+        let arrFill: TSArray<number> = <TSArray<number>>[]
+        q.GetString(1).split(",").forEach((v, i, arr) => {
+            arrFill.push(ToUInt32(v))
+        })
+        statChoice[0][q.GetUInt32(0)] = arrFill
+        arrFill = <TSArray<number>>[]
+        q.GetString(2).split(",").forEach((v, i, arr) => {
+            arrFill.push(ToUInt32(v))
+        })
+        statChoice[1][q.GetUInt32(0)] = arrFill
+    }
+}
+
+
+export let statToWeight: TSDictionary<number, number> = CreateDictionary<number, number>({})
+
+export const statChoice: number[][][] = [//data here is filled in datascripts
+    <number[][]>[//primaries
+        <number[]>[//str group
+        ],
+        <number[]>[//agi group
+        ],
+        <number[]>[//int group
+
+        ],
+    ],
+    <number[][]>[//secondaries
+        <number[]>[//str group
+        ],
+        <number[]>[//agi group
+        ],
+        <number[]>[//int group
+        ],
+    ],
+]
+
+export let statToName: TSDictionary<number, string> = CreateDictionary<number, string>({
     0: 'Mana',
     1: 'Health',
     3: 'Agility',
@@ -143,194 +215,6 @@ export let statToName: TSDictionary<number,string> = CreateDictionary<number, st
     48: 'Block Value',
 })
 
-export let statToWeight: TSDictionary<number,number> = CreateDictionary<number, number>({
-    // Unused
-    0: 1,
-    // Health
-    1: 12,
-    // Agility, Strength, Intellect, Spirit, Stamina
-    3: 1.15,
-    //str
-    4: 1.15,
-    //int
-    5: 1.15,
-    //spi
-    6: 1.15,
-    //stam
-    7: 1.15,
-    // Defense 
-    12: 1.1,
-    // Dodge
-    13: 1.1,
-    // Parry
-    14: 1.1,
-    // Shield Block
-    15: 1.1,
-    // Melee, Ranged, & Spell Hit
-    16: 1,
-    17: 1,
-    18: 1,
-    // Melee Ranged & Spell Crit
-    19: 1,
-    20: 1,
-    21: 1,
-    // Melee, Ranged, & Spell Hit Avoidance
-    22: 1,
-    23: 1,
-    24: 1,
-    // Melee, Ranged & Spell Crit Avoidance
-    25: 1,
-    26: 1,
-    27: 1,
-    // Melee, Ranged, Spell Haste
-    28: 1,
-    29: 1,
-    30: 1,
-    // Hit Rating (General)
-    31: 1,
-    // Critical Strike (General)
-    32: 1,
-    // Hit Avoidance 
-    33: 1,
-    // Crit Avoidance
-    34: 1,
-    // Resilience
-    35: 1,
-    // Haste (General)
-    36: 1.2,
-    // Expertise
-    37: 1.3,
-    // Attack Power
-    38: 1.3,
-    // Ranged Attack Power
-    39: 1.3,
-    // Feral Attack Power
-    40: 1,
-    // Dmg Done
-    41: 1,
-    // Healing Done
-    42: 1,
-    // MP5
-    43: 1,
-    // Armor Penentration
-    44: 1.1,
-    // Spell Power (General)
-    45: 3,
-    // HP5
-    46: 1,
-    // Spell Penetration
-    47: 1,
-    // Block Value
-    48: 1,
-})
-
-const enum itemStats /**@realType:uint32*/ {
-    MANA = 0,
-    HEALTH = 1,
-    AGILITY = 3,
-    STRENGTH = 4,
-    INTELLECT = 5,
-    SPIRIT = 6,
-    STAMINA = 7,
-    DEFENSE_SKILL_RATING = 12,
-    DODGE_RATING = 13,
-    PARRY_RATING = 14,
-    BLOCK_RATING = 15,
-    HIT_MELEE_RATING = 16,
-    HIT_RANGED_RATING = 17,
-    HIT_SPELL_RATING = 18,
-    CRIT_MELEE_RATING = 19,
-    CRIT_RANGED_RATING = 20,
-    CRIT_SPELL_RATING = 21,
-    HIT_TAKEN_MELEE_RATING = 22,
-    HIT_TAKEN_RANGED_RATING = 23,
-    HIT_TAKEN_SPELL_RATING = 24,
-    CRIT_TAKEN_MELEE_RATING = 25,
-    CRIT_TAKEN_RANGED_RATING = 26,
-    CRIT_TAKEN_SPELL_RATING = 27,
-    HASTE_MELEE_RATING = 28,
-    HASTE_RANGED_RATING = 29,
-    HASTE_SPELL_RATING = 30,
-    HIT_RATING = 31,
-    CRIT_RATING = 32,
-    HIT_TAKEN_RATING = 33,
-    CRIT_TAKEN_RATING = 34,
-    RESILIENCE_RATING = 35,
-    HASTE_RATING = 36,
-    EXPERTISE_RATING = 37,
-    ATTACK_POWER = 38,
-    RANGED_ATTACK_POWER = 39,
-    SPELL_HEALING_DONE = 41,
-    SPELL_DAMAGE_DONE = 42,
-    MANA_REGENERATION = 43,
-    ARMOR_PENETRATION_RATING = 44,
-    SPELL_POWER = 45,
-    HEALTH_REGEN = 46,
-    SPELL_PENETRATION = 47,
-    BLOCK_VALUE = 48,
-}
-
-export const statChoices: number[][][] = [
-    <number[][]>[//primaries
-        <number[]>[//str group
-            itemStats.STRENGTH,
-            itemStats.STAMINA,
-            itemStats.AGILITY
-        ],
-        <number[]>[//agi group
-            itemStats.AGILITY,
-            itemStats.STAMINA,
-            itemStats.STRENGTH,
-        ],
-        <number[]>[//int group
-            itemStats.INTELLECT,
-            itemStats.STAMINA,
-            itemStats.SPIRIT
-        ],
-    ],
-    <number[][]>[//secondaries
-        <number[]>[//str group
-            itemStats.HEALTH,
-            itemStats.DEFENSE_SKILL_RATING,
-            itemStats.BLOCK_RATING,
-            itemStats.HIT_RATING,
-            itemStats.CRIT_RATING,
-            itemStats.HIT_TAKEN_RATING,
-            itemStats.RESILIENCE_RATING,
-            itemStats.HASTE_RATING,
-            itemStats.EXPERTISE_RATING,
-            itemStats.ATTACK_POWER,
-            itemStats.ARMOR_PENETRATION_RATING,
-            itemStats.STRENGTH,
-            itemStats.AGILITY,
-        ],
-        <number[]>[//agi group
-            itemStats.HEALTH,
-            itemStats.DODGE_RATING,
-            itemStats.HIT_RATING,
-            itemStats.CRIT_RATING,
-            itemStats.CRIT_TAKEN_RATING,
-            itemStats.HASTE_RATING,
-            itemStats.EXPERTISE_RATING,
-            itemStats.ATTACK_POWER,
-            itemStats.ARMOR_PENETRATION_RATING,
-            itemStats.AGILITY,
-            itemStats.STRENGTH,
-        ],
-        <number[]>[//int group
-            itemStats.MANA,
-            itemStats.SPIRIT,
-            itemStats.INTELLECT,
-            itemStats.CRIT_RATING,
-            itemStats.HIT_RATING,
-            itemStats.HASTE_RATING,
-            itemStats.MANA_REGENERATION,
-            itemStats.SPELL_POWER,
-            itemStats.SPELL_PENETRATION,
-        ],
-    ],
-]
-
 const empty: TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>> = CreateDictionary({
     2: CreateDictionary<number, TSDictionary<number, number[]>>({
         13: CreateDictionary<number, number[]>({
@@ -370,16 +254,16 @@ const empty: TSDictionary<int32, TSDictionary<number, TSDictionary<number, numbe
     })
 })
 
-export const displayDict: TSDictionary<int, TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>>> = <TSDictionary<int, TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>>>>CreateDictionary({//quality
+export const displayID: TSDictionary<int, TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>>> = <TSDictionary<int, TSDictionary<int32, TSDictionary<number, TSDictionary<number, number[]>>>>>CreateDictionary({//quality
     2: empty,
     3: empty,
     4: empty,
     5: empty,
 })
 
-export const prefixPostfixArray = [<string[]>[], <string[]>[]]
+export const prefixPostfix = [<string[]>[], <string[]>[]]
 
-export const baseNameDict: TSDictionary<int, TSDictionary<number, TSDictionary<number, string[]>>> = CreateDictionary({
+export const baseName: TSDictionary<int, TSDictionary<number, TSDictionary<number, string[]>>> = CreateDictionary({
     2: CreateDictionary<number, TSDictionary<number, string[]>>({
         0: CreateDictionary<number, string[]>({
             13: <string[]>[]
@@ -461,25 +345,3 @@ export const baseNameDict: TSDictionary<int, TSDictionary<number, TSDictionary<n
         }),
     })
 })
-
-export function classIDToStatType(classID: number): number {
-    switch (classID) {
-        case 1:
-        case 6:
-            return 0
-        case 2:
-            return getRandNumber(2) == 0 ? 0 : 1
-        case 3:
-        case 4:
-            return 1
-        case 5:
-        case 8:
-        case 9:
-            return 2
-        case 7:
-        case 11:
-            return getRandNumber(2) + 1
-        default:
-            return 0
-    }
-}
