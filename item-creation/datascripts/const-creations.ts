@@ -8512,3 +8512,158 @@ export let names = [
     [3, -1, -1, -1, 'of Winter'],
     [3, -1, -1, -1, 'of Worth'],
 ]
+
+const enum itemStats /**@realType:uint32*/ {
+    MANA = 0,
+    HEALTH = 1,
+    AGILITY = 3,
+    STRENGTH = 4,
+    INTELLECT = 5,
+    SPIRIT = 6,
+    STAMINA = 7,
+    DEFENSE_SKILL_RATING = 12,
+    DODGE_RATING = 13,
+    PARRY_RATING = 14,
+    BLOCK_RATING = 15,
+    HIT_MELEE_RATING = 16,
+    HIT_RANGED_RATING = 17,
+    HIT_SPELL_RATING = 18,
+    CRIT_MELEE_RATING = 19,
+    CRIT_RANGED_RATING = 20,
+    CRIT_SPELL_RATING = 21,
+    HIT_TAKEN_MELEE_RATING = 22,
+    HIT_TAKEN_RANGED_RATING = 23,
+    HIT_TAKEN_SPELL_RATING = 24,
+    CRIT_TAKEN_MELEE_RATING = 25,
+    CRIT_TAKEN_RANGED_RATING = 26,
+    CRIT_TAKEN_SPELL_RATING = 27,
+    HASTE_MELEE_RATING = 28,
+    HASTE_RANGED_RATING = 29,
+    HASTE_SPELL_RATING = 30,
+    HIT_RATING = 31,
+    CRIT_RATING = 32,
+    HIT_TAKEN_RATING = 33,
+    CRIT_TAKEN_RATING = 34,
+    RESILIENCE_RATING = 35,
+    HASTE_RATING = 36,
+    EXPERTISE_RATING = 37,
+    ATTACK_POWER = 38,
+    RANGED_ATTACK_POWER = 39,
+    SPELL_HEALING_DONE = 41,
+    SPELL_DAMAGE_DONE = 42,
+    MANA_REGENERATION = 43,
+    ARMOR_PENETRATION_RATING = 44,
+    SPELL_POWER = 45,
+    HEALTH_REGEN = 46,
+    SPELL_PENETRATION = 47,
+    BLOCK_VALUE = 48,
+}
+
+
+export const statChoices: number[][][] = [
+    <number[][]>[//primaries
+        <number[]>[//str group
+            itemStats.STRENGTH,
+            itemStats.STAMINA,
+            itemStats.AGILITY
+        ],
+        <number[]>[//agi group
+            itemStats.AGILITY,
+            itemStats.STAMINA,
+            itemStats.STRENGTH,
+        ],
+        <number[]>[//int group
+            itemStats.INTELLECT,
+            itemStats.STAMINA,
+            itemStats.SPIRIT
+        ],
+    ],
+    <number[][]>[//secondaries
+        <number[]>[//str group
+            itemStats.HEALTH,
+            itemStats.DEFENSE_SKILL_RATING,
+            itemStats.BLOCK_RATING,
+            itemStats.HIT_RATING,
+            itemStats.CRIT_RATING,
+            itemStats.HIT_TAKEN_RATING,
+            itemStats.RESILIENCE_RATING,
+            itemStats.HASTE_RATING,
+            itemStats.EXPERTISE_RATING,
+            itemStats.ATTACK_POWER,
+            itemStats.ARMOR_PENETRATION_RATING,
+            itemStats.STRENGTH,
+            itemStats.AGILITY,
+        ],
+        <number[]>[//agi group
+            itemStats.HEALTH,
+            itemStats.DODGE_RATING,
+            itemStats.HIT_RATING,
+            itemStats.CRIT_RATING,
+            itemStats.CRIT_TAKEN_RATING,
+            itemStats.HASTE_RATING,
+            itemStats.EXPERTISE_RATING,
+            itemStats.ATTACK_POWER,
+            itemStats.ARMOR_PENETRATION_RATING,
+            itemStats.AGILITY,
+            itemStats.STRENGTH,
+        ],
+        <number[]>[//int group
+            itemStats.MANA,
+            itemStats.SPIRIT,
+            itemStats.INTELLECT,
+            itemStats.CRIT_RATING,
+            itemStats.HIT_RATING,
+            itemStats.HASTE_RATING,
+            itemStats.MANA_REGENERATION,
+            itemStats.SPELL_POWER,
+            itemStats.SPELL_PENETRATION,
+        ],
+    ],
+]
+
+export let statToWeight = {
+    0: 1, // Unused
+    1: 12, // Health
+    3: 1.15, // Agility
+    4: 1.15, // Strength
+    5: 1.15, // Intellect
+    6: 1.15, // Spirit
+    7: 1.15, // Stamina
+    12: 1.1, // Defense 
+    13: 1.1, // Dodge
+    14: 1.1, // Parry
+    15: 1.1, // Shield Block
+    16: 1, // Melee Hit
+    17: 1, // Ranged Hit
+    18: 1, // Spell Hit
+    19: 1, // Melee Crit
+    20: 1, // Ranged Crit
+    21: 1, //Spell crit
+    22: 1, // Melee Hit Avoidance
+    23: 1, //Ranged Hit Avoidance
+    24: 1, //Spell Hit Avoidance
+    25: 1, // Melee Crit Avoidance
+    26: 1, //Ranged Crit Avoidance
+    27: 1, //Spell Crit Avoidance
+    28: 1, // Melee Haste
+    29: 1, //Ranged Haste
+    30: 1, //Spell Haste
+    31: 1, // Hit Rating (General)
+    32: 1, // Critical Strike (General)
+    33: 1, // Hit Avoidance 
+    34: 1, // Crit Avoidance
+    35: 1, // Resilience
+    36: 1.2, // Haste (General)
+    37: 1.3, // Expertise
+    38: 1.3, // Attack Power
+    39: 1.3, // Ranged Attack Power
+    40: 1, // Feral Attack Power
+    41: 1, // Dmg Done
+    42: 1, // Healing Done
+    43: 1, // MP5
+    44: 1.1, // Armor Penentration
+    45: 3, // Spell Power (General)
+    46: 1, // HP5
+    47: 1, // Spell Penetration
+    48: 1, // Block Value
+}
