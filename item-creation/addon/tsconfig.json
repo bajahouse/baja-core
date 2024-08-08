@@ -1,0 +1,41 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "lib": [
+            "esnext",
+            "dom"
+        ],
+        "moduleResolution": "node",
+        "rootDir": "../",
+        "outDir": "./build",
+        "typeRoots": [
+            "node_modules/@wartoshika/wow-declarations",
+            "node_modules/lua-types/5.1",
+            "node_modules/@types"
+        ],
+        "experimentalDecorators": true,
+        "skipLibCheck": true,
+        "types": [
+            "typescript-to-lua/language-extensions"
+        ]
+    },
+    "include": [
+        "./",
+        "../shared"
+    ],
+    "exclude": [
+        "../scripts",
+        "../assets",
+        "../data"
+    ],
+    "tstl": {
+        "luaTarget": "5.1",
+        "luaPlugins": [
+            {
+                "name": "..\\..\\..\\bin\\scripts\\addons\\addons\\RequirePreload.js",
+                "import": "RequirePreload"
+            }
+        ],
+        "noImplicitSelf": true
+    }
+}
