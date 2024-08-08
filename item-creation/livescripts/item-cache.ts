@@ -9,7 +9,8 @@
 //
 // ============================================================================
 
-import { itemCache, itemCacheID } from "../../shared/Messages";
+import { itemCache, itemCacheID } from "../shared/Messages";
+
 
 export function itemCacheSend(events: TSEvents) {
     events.CustomPacket.OnReceive(itemCacheID, (opcode, packet, player) => {
