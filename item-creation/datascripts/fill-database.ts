@@ -1,6 +1,6 @@
 import { std } from "wow/wotlk"
 import { displays, names, statChoices, statToWeight } from "./const-creations"
-import { runDB } from "../datascripts"
+import { runDB } from "./datascripts"
 
 if(runDB)
 {
