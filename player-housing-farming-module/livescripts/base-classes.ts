@@ -27,7 +27,7 @@ export class PlayerHouse extends DBEntry {
     }
 
     static get(player: TSPlayer): PlayerHouse {
-        return player.GetObject('FarmingFarmData', LoadDBEntry(new PlayerHouse(player.GetGUID())))
+        return player.GetObject('FarmingFarmData', LoadDBEntry(new PlayerHouse(player.GetGUIDLow())))
     }
 
     Open(player: TSPlayer) {
@@ -35,7 +35,7 @@ export class PlayerHouse extends DBEntry {
         PlayerHouseCrops.get(player).forEach(x => x.Spawn(player));
         PlayerHouseGobs.get(player).forEach(x => x.Spawn(player));
         PlayerHouseCreatures.get(player).forEach(x => x.Spawn(player));
-        player.SetPhaseMask(player.GetPhaseMask(), true, player.GetGUID());
+        player.SetPhaseMask(player.GetPhaseMask(), true, player.GetGUIDLow());
     }
 
     Close(player: TSPlayer) {
@@ -44,9 +44,9 @@ export class PlayerHouse extends DBEntry {
         PlayerHouseGobs.get(player).forEach(x => x.Despawn(player.GetMap()));
         PlayerHouseCreatures.get(player).forEach(x => x.Spawn(player));
         player.SetPhaseMask(player.GetPhaseMask(), true, 0);
-        if (!player.GetGroup().IsNull()) {
-            player.GetGroup().GetMembers().forEach(x => {
-                if (x.GetPhaseID() == player.GetGUID()) {
+        if (player.GetGroup()) {
+            player.GetGroup()!.GetMembers().forEach(x => {
+                if (x.GetPhaseID() == player.GetGUIDLow()) {
                     x.SetPhaseMask(x.GetPhaseMask(), true, 0);
                 }
             })
@@ -106,7 +106,7 @@ export class PlayerHouseCrops extends DBArrayEntry {
     Despawn(map: TSMap) {
         if (this.spawnGuid === 0 || this.spawnMap != map.GetMapID()) return;
         let go = map.GetGameObject(this.spawnGuid);
-        if (!go.IsNull()) {
+        if (go) {
             go.RemoveFromWorld(true);
         }
         this.spawnGuid = 0;
@@ -117,15 +117,15 @@ export class PlayerHouseCrops extends DBArrayEntry {
         if (this.spawnGuid != 0) {
             return;
         }
-        let go = player.GetMap().SpawnGameObject(this.GetActiveGOEntry(), this.x, this.y, this.z, this.o)
-        go.SetPhaseMask(1, true, player.GetGUID())
+        let go = player.GetMap().SpawnGameObject(this.GetActiveGOEntry(), this.x, this.y, this.z, this.o)!
+        go.SetPhaseMask(1, true, player.GetGUIDLow())
         this.spawnMap = player.GetMapID();
-        this.spawnGuid = go.GetGUID();
+        this.spawnGuid = go.GetGUIDLow();
         this.spawnedEntry = go.GetEntry();
     }
 
     static get(player: TSPlayer): DBContainer<PlayerHouseCrops> {
-        return player.GetObject('FarmingCropData', LoadDBArrayEntry(PlayerHouseCrops, player.GetGUID()))
+        return player.GetObject('FarmingCropData', LoadDBArrayEntry(PlayerHouseCrops, player.GetGUIDLow()))
     }
 }
 export const CropSizes: TSDictionary<number, number> = CreateDictionary<number, number>({})
@@ -181,7 +181,7 @@ export class PlayerHouseGobs extends DBArrayEntry {
     Despawn(map: TSMap) {
         if (this.spawnGuid === 0 || this.spawnMap != map.GetMapID()) return;
         let go = map.GetGameObject(this.spawnGuid);
-        if (!go.IsNull()) {
+        if (go) {
             go.RemoveFromWorld(false);
         }
         this.spawnGuid = 0;
@@ -192,15 +192,15 @@ export class PlayerHouseGobs extends DBArrayEntry {
         if (this.spawnGuid != 0) {
             return;
         }
-        let go = player.GetMap().SpawnGameObject(this.entry, this.x, this.y, this.z, this.o)
-        go.SetPhaseMask(1, true, player.GetGUID())
+        let go = player.GetMap().SpawnGameObject(this.entry, this.x, this.y, this.z, this.o)!
+        go.SetPhaseMask(1, true, player.GetGUIDLow())
         this.spawnMap = player.GetMapID();
-        this.spawnGuid = go.GetGUID();
+        this.spawnGuid = go.GetGUIDLow();
         this.spawnedEntry = go.GetEntry();
     }
 
     static get(player: TSPlayer): DBContainer<PlayerHouseGobs> {
-        return player.GetObject('FarmingGobData', LoadDBArrayEntry(PlayerHouseGobs, player.GetGUID()))
+        return player.GetObject('FarmingGobData', LoadDBArrayEntry(PlayerHouseGobs, player.GetGUIDLow()))
     }
 }
 
@@ -230,7 +230,7 @@ export class PlayerHouseCreatures extends DBArrayEntry {
     Despawn(map: TSMap) {
         if (this.spawnGuid === 0 || this.spawnMap != map.GetMapID()) return;
         let creature = map.GetCreature(this.spawnGuid);
-        if (!creature.IsNull()) {
+        if (creature) {
             creature.DespawnOrUnsummon(0);
         }
         this.spawnGuid = 0;
@@ -241,15 +241,15 @@ export class PlayerHouseCreatures extends DBArrayEntry {
         if (this.spawnGuid != 0) {
             return;
         }
-        let creature = player.SpawnCreature(this.entry, this.x, this.y, this.z, this.o, 8, 0)
-        creature.SetPhaseMask(1, true, player.GetGUID())
+        let creature = player.SpawnCreature(this.entry, this.x, this.y, this.z, this.o, 8, 0)!
+        creature.SetPhaseMask(1, true, player.GetGUIDLow())
         this.spawnMap = player.GetMapID();
-        this.spawnGuid = creature.GetGUID();
+        this.spawnGuid = creature.GetGUIDLow();
         this.spawnedEntry = creature.GetEntry();
     }
 
     static get(player: TSPlayer): DBContainer<PlayerHouseCreatures> {
-        return player.GetObject('FarmingCreatureData', LoadDBArrayEntry(PlayerHouseCreatures, player.GetGUID())
+        return player.GetObject('FarmingCreatureData', LoadDBArrayEntry(PlayerHouseCreatures, player.GetGUIDLow())
         )
     }
 }

@@ -15,15 +15,15 @@ export function dumpPlayerInventory(events: TSEvents) {
         if (command.get().startsWith('dumpinv') && player.IsGM()) {
             found.set(true)
             let tar = player.GetSelection()
-            if (tar.IsNull() || !tar.IsPlayer())
+            if (!tar || !tar.IsPlayer())
                 return
-            let target = tar.ToPlayer()
+            let target = tar.ToPlayer()!
 
             player.SendBroadcastMessage('main inventory')
             for (let x = 19; x <= 22; x++) {
                 for (let i = 0; i <= 35; ++i) {
                     let item = target.GetItemByPos(x, i);
-                    if (!item.IsNull()) {
+                    if (item) {
                         player.SendBroadcastMessage('Entry: ' + item.GetEntry() + ' Name: ' + item.GetName() + ' Count: ' + item.GetCount());
                     }
                 }
@@ -32,7 +32,7 @@ export function dumpPlayerInventory(events: TSEvents) {
             for (let x = 67; x <= 74; x++) {
                 for (let i = 0; i <= 35; ++i) {
                     let item = target.GetItemByPos(x, i);
-                    if (!item.IsNull()) {
+                    if (item) {
                         player.SendBroadcastMessage('Entry: ' + item.GetEntry() + ' Name: ' + item.GetName() + ' Count: ' + item.GetCount());
                     }
                 }
@@ -40,7 +40,7 @@ export function dumpPlayerInventory(events: TSEvents) {
             player.SendBroadcastMessage('misc')
             for (let i = 0; i <= 117; ++i) {
                 let item = target.GetItemByPos(255, i);
-                if (!item.IsNull()) {
+                if (item) {
                     player.SendBroadcastMessage('Entry: ' + item.GetEntry() + ' Name: ' + item.GetName() + ' Count: ' + item.GetCount());
                 }
             }

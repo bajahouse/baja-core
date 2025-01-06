@@ -390,6 +390,8 @@ export function dungeon1(events: TSEvents) {
         setupBossPull(events, bossIDs[i])
     }
     events.Creature.OnDeath(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vase"), (creature, killer) => {
+        if (!killer)
+            return
         checkPlayerGiveReward(killer, getRandomInt(1) + 1)
         creature.DespawnOrUnsummon(5000)
     })
@@ -416,7 +418,7 @@ export function dungeon1(events: TSEvents) {
         }
 
         player.AddNamedTimer('rebuff', 10000, TimerLoops.INDEFINITE, 2, (owner, timer) => {
-            applyPlayerBuffs(owner.ToPlayer())
+            applyPlayerBuffs(owner.ToPlayer()!)
         })
     })
 
@@ -437,7 +439,7 @@ export function dungeon1(events: TSEvents) {
     events.Spell.OnHit(8326, spell => {
         let c = spell.GetCaster()
         if (c.GetMapID() == 726) {
-            let p = c.ToPlayer()
+            let p = c.ToPlayer()!
             p.ResurrectPlayer(30, false);
             p.Teleport(startingMapID, -8749.424805, -77.516861, 31.135099, 0.923082)
         }
@@ -448,7 +450,7 @@ function addPrestigeBuffToCreature(mob: TSCreature) {
     let map = mob.GetMap()
     let prestige = map.GetUInt('prestige', 0)
     let pcount = map.GetPlayerCount()
-    mob.CastCustomSpell(mob, prestigeSpell, true, prestigeMult * prestige * pcount, prestigeMult * prestige * pcount, prestigeMult * prestige * pcount, CreateItem(insideCurrencyID, 1), mob.GetGUID())
+    mob.CastCustomSpell(mob, prestigeSpell, true, prestigeMult * prestige * pcount, prestigeMult * prestige * pcount, prestigeMult * prestige * pcount, CreateItem(insideCurrencyID, 1))
 }
 
 function setupCreaturePrestigeScripts(events: TSEvents, mobID: number) {
@@ -462,7 +464,7 @@ function setupCreaturePrestigeScripts(events: TSEvents, mobID: number) {
 
 function setupMiniMobDeath(events: TSEvents, mobID: number) {
     events.Creature.OnDeath(mobID, (creature, killer) => {
-        checkPlayerGiveReward(killer, getRandomInt(1) + 1)
+        checkPlayerGiveReward(killer!, getRandomInt(1) + 1)
         if (getRandomInt(100) >= 99) {
             creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
         }
@@ -472,7 +474,7 @@ function setupMiniMobDeath(events: TSEvents, mobID: number) {
 
 function setupMobDeath(events: TSEvents, mobID: number) {
     events.Creature.OnDeath(mobID, (creature, killer) => {
-        checkPlayerGiveReward(killer, getRandomInt(5) + 1)
+        checkPlayerGiveReward(killer!, getRandomInt(5) + 1)
         if (getRandomInt(100) >= 97) {
             creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
         }
@@ -482,7 +484,7 @@ function setupMobDeath(events: TSEvents, mobID: number) {
 
 function setupMiniBossDeath(events: TSEvents, mobID: number) {
     events.Creature.OnDeath(mobID, (creature, killer) => {
-        checkPlayerGiveReward(killer, getRandomInt(20) + 1)
+        checkPlayerGiveReward(killer!, getRandomInt(20) + 1)
         if (getRandomInt(100) >= 50) {
             creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
         }
@@ -492,7 +494,7 @@ function setupMiniBossDeath(events: TSEvents, mobID: number) {
 
 function setupBossDeath(events: TSEvents, mobID: number) {
     events.Creature.OnDeath(mobID, (creature, killer) => {
-        checkPlayerGiveReward(killer, getRandomInt(20) + 30)
+        checkPlayerGiveReward(killer!, getRandomInt(20) + 30)
         creature.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), creature.GetX(), creature.GetY(), creature.GetZ(), creature.GetO(), 8, 0)
         creature.DespawnOrUnsummon(3000)
     })
@@ -509,9 +511,9 @@ function setupBossPull(events: TSEvents, mobID: number) {
 
 export function checkPlayerGiveReward(killer: TSUnit, randVal: number) {
     if (killer.IsPlayer()) {
-        let killerPlayer = killer.ToPlayer()
+        let killerPlayer = killer.ToPlayer()!
         if (killerPlayer.IsInGroup()) {
-            let group = killerPlayer.GetGroup().GetMembers()
+            let group = killerPlayer.GetGroup()!.GetMembers()
             for (let i = 0; i < group.length; i++) {
                 group[i].AddItem(insideCurrencyID, randVal)
             }
@@ -519,11 +521,11 @@ export function checkPlayerGiveReward(killer: TSUnit, randVal: number) {
             killerPlayer.AddItem(insideCurrencyID, randVal)
         }
     } else {
-        let owner = killer.GetOwner()
+        let owner = killer.GetOwner()!
         if (owner.IsPlayer()) {
-            let ownerPlayer = owner.ToPlayer()
+            let ownerPlayer = owner.ToPlayer()!
             if (ownerPlayer.IsInGroup()) {
-                let group = ownerPlayer.GetGroup().GetMembers()
+                let group = ownerPlayer.GetGroup()!.GetMembers()
                 for (let i = 0; i < group.length; i++) {
                     group[i].AddItem(insideCurrencyID, randVal)
                 }

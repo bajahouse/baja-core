@@ -20,8 +20,8 @@ export class playerEnchantInfo extends DBEntry {
 
     constructor(player: TSPlayer, itemGUID: TSItem) {
         super();
-        this.playerGUID = player.GetGUID()
-        this.itemGUID = itemGUID.GetGUID()
+        this.playerGUID = player.GetGUIDLow()
+        this.itemGUID = itemGUID.GetGUIDLow()
     }
 
     static get(player: TSPlayer, item: TSItem): playerEnchantInfo {
@@ -55,7 +55,8 @@ export function itemRandomEnchantVisual(events: TSEvents) {
 function applyVisuals(player: TSPlayer) {
     for (let i = EquipmentSlots.MAINHAND; i <= EquipmentSlots.RANGED; i++) {
         let item = player.GetItemByPos(255, i)
-        applySingleVisual(player, item)
+        if (item)
+            applySingleVisual(player, item)
     }
 }
 
@@ -64,7 +65,7 @@ function applySingleVisual(player: TSPlayer, item: TSItem) {
     if (item.GetEnchantmentID(0) != 0) return
 
     let cur = playerEnchantInfo.get(player, item)
-    if (item.GetGUID() == cur.itemGUID) {
+    if (item.GetGUIDLow() == cur.itemGUID) {
         player.SetCoreUInt16(284 + (item.GetSlot() * 2), 0, cur.display)
     }
 }

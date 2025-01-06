@@ -18,18 +18,18 @@ export function RegisterFarmingSpells(events: TSEvents) {
     GetIDTag('player-housing-mod', 'farming-crop-final').forEach(x => {
         events.GameObject.OnUse(x, (obj, user, cancel) => {
             let player = user.ToPlayer();
-            if (player.IsNull())
+            if (!player)
                 return
 
-            if (PlayerHouse.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+            if (PlayerHouse.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUIDLow()) {
                 player.SendAreaTriggerMessage("This is not your home!")
                 cancel.set(true)
                 return
             }
 
             PlayerHouseCrops.get(player).forEach(element => {
-                if (element.spawnGuid == obj.GetGUID()) {
-                    element.Harvest(player)
+                if (element.spawnGuid == obj.GetGUIDLow()) {
+                    element.Harvest(player!)
                 }
             })
         })
@@ -39,10 +39,10 @@ export function RegisterFarmingSpells(events: TSEvents) {
     GetIDTag('player-housing-mod', 'farming-fertilizer-spell').forEach(x => {
         events.Spell.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer()
-            if (player.IsNull())
+            if (!player)
                 return
 
-            if (PlayerHouse.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+            if (PlayerHouse.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUIDLow()) {
                 player.SendAreaTriggerMessage("This is not your home!")
                 result.set(SpellCastResult.FAILED_DONT_REPORT)
                 return
@@ -50,11 +50,11 @@ export function RegisterFarmingSpells(events: TSEvents) {
         })
 
         events.Spell.OnCast(x, (spell) => {
-            let player = spell.GetCaster().ToPlayer()
+            let player = spell.GetCaster().ToPlayer()!
             let nearbyGobs = player.GetGameObjectsInRange(10, 0, 0)
             nearbyGobs.forEach((v, i, arr) => {
                 PlayerHouseCrops.get(player).forEach(element => {
-                    if (element.spawnGuid == v.GetGUID()) {
+                    if (element.spawnGuid == v.GetGUIDLow()) {
                         element.fertilizeMultiplier = spell.GetSpellInfo().GetPriority() / 10;
                         element.MarkDirty()
                     }
@@ -68,9 +68,9 @@ function spellScriptsForPlacement(events: TSEvents) {
     GetIDTag('player-housing-mod', 'farming-crop-spell').forEach(x => {
         events.Spell.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
-            if (player.IsNull())
+            if (!player)
                 return
-            if (PlayerHouse.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+            if (PlayerHouse.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUIDLow()) {
                 player.SendAreaTriggerMessage("This is not your home!")
                 result.set(SpellCastResult.FAILED_DONT_REPORT)
                 return
@@ -82,7 +82,7 @@ function spellScriptsForPlacement(events: TSEvents) {
                 return;
             }
             result.set(SpellCastResult.FAILED_DONT_REPORT)
-            let crop = cropData.Add(new PlayerHouseCrops(player.GetGUID()))
+            let crop = cropData.Add(new PlayerHouseCrops(player.GetGUIDLow()))
             crop.x = spell.GetTargetDest().x
             crop.y = spell.GetTargetDest().y
             crop.z = spell.GetTargetDest().z
@@ -98,16 +98,16 @@ function spellScriptsForPlacement(events: TSEvents) {
     GetIDTag('player-housing-mod', 'farming-gob-spell').forEach(x => {
         events.Spell.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
-            if (player.IsNull())
+            if (!player)
                 return
-            if (PlayerHouse.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+            if (PlayerHouse.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUIDLow()) {
                 player.SendAreaTriggerMessage("This is not your home!")
                 result.set(SpellCastResult.FAILED_DONT_REPORT)
                 return
             }
             let gobData = PlayerHouseGobs.get(player);
             result.set(SpellCastResult.FAILED_DONT_REPORT)
-            let gob = gobData.Add(new PlayerHouseGobs(player.GetGUID()))
+            let gob = gobData.Add(new PlayerHouseGobs(player.GetGUIDLow()))
             gob.entry = spell.GetSpellInfo().GetPriority();
             gob.x = spell.GetTargetDest().x
             gob.y = spell.GetTargetDest().y
@@ -121,16 +121,16 @@ function spellScriptsForPlacement(events: TSEvents) {
     GetIDTag('player-housing-mod', 'farming-creature-spell').forEach(x => {
         events.Spell.OnCheckCast(x, (spell, result) => {
             let player = spell.GetCaster().ToPlayer();
-            if (player.IsNull())
+            if (!player)
                 return
-            if (PlayerHouse.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUID()) {
+            if (PlayerHouse.get(player).area != player.GetAreaID() || player.GetPhaseID() != player.GetGUIDLow()) {
                 player.SendAreaTriggerMessage("This is not your home!")
                 result.set(SpellCastResult.FAILED_DONT_REPORT)
                 return
             }
             let creatureData = PlayerHouseCreatures.get(player);
             result.set(SpellCastResult.FAILED_DONT_REPORT)
-            let creature = creatureData.Add(new PlayerHouseCreatures(player.GetGUID()))
+            let creature = creatureData.Add(new PlayerHouseCreatures(player.GetGUIDLow()))
             creature.entry = spell.GetSpellInfo().GetPriority();
             creature.x = player.GetX()
             creature.y = player.GetY()

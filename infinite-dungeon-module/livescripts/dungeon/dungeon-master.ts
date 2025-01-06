@@ -68,8 +68,8 @@ export function dungeonBuffSystem(events: TSEvents) {
     events.Creature.OnCreate(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-orb"), (creature, cancel) => {
         creature.GetCollisions().Add("infinite-dungeon", 2, 500, 0, (self, collided, cancel, entry) => {
             if (collided.IsPlayer()) {
-                let player = collided.ToPlayer()
-                let creature = self.ToCreature()
+                let player = collided.ToPlayer()!
+                let creature = self.ToCreature()!
                 if (player.IsInGroup()) {
                     let arr = creature.GetJsonArray('usedBy', new TSJsonArray())
                     for (let i = 0; i < arr.length; i++) {
@@ -81,7 +81,7 @@ export function dungeonBuffSystem(events: TSEvents) {
                         arr.PushNumber(player.GetGUIDLow())
                         creature.SetJsonArray('usedBy', arr)
                     }
-                    if (arr.length == player.GetGroup().GetMembersCount()) {
+                    if (arr.length == player.GetGroup()!.GetMembersCount()) {
                         creature.DespawnOrUnsummon(0)
                     }
                 } else {
@@ -135,7 +135,7 @@ export function rewardGroup(player: TSPlayer) {
     let rewardID: number = player.GetMap().GetUInt('rewardID', GetID("item_template", 'infinite-dungeon-mod', "dungeon-end-currency"))
     let insideID: number = player.GetMap().GetUInt('dropID', GetID("item_template", 'infinite-dungeon-mod', "dungeon-inside-currency"))
     if (player.IsInGroup()) {
-        let group = player.GetGroup().GetMembers()
+        let group = player.GetGroup()!.GetMembers()
         for (let i = 0; i < group.length; i++) {
             let curPrestige: number = group[i].GetUInt('prestige', 0)
             let rewCount: number = (curPrestige * curPrestige) + curPrestige
@@ -160,7 +160,7 @@ export function resetGroup(player: TSPlayer, playerSpawnCoords: TSDictionary<str
     map.SetUInt('prestige', prestige)
     if ((<uint32>prestige) % 5 == 0) {
         if (player.IsInGroup()) {
-            let pGroup = player.GetGroup().GetMembers()
+            let pGroup = player.GetGroup()!.GetMembers()
             for (let i = 0; i > pGroup.length; i++) {
                 addTormentOrBlessing(pGroup[i])
                 applyPlayerBuffs(pGroup[i])
@@ -172,7 +172,7 @@ export function resetGroup(player: TSPlayer, playerSpawnCoords: TSDictionary<str
     }
     despawnMap(player)
     if (player.IsInGroup()) {
-        teleportRandomStart(player.GetGroup().GetMembers(), playerSpawnCoords)
+        teleportRandomStart(player.GetGroup()!.GetMembers(), playerSpawnCoords)
     } else {
         teleportRandomStart([player], playerSpawnCoords)
     }
@@ -202,20 +202,20 @@ function despawnMap(player: TSPlayer) {
 }
 
 export function spawnMap(map: TSMap, miniMobSpawnCoords: TSDictionary<string, number>[], miniMobIDs: number[], mobSpawnCoords: TSDictionary<string, number>[], mobIDs: number[], miniBossSpawnCoords: TSDictionary<string, number>[], miniBossIDs: number[], bossSpawnCoords: TSDictionary<string, number>[], bossIDs: number[], vendorSpawnCoords: TSDictionary<string, number>, chestSpawnCoords: TSDictionary<string, number>[], vaseSpawnCoords: TSDictionary<string, number>[],) {
-    let c = map.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vendor"), vendorSpawnCoords['x'], vendorSpawnCoords['y'], vendorSpawnCoords['z'], vendorSpawnCoords['o'], 180000)
+    let c = map.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vendor"), vendorSpawnCoords['x'], vendorSpawnCoords['y'], vendorSpawnCoords['z'], vendorSpawnCoords['o'], 180000)!
     //chests
     for (let i = 0; i < chestSpawnCoords.length; i++) {
         c.SummonGameObject(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeon-chest"), chestSpawnCoords[i]['x'], chestSpawnCoords[i]['y'], chestSpawnCoords[i]['z'], chestSpawnCoords[i]['o'], 0)
     }
     //vases
     for (let i = 0; i < vaseSpawnCoords.length; i++) {
-        map.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vase"), vaseSpawnCoords[i]['x'], vaseSpawnCoords[i]['y'], vaseSpawnCoords[i]['z'], vaseSpawnCoords[i]['o'], 0)
+        map.SpawnCreature(GetID("creature_template", 'infinite-dungeon-mod', "dungeon-vase"), vaseSpawnCoords[i]['x'], vaseSpawnCoords[i]['y'], vaseSpawnCoords[i]['z'], vaseSpawnCoords[i]['o'], 0)!
             .SetScale(Math.random() / 4 + 0.15)
     }
     //minimobs
     for (let i = 0; i < miniMobSpawnCoords.length; i++) {
         for (let j = 0; j < getRandomInt(3); j++) {
-            map.SpawnCreature(miniMobIDs[getRandomInt(miniMobIDs.length)], miniMobSpawnCoords[i]['x'], miniMobSpawnCoords[i]['y'], miniMobSpawnCoords[i]['z'], miniMobSpawnCoords[i]['o'], 0).MoveRandom(30)
+            map.SpawnCreature(miniMobIDs[getRandomInt(miniMobIDs.length)], miniMobSpawnCoords[i]['x'], miniMobSpawnCoords[i]['y'], miniMobSpawnCoords[i]['z'], miniMobSpawnCoords[i]['o'], 0)!.MoveRandom(30)
         }
     }
     //mobs
@@ -237,7 +237,7 @@ export function spawnMap(map: TSMap, miniMobSpawnCoords: TSDictionary<string, nu
 }
 
 function spawnBoss(map: TSMap, bossID: number, sPos: TSDictionary<string, number>, lastBoss: boolean) {
-    let c = map.SpawnCreature(bossID, sPos['x'], sPos['y'], sPos['z'], sPos['o'], 0)
+    let c = map.SpawnCreature(bossID, sPos['x'], sPos['y'], sPos['z'], sPos['o'], 0)!
     if (lastBoss) {
         c.SetUInt('lastBoss', 1)
     } else {
@@ -442,9 +442,9 @@ export function applyPlayerBuffs(player: TSPlayer) {
         if (charItems.currentBuffsType[i] == 0 || charItems.currentBuffsType[i] == 1) {
             //console.log('player:'+player.GetName() + ' spellID ' + charItems.currentBuffs[i] + ' stackAmt: ' +charItems.currentBuffsCount[i] )
             if (player.HasAura(charItems.currentBuffs[i])) {
-                player.GetAura(charItems.currentBuffs[i]).SetStackAmount(charItems.currentBuffsCount[i])
+                player.GetAura(charItems.currentBuffs[i])!.SetStackAmount(charItems.currentBuffsCount[i])
             } else {
-                player.AddAura(charItems.currentBuffs[i], player).SetStackAmount(charItems.currentBuffsCount[i])
+                player.AddAura(charItems.currentBuffs[i], player)?.SetStackAmount(charItems.currentBuffsCount[i])
             }
             //player.AddAura(charItems.currentBuffs[i], player).SetStackAmount(charItems.currentBuffsCount[i])
         } else if (charItems.currentBuffsType[i] == 2) {
@@ -455,9 +455,9 @@ export function applyPlayerBuffs(player: TSPlayer) {
     for (let i = 0; i < charItems.currentTormentsAndBlessings.length; i++) {
         if (charItems.currentTormentsAndBlessingsType[i] == 0 || charItems.currentTormentsAndBlessingsType[i] == 1) {
             if (player.HasAura(charItems.currentTormentsAndBlessings[i])) {
-                player.GetAura(charItems.currentTormentsAndBlessings[i]).SetStackAmount(charItems.currentTormentsAndBlessingsCount[i])
+                player.GetAura(charItems.currentTormentsAndBlessings[i])?.SetStackAmount(charItems.currentTormentsAndBlessingsCount[i])
             } else {
-                player.AddAura(charItems.currentTormentsAndBlessings[i], player).SetStackAmount(charItems.currentTormentsAndBlessingsCount[i])
+                player.AddAura(charItems.currentTormentsAndBlessings[i], player)?.SetStackAmount(charItems.currentTormentsAndBlessingsCount[i])
             }
             //player.AddAura(charItems.currentTormentsAndBlessings[i], player).SetStackAmount(charItems.currentTormentsAndBlessingsCount[i])
         } else if (charItems.currentTormentsAndBlessingsType[i] == 2) {
@@ -519,7 +519,7 @@ function setupTables() {
 export function setupLastBossCheck(events: TSEvents, bossID: number) {
     events.Creature.OnDeath(bossID, (creature, killer) => {
         if (creature.GetUInt('lastBoss', 0) == 1) {
-            killer.SummonGameObject(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), creature.GetX(), creature.GetY(), creature.GetZ() + 1, creature.GetO(), 0)
+            killer!.SummonGameObject(GetID("gameobject_template", 'infinite-dungeon-mod', "dungeonendobj"), creature.GetX(), creature.GetY(), creature.GetZ() + 1, creature.GetO(), 0)
         }
     })
 }

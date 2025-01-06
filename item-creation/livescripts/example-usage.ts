@@ -14,6 +14,7 @@ export function example(events: TSEvents) {
         } else if (cmd[0] == 'updateitem') {
             found.set(true)
             let item = player.GetItemByPos(255, 17)
+            if (!item) return
             //player.RemoveAllItemMods()//other option rather than slot ID reloading
             player.RemoveItemMods(item, 17)
             let t = item.GetTemplate()
@@ -29,6 +30,7 @@ export function example(events: TSEvents) {
         } else if (cmd[0] == 'resetitem') {
             found.set(true)
             let item = player.GetItemByPos(255, 17)
+            if (!item) return
             //player.RemoveAllItemMods()//other option rather than slot ID reloading
             player.RemoveItemMods(item, 17)
             let t = item.GetTemplate()

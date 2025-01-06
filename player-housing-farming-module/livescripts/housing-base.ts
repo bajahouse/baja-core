@@ -28,7 +28,7 @@ export function baseHouse(events: TSEvents) {
                 PlayerHouse.get(player).Open(player)
                 player.SendAreaTriggerMessage('You have entered your house.')
                 player.AddNamedTimer('refreshPlants', 30000, TimerLoops.INDEFINITE, (owner, timer) => {
-                    let player = owner.ToPlayer()
+                    let player = owner.ToPlayer()!
                     PlayerHouseCrops.get(player).forEach((x) => {
                         x.canGrow(player)
                     })

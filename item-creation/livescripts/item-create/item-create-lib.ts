@@ -12,11 +12,11 @@ export function itemCreationSetup(events: TSEvents) {
     setupConstCreations()
 }
 
-export function createItemWithSeed(player: TSPlayer, seed: number) {
+export function createItemWithSeed(player: TSPlayer, seed: number):TSItem {
     let temp: TSItemTemplate = CreateItemTemplate(getItemID(), templateItemID)
     temp = modifyItemProperties(temp, chooseItemType(seed), getRandNumberWithSeed(seed, 2) + player.GetLevel(), getRandNumberWithSeed(seed, 3), GetRandQuality(seed), seed)
     player.SendItemQueryPacket(temp)
-    return player.AddItem(temp.GetEntry(), 1)
+    return player.AddItem(temp.GetEntry(), 1)!
 }
 
 export function createItemRandom(player: TSPlayer): TSItem {
@@ -24,7 +24,7 @@ export function createItemRandom(player: TSPlayer): TSItem {
     let seed = generateSeed()
     temp = modifyItemProperties(temp, chooseItemType(seed), player.GetLevel(), getRandNumberWithSeed(seed, 3), GetRandQuality(seed), seed)
     player.SendItemQueryPacket(temp)
-    return player.AddItem(temp.GetEntry(), 1)
+    return player.AddItem(temp.GetEntry(), 1)!
 }
 
 export function returnCustomItemWithLevelQuality(level: number, quality: number): TSItemTemplate {
@@ -107,7 +107,7 @@ function modifyItemProperties(temp: TSItemTemplate, itemInfo: number[], level: n
 
 function generateStats(itemLevel: number, temp: TSItemTemplate, slotMult: number, statType: number, seed: number) {
     const group = getStatGroup(statType, temp.GetQuality(), seed)
-    var totalStats = slotMult * itemLevel * 4 * qualityMultiplier[temp.GetQuality()]
+    let totalStats = slotMult * itemLevel * 4 * qualityMultiplier[temp.GetQuality()]
     if (temp.GetQuality() == 5)
         totalStats = totalStats * 1.5
     let statsPrimary: number = totalStats * .7
@@ -188,7 +188,8 @@ export function regenerateAllItems() {
     let q = QueryCharacters('SELECT entry FROM custom_item_template')
     while (q.GetRow()) {
         let temp = GetItemTemplate(q.GetUInt32(0))
-        modifyItemProperties(temp, chooseItemType(temp.GetScriptID()), getRandNumberWithSeed(temp.GetScriptID(), 2) + temp.GetRequiredLevel(), getRandNumberWithSeed(temp.GetScriptID(), 3), GetRandQuality(temp.GetScriptID()), temp.GetScriptID())
+        if (temp)
+            modifyItemProperties(temp, chooseItemType(temp.GetScriptID()), getRandNumberWithSeed(temp.GetScriptID(), 2) + temp.GetRequiredLevel(), getRandNumberWithSeed(temp.GetScriptID(), 3), GetRandQuality(temp.GetScriptID()), temp.GetScriptID())
     }
 }
 
